@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>NICEGOLD MON - Request Access</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+
+      font-family: Arial, sans-serif;
+      color: white;
+      background: #020817;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Moving blue light fields */
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(70px);
+      pointer-events: none;
+      opacity: 0.55;
+      animation: moveOrb 12s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      width: 260px;
+      height: 260px;
+      background: #0066ff;
+      top: -80px;
+      left: -80px;
+    }
+
+    .orb.two {
+      width: 230px;
+      height: 230px;
+      background: #00c8ff;
+      right: -70px;
+      top: 20%;
+      animation-delay: 2s;
+    }
+
+    .orb.three {
+      width: 280px;
+      height: 280px;
+      background: #5138ee;
+      bottom: -120px;
+      left: 25%;
+      animation-delay: 4s;
+    }
+
+    .orb.four {
+      width: 170px;
+      height: 170px;
+      background: #008cff;
+      bottom: 15%;
+      right: 10%;
+      animation-delay: 1s;
+    }
+
+    @keyframes moveOrb {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(45px, -35px) scale(1.12);
+      }
+
+      100% {
+        transform: translate(-30px, 40px) scale(0.95);
+      }
+    }
+
+    /* Tiny floating lights */
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: #72d9ff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #1dbdff;
+      animation: rise 9s linear infinite;
+      opacity: 0.65;
+    }
+
+    .particle:nth-child(1) {
+      left: 10%;
+      bottom: -10px;
+      animation-delay: 1s;
+    }
+
+    .particle:nth-child(2) {
+      left: 28%;
+      bottom: -10px;
+      animation-delay: 4s;
+    }
+
+    .particle:nth-child(3) {
+      left: 48%;
+      bottom: -10px;
+      animation-delay: 2s;
+    }
+
+    .particle:nth-child(4) {
+      left: 70%;
+      bottom: -10px;
+      animation-delay: 6s;
+    }
+
+    .particle:nth-child(5) {
+      left: 88%;
+      bottom: -10px;
+      animation-delay: 3s;
+    }
+
+    @keyframes rise {
+      from {
+        transform: translateY(0);
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 0.7;
+      }
+
+      80% {
+        opacity: 0.5;
+      }
+
+      to {
+        transform: translateY(-110vh);
+        opacity: 0;
+      }
+    }
+
+    /* Glass card */
+
+    .card {
+      position: relative;
+      z-index: 5;
+
+      width: 100%;
+      max-width: 410px;
+
+      padding: 30px 23px;
+
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 24px;
+
+      background: rgba(4, 12, 30, 0.62);
+
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+
+      box-shadow:
+        0 30px 80px rgba(0,0,0,0.55),
+        0 0 45px rgba(0,120,255,0.10),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .brand {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #9caac5;
+      font-size: 13px;
+      margin-top: 7px;
+      margin-bottom: 25px;
+    }
+
+    .info {
+      padding: 13px;
+      border-radius: 12px;
+      background: rgba(0,120,255,0.08);
+      border: 1px solid rgba(80,170,255,0.12);
+      color: #a9c9e9;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      color: #b7c1d4;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 12px;
+
+      background: rgba(0,0,0,0.25);
+      color: white;
+
+      outline: none;
+      font-size: 14px;
+      margin-bottom: 17px;
+    }
+
+    input:focus {
+      border-color: rgba(50,170,255,0.65);
+      box-shadow: 0 0 20px rgba(0,140,255,0.10);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+
+      border: none;
+      border-radius: 12px;
+
+      background: linear-gradient(
+        135deg,
+        #ffffff,
+        #cfeaff
+      );
+
+      color: #06101f;
+
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #message {
+      min-height: 20px;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 12px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #65738c;
+      font-size: 10px;
+      margin-top: 23px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="orb three"></div>
+  <div class="orb four"></div>
+
+  <div class="particles">
+    <span class="particle"></span>
+    <span class="particle"></span>
+    <span class="particle"></span>
+    <span class="particle"></span>
+    <span class="particle"></span>
+  </div>
+
+
+  <div class="card">
+
+    <div class="brand">
+      ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+    </div>
+
+    <div class="subtitle">
+      Request Bot Access
+    </div>
+
+    <div class="info">
+      Access to the NICEGOLD bot requires administrator
+      approval. Submit your request and wait for an
+      access code from the administrator.
+    </div>
+
+
+    <form id="requestForm">
+
+      <label for="name">
+        Your name
+      </label>
+
+      <input
+        id="name"
+        type="text"
+        placeholder="Enter your name"
+        required
+      >
+
+
+      <label for="contact">
+        Contact / username
+      </label>
+
+      <input
+        id="contact"
+        type="text"
+        placeholder="Enter your contact or username"
+        required
+      >
+
+
+      <button type="submit">
+        🔐 Request Access
+      </button>
+
+      <div id="message"></div>
+
+    </form>
+
+
+    <div class="footer">
+      NICEGOLD MON • Access controlled by administrator
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const form =
+      document.getElementById("requestForm");
+
+    const message =
+      document.getElementById("message");
+
+
+    form.addEventListener("submit", async (event) => {
+
+      event.preventDefault();
+
+      message.style.color = "#9caac5";
+      message.textContent = "Submitting request...";
+
+
+      const name =
+        document.getElementById("name").value.trim();
+
+      const contact =
+        document.getElementById("contact").value.trim();
+
+
+      try {
+
+        const response =
+          await fetch("/api/access/request", {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+              name,
+              contact
+            })
+
+          });
+
+
+        const data =
+          await response.json();
+
+
+        if (response.ok && data.ok) {
+
+          message.style.color = "#35d77b";
+
+          message.textContent =
+            data.message ||
+            "Request submitted successfully.";
+
+          form.reset();
+
+        } else {
+
+          message.style.color = "#e05b5b";
+
+          message.textContent =
+            data.message ||
+            "Request could not be submitted.";
+
+        }
+
+      } catch (error) {
+
+        message.style.color = "#e05b5b";
+
+        message.textContent =
+          "Could not reach the server.";
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
