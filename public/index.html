@@ -1,15 +1,241 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NiceGold MON</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NICEGOLD MON</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0b0f;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 22px 18px;
+      border-bottom: 1px solid #25252d;
+      background: #111116;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .subtitle {
+      color: #9999a5;
+      margin-top: 5px;
+      font-size: 13px;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 850px;
+      margin: 25px auto;
+    }
+
+    .status-card {
+      background: #14141b;
+      border: 1px solid #292933;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .status-title {
+      color: #a8a8b5;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: #36d77b;
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(54, 215, 123, 0.7);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .card {
+      background: #14141b;
+      border: 1px solid #292933;
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .card h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: #9999a5;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #111116;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .button:active {
+      transform: scale(0.98);
+    }
+
+    .footer {
+      text-align: center;
+      color: #666672;
+      font-size: 12px;
+      padding: 30px 10px;
+    }
+
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .brand {
+        font-size: 19px;
+      }
+    }
+  </style>
 </head>
 
-<body style="background:#08090d;color:white;text-align:center;font-family:Arial;padding-top:100px;">
+<body>
 
-    <h1>✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵</h1>
+  <header class="header">
+    <div class="brand">
+      ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+    </div>
 
-    <p style="color:#42ff9c;">● NICEGOLD MON IS ONLINE</p>
+    <div class="subtitle">
+      NICEGOLD MON Control Panel
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="status-card">
+      <div class="status-title">SERVER STATUS</div>
+
+      <div class="status">
+        <span class="dot"></span>
+        NICEGOLD MON is online
+      </div>
+    </section>
+
+    <section class="grid">
+
+      <div class="card">
+        <h3>🤖 Bot</h3>
+        <p>
+          Manage the NICEGOLD bot and monitor its current state.
+        </p>
+
+        <button class="button" onclick="checkBot()">
+          Check Bot
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>📊 System</h3>
+        <p>
+          View basic information about the running NICEGOLD server.
+        </p>
+
+        <button class="button" onclick="checkServer()">
+          Check Server
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>⚙️ Settings</h3>
+        <p>
+          Configuration controls will be added here as we build the panel.
+        </p>
+
+        <button class="button" onclick="comingSoon()">
+          Settings
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>💬 Messages</h3>
+        <p>
+          Messaging and conversation features will be added later.
+        </p>
+
+        <button class="button" onclick="comingSoon()">
+          Open Messages
+        </button>
+      </div>
+
+    </section>
+
+    <div class="footer">
+      NICEGOLD MON • Control Panel
+    </div>
+
+  </main>
+
+  <script>
+    async function checkBot() {
+      try {
+        const response = await fetch("/api/whatsapp/status");
+        const data = await response.json();
+
+        alert("Bot status: " + data.state);
+      } catch (error) {
+        alert("Could not reach the server.");
+      }
+    }
+
+    async function checkServer() {
+      try {
+        const response = await fetch("/api/health");
+        const data = await response.json();
+
+        alert(data.message);
+      } catch (error) {
+        alert("Server check failed.");
+      }
+    }
+
+    function comingSoon() {
+      alert("This NICEGOLD feature is coming soon.");
+    }
+  </script>
 
 </body>
 </html>
