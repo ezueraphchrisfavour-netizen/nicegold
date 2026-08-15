@@ -1,0 +1,10 @@
+node_modules/
+.env
+.env.*
+*.log
+auth/
+sessions/
+session/
+creds/
+credentials/
+baileys_auth/
