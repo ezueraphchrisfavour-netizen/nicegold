@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>NICEGOLD MON</title>
 
   <style>
@@ -14,26 +15,26 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: #0b0b0f;
+      background: #08080c;
       color: #ffffff;
       min-height: 100vh;
     }
 
     .header {
-      padding: 22px 18px;
-      border-bottom: 1px solid #25252d;
-      background: #111116;
+      padding: 24px 18px;
+      background: #111118;
+      border-bottom: 1px solid #292933;
     }
 
     .brand {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 700;
       line-height: 1.4;
     }
 
     .subtitle {
-      color: #9999a5;
-      margin-top: 5px;
+      margin-top: 6px;
+      color: #888894;
       font-size: 13px;
     }
 
@@ -43,34 +44,46 @@
       margin: 25px auto;
     }
 
-    .status-card {
-      background: #14141b;
-      border: 1px solid #292933;
-      border-radius: 18px;
-      padding: 22px;
+    .hero {
+      background: #14141c;
+      border: 1px solid #2a2a35;
+      border-radius: 20px;
+      padding: 23px;
       margin-bottom: 18px;
     }
 
-    .status-title {
-      color: #a8a8b5;
-      font-size: 13px;
+    .label {
+      color: #888894;
+      font-size: 12px;
       margin-bottom: 10px;
+      letter-spacing: 1px;
     }
 
-    .status {
+    .main-status {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 21px;
+      gap: 11px;
+      font-size: 23px;
       font-weight: 700;
     }
 
     .dot {
-      width: 12px;
-      height: 12px;
-      background: #36d77b;
+      width: 13px;
+      height: 13px;
       border-radius: 50%;
-      box-shadow: 0 0 12px rgba(54, 215, 123, 0.7);
+      background: #32d477;
+      box-shadow: 0 0 14px rgba(50, 212, 119, 0.7);
+    }
+
+    .dot.offline {
+      background: #e04b4b;
+      box-shadow: 0 0 14px rgba(224, 75, 75, 0.5);
+    }
+
+    .updated {
+      margin-top: 10px;
+      color: #777782;
+      font-size: 12px;
     }
 
     .grid {
@@ -80,44 +93,60 @@
     }
 
     .card {
-      background: #14141b;
+      background: #14141c;
       border: 1px solid #292933;
       border-radius: 18px;
       padding: 20px;
     }
 
-    .card h3 {
+    .card-title {
       font-size: 16px;
-      margin-bottom: 8px;
+      font-weight: 700;
+      margin-bottom: 13px;
     }
 
-    .card p {
-      color: #9999a5;
-      font-size: 13px;
+    .value {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .small {
+      color: #858591;
+      font-size: 12px;
+      margin-top: 7px;
       line-height: 1.5;
     }
 
-    .button {
+    .online {
+      color: #32d477;
+    }
+
+    .offline {
+      color: #e04b4b;
+    }
+
+    .refresh {
       width: 100%;
-      margin-top: 15px;
-      padding: 13px;
-      border: none;
-      border-radius: 10px;
+      margin-top: 18px;
+      padding: 14px;
+      border: 0;
+      border-radius: 12px;
       background: #ffffff;
-      color: #111116;
+      color: #111118;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
     }
 
-    .button:active {
+    .refresh:active {
       transform: scale(0.98);
     }
 
     .footer {
       text-align: center;
-      color: #666672;
-      font-size: 12px;
       padding: 30px 10px;
+      color: #666671;
+      font-size: 12px;
     }
 
     @media (max-width: 600px) {
@@ -126,7 +155,7 @@
       }
 
       .brand {
-        font-size: 19px;
+        font-size: 18px;
       }
     }
   </style>
@@ -144,97 +173,267 @@
     </div>
   </header>
 
+
   <main class="container">
 
-    <section class="status-card">
-      <div class="status-title">SERVER STATUS</div>
+    <!-- Main server status -->
+    <section class="hero">
 
-      <div class="status">
-        <span class="dot"></span>
-        NICEGOLD MON is online
+      <div class="label">
+        SERVER STATUS
       </div>
+
+      <div class="main-status">
+        <span id="serverDot" class="dot"></span>
+
+        <span id="serverStatus">
+          Checking...
+        </span>
+      </div>
+
+      <div id="lastUpdated" class="updated">
+        Checking server...
+      </div>
+
     </section>
 
+
+    <!-- Dashboard cards -->
     <section class="grid">
 
       <div class="card">
-        <h3>🤖 Bot</h3>
-        <p>
-          Manage the NICEGOLD bot and monitor its current state.
-        </p>
 
-        <button class="button" onclick="checkBot()">
-          Check Bot
-        </button>
+        <div class="card-title">
+          🤖 Bot
+        </div>
+
+        <div id="botStatus" class="value">
+          Checking...
+        </div>
+
+        <div id="botMessage" class="small">
+          Checking bot status...
+        </div>
+
       </div>
 
-      <div class="card">
-        <h3>📊 System</h3>
-        <p>
-          View basic information about the running NICEGOLD server.
-        </p>
 
-        <button class="button" onclick="checkServer()">
-          Check Server
-        </button>
+      <div class="card">
+
+        <div class="card-title">
+          📡 API
+        </div>
+
+        <div id="apiStatus" class="value">
+          Checking...
+        </div>
+
+        <div class="small">
+          NICEGOLD API connection
+        </div>
+
       </div>
 
-      <div class="card">
-        <h3>⚙️ Settings</h3>
-        <p>
-          Configuration controls will be added here as we build the panel.
-        </p>
 
-        <button class="button" onclick="comingSoon()">
-          Settings
-        </button>
+      <div class="card">
+
+        <div class="card-title">
+          🌐 Website
+        </div>
+
+        <div class="value online">
+          ONLINE
+        </div>
+
+        <div class="small">
+          Public NICEGOLD website
+        </div>
+
       </div>
 
-      <div class="card">
-        <h3>💬 Messages</h3>
-        <p>
-          Messaging and conversation features will be added later.
-        </p>
 
-        <button class="button" onclick="comingSoon()">
-          Open Messages
-        </button>
+      <div class="card">
+
+        <div class="card-title">
+          ⚙️ System
+        </div>
+
+        <div class="value">
+          NICEGOLD MON
+        </div>
+
+        <div class="small">
+          Control panel
+        </div>
+
       </div>
 
     </section>
 
+
+    <button class="refresh" onclick="updateDashboard()">
+      🔄 Refresh Status
+    </button>
+
+
     <div class="footer">
-      NICEGOLD MON • Control Panel
+      NICEGOLD MON • Live Control Panel
     </div>
 
   </main>
 
+
   <script>
-    async function checkBot() {
+
+    async function updateDashboard() {
+
+      const serverStatus =
+        document.getElementById("serverStatus");
+
+      const serverDot =
+        document.getElementById("serverDot");
+
+      const lastUpdated =
+        document.getElementById("lastUpdated");
+
+      const botStatus =
+        document.getElementById("botStatus");
+
+      const botMessage =
+        document.getElementById("botMessage");
+
+      const apiStatus =
+        document.getElementById("apiStatus");
+
+
+      /*
+       * Check server
+       */
+
       try {
-        const response = await fetch("/api/whatsapp/status");
-        const data = await response.json();
 
-        alert("Bot status: " + data.state);
+        const response =
+          await fetch("/api/health", {
+            cache: "no-store"
+          });
+
+        if (!response.ok) {
+          throw new Error("Server error");
+        }
+
+        const data =
+          await response.json();
+
+
+        serverStatus.textContent =
+          "NICEGOLD MON is online";
+
+        serverStatus.className =
+          "online";
+
+        serverDot.className =
+          "dot";
+
+        apiStatus.textContent =
+          "CONNECTED";
+
+        apiStatus.className =
+          "value online";
+
+
+        lastUpdated.textContent =
+          "Last checked: " +
+          new Date().toLocaleTimeString();
+
+
       } catch (error) {
-        alert("Could not reach the server.");
-      }
-    }
 
-    async function checkServer() {
+        serverStatus.textContent =
+          "Server unavailable";
+
+        serverStatus.className =
+          "offline";
+
+        serverDot.className =
+          "dot offline";
+
+        apiStatus.textContent =
+          "OFFLINE";
+
+        apiStatus.className =
+          "value offline";
+
+        lastUpdated.textContent =
+          "Unable to reach NICEGOLD API";
+      }
+
+
+      /*
+       * Check bot
+       */
+
       try {
-        const response = await fetch("/api/health");
-        const data = await response.json();
 
-        alert(data.message);
+        const response =
+          await fetch("/api/whatsapp/status", {
+            cache: "no-store"
+          });
+
+        if (!response.ok) {
+          throw new Error("Bot API error");
+        }
+
+        const data =
+          await response.json();
+
+
+        botStatus.textContent =
+          data.state.toUpperCase();
+
+        botMessage.textContent =
+          data.message;
+
+
+        if (data.state === "ready") {
+
+          botStatus.className =
+            "value online";
+
+        } else {
+
+          botStatus.className =
+            "value offline";
+        }
+
+
       } catch (error) {
-        alert("Server check failed.");
+
+        botStatus.textContent =
+          "UNAVAILABLE";
+
+        botStatus.className =
+          "value offline";
+
+        botMessage.textContent =
+          "Could not retrieve bot status.";
       }
+
     }
 
-    function comingSoon() {
-      alert("This NICEGOLD feature is coming soon.");
-    }
+
+    /*
+     * Initial check
+     */
+
+    updateDashboard();
+
+
+    /*
+     * Automatically update every 10 seconds
+     */
+
+    setInterval(updateDashboard, 10000);
+
   </script>
 
 </body>

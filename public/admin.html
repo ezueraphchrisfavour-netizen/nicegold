@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#020817">
+
+  <title>NICEGOLD MON • Admin Panel</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: white;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0,120,255,.30), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(0,210,255,.20), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(80,50,255,.25), transparent 35%),
+        #020817;
+      padding: 20px;
+    }
+
+    .orb {
+      position: fixed;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: .35;
+      pointer-events: none;
+      animation: float 12s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      background: #0077ff;
+      left: -100px;
+      top: -100px;
+    }
+
+    .orb.two {
+      background: #00d9ff;
+      right: -100px;
+      bottom: -100px;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      to {
+        transform: translate(70px, 50px) scale(1.15);
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 950px;
+      margin: auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 25px;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      background: rgba(4,15,35,.65);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      color: #91a4bf;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .logout {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,.08);
+      color: white;
+      cursor: pointer;
+    }
+
+    .logout:hover {
+      background: rgba(255,255,255,.14);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(4,15,35,.62);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 15px 40px rgba(0,0,0,.25);
+    }
+
+    .label {
+      color: #8194af;
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    .value {
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .online {
+      color: #43e58b;
+    }
+
+    .section-title {
+      margin-bottom: 14px;
+      font-size: 17px;
+    }
+
+    #requests {
+      display: grid;
+      gap: 12px;
+    }
+
+    .request {
+      padding: 18px;
+      border-radius: 17px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(4,15,35,.68);
+      backdrop-filter: blur(18px);
+    }
+
+    .request-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .name {
+      font-weight: 700;
+    }
+
+    .status {
+      color: #ffd166;
+      font-size: 11px;
+    }
+
+    .details {
+      color: #9aabc2;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .approve,
+    .deny {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 15px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .approve {
+      background: #d9f7ff;
+      color: #06111d;
+    }
+
+    .deny {
+      background: rgba(255,80,80,.12);
+      color: #ff8585;
+      border: 1px solid rgba(255,80,80,.18);
+    }
+
+    .empty {
+      padding: 35px;
+      text-align: center;
+      color: #72849d;
+      border-radius: 18px;
+      background: rgba(4,15,35,.55);
+    }
+
+    @media (max-width: 650px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .logout {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <main class="container">
+
+    <header>
+      <div>
+        <div class="brand">
+          ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+        </div>
+
+        <div class="subtitle">
+          Administrator Control Center
+        </div>
+      </div>
+
+      <button class="logout" onclick="logout()">
+        Log out
+      </button>
+    </header>
+
+    <section class="stats">
+
+      <div class="card">
+        <div class="label">SERVER</div>
+        <div class="value online">● ONLINE</div>
+      </div>
+
+      <div class="card">
+        <div class="label">PENDING REQUESTS</div>
+        <div class="value" id="pendingCount">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">WHATSAPP ENGINE</div>
+        <div class="value">STOPPED</div>
+      </div>
+
+    </section>
+
+    <h2 class="section-title">
+      Access Requests
+    </h2>
+
+    <section id="requests">
+      <div class="empty">
+        Loading requests...
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+
+    async function checkAdmin() {
+      try {
+        const response =
+          await fetch("/api/admin/status");
+
+        const data =
+          await response.json();
+
+        if (!data.authenticated) {
+          window.location.href = "/login.html";
+          return false;
+        }
+
+        return true;
+
+      } catch (error) {
+        window.location.href = "/login.html";
+        return false;
+      }
+    }
+
+
+    async function loadRequests() {
+
+      const allowed =
+        await checkAdmin();
+
+      if (!allowed) return;
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/admin/access-requests"
+          );
+
+        const data =
+          await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message ||
+            "Could not load requests."
+          );
+        }
+
+        const requests =
+          data.requests || [];
+
+        const pending =
+          requests.filter(
+            r => r.status === "pending"
+          ).length;
+
+        document.getElementById(
+          "pendingCount"
+        ).textContent = pending;
+
+        const container =
+          document.getElementById(
+            "requests"
+          );
+
+        if (requests.length === 0) {
+
+          container.innerHTML = `
+            <div class="empty">
+              No access requests yet.
+            </div>
+          `;
+
+          return;
+        }
+
+        container.innerHTML =
+          requests.map(
+            request => renderRequest(request)
+          ).join("");
+
+      } catch (error) {
+
+        document.getElementById(
+          "requests"
+        ).innerHTML = `
+          <div class="empty">
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+      }
+    }
+
+
+    function renderRequest(request) {
+
+      const date =
+        new Date(
+          request.createdAt
+        ).toLocaleString();
+
+      const actions =
+        request.status === "pending"
+          ? `
+            <div class="actions">
+
+              <button
+                class="approve"
+                onclick="approveRequest('${request.id}')"
+              >
+                ✓ Approve
+              </button>
+
+              <button
+                class="deny"
+                onclick="denyRequest('${request.id}')"
+              >
+                ✕ Deny
+              </button>
+
+            </div>
+          `
+          : `
+            <div class="details">
+              Status: ${escapeHtml(request.status)}
+            </div>
+          `;
+
+      return `
+        <div class="request">
+
+          <div class="request-top">
+
+            <div class="name">
+              👤 ${escapeHtml(request.name)}
+            </div>
+
+            <div class="status">
+              ${escapeHtml(request.status)}
+            </div>
+
+          </div>
+
+          <div class="details">
+
+            Contact:
+            ${escapeHtml(request.contact)}
+            <br>
+
+            Requested:
+            ${escapeHtml(date)}
+
+          </div>
+
+          ${actions}
+
+        </div>
+      `;
+    }
+
+
+    async function approveRequest(id) {
+
+      const response =
+        await fetch(
+          `/api/admin/access-requests/${id}/approve`,
+          {
+            method: "POST"
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+
+        alert(
+          data.message ||
+          "Could not approve request."
+        );
+
+        return;
+      }
+
+      alert(
+        "Access approved.\n\n" +
+        "Temporary code: " +
+        data.accessCode +
+        "\n\nExpires: " +
+        new Date(
+          data.expiresAt
+        ).toLocaleString()
+      );
+
+      loadRequests();
+    }
+
+
+    async function denyRequest(id) {
+
+      const response =
+        await fetch(
+          `/api/admin/access-requests/${id}/deny`,
+          {
+            method: "POST"
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+
+        alert(
+          data.message ||
+          "Could not deny request."
+        );
+
+        return;
+      }
+
+      loadRequests();
+    }
+
+
+    async function logout() {
+
+      await fetch(
+        "/api/logout",
+        {
+          method: "POST"
+        }
+      );
+
+      window.location.href =
+        "/login.html";
+    }
+
+
+    function escapeHtml(value) {
+
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+
+    loadRequests();
+
+    setInterval(
+      loadRequests,
+      10000
+    );
+
+  </script>
+
+</body>
+</html>
