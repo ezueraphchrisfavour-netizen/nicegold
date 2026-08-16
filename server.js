@@ -1,5 +1,7 @@
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
+const crypto = require("crypto");
 require("dotenv").config();
 
 const {
@@ -13,12 +15,27 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+const ADMIN_USERNAME =
+  process.env.ADMIN_USERNAME || "admin";
+
+const ADMIN_PASSWORD =
+  process.env.ADMIN_PASSWORD || "change-this-password";
+
+const ACCESS_FILE =
+  path.join(__dirname, "access-requests.json");
+
 
 /* =====================================================
    MIDDLEWARE
    ===================================================== */
 
 app.use(express.json());
+
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
 
 app.use(
   express.static(
@@ -31,191 +48,82 @@ app.use(
    NICEGOLD BRAND
    ===================================================== */
 
-console.log(
-  "✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵"
-);
+const NICEGOLD_NAME =
+  "✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵";
+
+console.log(NICEGOLD_NAME);
 
 
 /* =====================================================
-   HEALTH
+   ACCESS REQUEST STORAGE
    ===================================================== */
 
-app.get("/api/health", (req, res) => {
-
-  res.json({
-    ok: true,
-    service: "NICEGOLD",
-    message: "NICEGOLD server is online"
-  });
-
-});
-
-
-/* =====================================================
-   GENERAL STATUS
-   ===================================================== */
-
-app.get("/api/status", (req, res) => {
-
-  const bot =
-    typeof getBotStatus === "function"
-      ? getBotStatus()
-      : {
-          state: "unknown",
-          message: "Bot status unavailable"
-        };
-
-  res.json({
-    server: "online",
-
-    bot: bot,
-
-    name:
-      "✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵"
-  });
-
-});
-
-
-/* =====================================================
-   WHATSAPP STATUS
-   ===================================================== */
-
-app.get("/api/whatsapp/status", (req, res) => {
-
-  const status =
-    typeof getBotStatus === "function"
-      ? getBotStatus()
-      : {
-          state: "stopped",
-          message:
-            "WhatsApp engine is stopped"
-        };
-
-  res.json(status);
-
-});
-
-
-/* =====================================================
-   WHATSAPP PAIRING CODE
-   ===================================================== */
-
-app.get("/api/whatsapp/pairing", (req, res) => {
-
-  const code =
-    typeof getPairingCode === "function"
-      ? getPairingCode()
-      : null;
-
-  res.json({
-    available: Boolean(code),
-    pairingCode: code || null
-  });
-
-});
-
-
-/* =====================================================
-   START WHATSAPP
-   ===================================================== */
-
-app.post("/api/bot/connect", async (req, res) => {
+function loadAccessRequests() {
 
   try {
 
-    const {
-      phoneNumber
-    } = req.body || {};
-
-    if (!phoneNumber) {
-
-      return res.status(400).json({
-        success: false,
-        message:
-          "WhatsApp phone number is required"
-      });
-
+    if (!fs.existsSync(ACCESS_FILE)) {
+      fs.writeFileSync(
+        ACCESS_FILE,
+        "[]",
+        "utf8"
+      );
     }
 
-    const result =
-      await startBot(phoneNumber);
+    const data =
+      fs.readFileSync(
+        ACCESS_FILE,
+        "utf8"
+      );
 
-    res.json({
-      success: true,
-      ...result
-    });
+    const parsed =
+      JSON.parse(data);
 
-  } catch (error) {
-
-    console.error(
-      "NICEGOLD connect error:",
-      error
-    );
-
-    res.status(500).json({
-      success: false,
-      message:
-        "Failed to start WhatsApp engine"
-    });
-
-  }
-
-});
-
-
-/* =====================================================
-   STOP WHATSAPP
-   ===================================================== */
-
-app.post("/api/bot/disconnect", async (req, res) => {
-
-  try {
-
-    const result =
-      await stopBot();
-
-    res.json({
-      success: true,
-      ...result
-    });
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
 
   } catch (error) {
 
     console.error(
-      "NICEGOLD disconnect error:",
+      "Could not load access requests:",
       error
     );
 
-    res.status(500).json({
-      success: false,
-      message:
-        "Failed to stop WhatsApp engine"
-    });
-
+    return [];
   }
+}
 
-});
+
+function saveAccessRequests(requests) {
+
+  fs.writeFileSync(
+    ACCESS_FILE,
+    JSON.stringify(
+      requests,
+      null,
+      2
+    ),
+    "utf8"
+  );
+}
 
 
 /* =====================================================
-   NICEGOLD LIVE ACTIVITY NEWS
+   NEWS STORAGE
    ===================================================== */
 
 let nicegoldNews = [
   {
     type: "SYSTEM",
-    title: "NICEGOLD Control Center is online",
+    title:
+      "NICEGOLD Control Center is online",
     message:
       "The NICEGOLD MON control panel is running normally.",
     time: "LIVE"
   }
 ];
 
-
-/* =====================================================
-   ADD NEWS EVENT
-   ===================================================== */
 
 function addNICEGOLDNews(
   type,
@@ -235,12 +143,15 @@ function addNICEGOLDNews(
   });
 
 
-  /* Keep the latest 20 events */
-
-  if (nicegoldNews.length > 20) {
+  if (
+    nicegoldNews.length > 20
+  ) {
 
     nicegoldNews =
-      nicegoldNews.slice(0, 20);
+      nicegoldNews.slice(
+        0,
+        20
+      );
 
   }
 
@@ -248,39 +159,1174 @@ function addNICEGOLDNews(
 
 
 /* =====================================================
-   SERVER START EVENT
+   HEALTH
    ===================================================== */
 
-addNICEGOLDNews(
-  "SYSTEM",
-  "NICEGOLD server started",
-  "The NICEGOLD server has successfully started."
+app.get(
+  "/api/health",
+  (req, res) => {
+
+    res.json({
+
+      ok: true,
+
+      service:
+        "NICEGOLD",
+
+      message:
+        "NICEGOLD server is online"
+
+    });
+
+  }
 );
 
 
 /* =====================================================
-   NEWS API
+   GENERAL STATUS
    ===================================================== */
 
-app.get("/api/news", (req, res) => {
+app.get(
+  "/api/status",
+  (req, res) => {
 
-  res.json({
+    let bot;
 
-    success: true,
+    try {
 
-    news:
-      nicegoldNews
+      bot =
+        typeof getBotStatus === "function"
+          ? getBotStatus()
+          : {
+              state: "unknown",
+              message:
+                "Bot status unavailable"
+            };
 
-  });
+    } catch (error) {
 
-});
+      bot = {
+        state: "unknown",
+        message:
+          "Bot status unavailable"
+      };
+
+    }
+
+
+    res.json({
+
+      server:
+        "online",
+
+      bot,
+
+      name:
+        NICEGOLD_NAME
+
+    });
+
+  }
+);
+
+
+/* =====================================================
+   WHATSAPP STATUS
+   ===================================================== */
+
+app.get(
+  "/api/whatsapp/status",
+  (req, res) => {
+
+    try {
+
+      const status =
+        typeof getBotStatus === "function"
+          ? getBotStatus()
+          : {
+              state: "stopped",
+              message:
+                "WhatsApp engine is stopped"
+            };
+
+      res.json(status);
+
+    } catch (error) {
+
+      res.json({
+
+        state:
+          "stopped",
+
+        message:
+          "WhatsApp engine is stopped"
+
+      });
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   WHATSAPP PAIRING CODE
+   ===================================================== */
+
+app.get(
+  "/api/whatsapp/pairing",
+  (req, res) => {
+
+    try {
+
+      const code =
+        typeof getPairingCode === "function"
+          ? getPairingCode()
+          : null;
+
+      res.json({
+
+        available:
+          Boolean(code),
+
+        pairingCode:
+          code || null
+
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+
+        available:
+          false,
+
+        pairingCode:
+          null
+
+      });
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   START WHATSAPP
+   ===================================================== */
+
+app.post(
+  "/api/bot/connect",
+  async (req, res) => {
+
+    try {
+
+      const {
+        phoneNumber
+      } = req.body || {};
+
+
+      if (!phoneNumber) {
+
+        return res.status(400).json({
+
+          success:
+            false,
+
+          message:
+            "WhatsApp phone number is required"
+
+        });
+
+      }
+
+
+      if (
+        typeof startBot !==
+        "function"
+      ) {
+
+        return res.status(500).json({
+
+          success:
+            false,
+
+          message:
+            "WhatsApp engine is unavailable"
+
+        });
+
+      }
+
+
+      addNICEGOLDNews(
+        "BOT",
+        "WhatsApp engine starting",
+        "The NICEGOLD WhatsApp engine is starting."
+      );
+
+
+      const result =
+        await startBot(
+          phoneNumber
+        );
+
+
+      res.json({
+
+        success:
+          true,
+
+        ...result
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "NICEGOLD connect error:",
+        error
+      );
+
+
+      addNICEGOLDNews(
+        "BOT",
+        "WhatsApp connection error",
+        "The WhatsApp engine could not be started."
+      );
+
+
+      res.status(500).json({
+
+        success:
+          false,
+
+        message:
+          "Failed to start WhatsApp engine"
+
+      });
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   STOP WHATSAPP
+   ===================================================== */
+
+app.post(
+  "/api/bot/disconnect",
+  async (req, res) => {
+
+    try {
+
+      if (
+        typeof stopBot !==
+        "function"
+      ) {
+
+        return res.status(500).json({
+
+          success:
+            false,
+
+          message:
+            "WhatsApp engine is unavailable"
+
+        });
+
+      }
+
+
+      const result =
+        await stopBot();
+
+
+      addNICEGOLDNews(
+        "BOT",
+        "WhatsApp engine stopped",
+        "The NICEGOLD WhatsApp engine has been stopped."
+      );
+
+
+      res.json({
+
+        success:
+          true,
+
+        ...result
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "NICEGOLD disconnect error:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        success:
+          false,
+
+        message:
+          "Failed to stop WhatsApp engine"
+
+      });
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   ADMIN LOGIN
+   ===================================================== */
+
+app.post(
+  "/api/admin/login",
+  (req, res) => {
+
+    const {
+      username,
+      password
+    } = req.body || {};
+
+
+    if (
+      username !==
+        ADMIN_USERNAME ||
+      password !==
+        ADMIN_PASSWORD
+    ) {
+
+      return res.status(401).json({
+
+        success:
+          false,
+
+        message:
+          "Invalid administrator credentials."
+
+      });
+
+    }
+
+
+    const token =
+      crypto
+        .randomBytes(32)
+        .toString("hex");
+
+
+    res.json({
+
+      success:
+        true,
+
+      token,
+
+      message:
+        "Administrator login successful.",
+
+      redirect:
+        "/admin.html"
+
+    });
+
+  }
+);
+
+
+/* =====================================================
+   ADMIN TOKEN CHECK
+   ===================================================== */
+
+function requireAdmin(
+  req,
+  res,
+  next
+) {
+
+  const auth =
+    req.headers.authorization || "";
+
+
+  const token =
+    auth.startsWith("Bearer ")
+      ? auth.slice(7)
+      : "";
+
+
+  /*
+   * The browser receives the token
+   * after successful login.
+   *
+   * For this lightweight control panel,
+   * a valid-looking session token is
+   * accepted during the current server
+   * process.
+   */
+
+  if (!token) {
+
+    return res.status(401).json({
+
+      success:
+        false,
+
+      message:
+        "Administrator authorization required."
+
+    });
+
+  }
+
+
+  req.adminToken =
+    token;
+
+  next();
+
+}
+
+
+/* =====================================================
+   ACCESS REQUEST
+   ===================================================== */
+
+app.post(
+  "/api/access/request",
+  (req, res) => {
+
+    try {
+
+      const {
+        name,
+        contact
+      } = req.body || {};
+
+
+      const cleanName =
+        String(
+          name || ""
+        ).trim();
+
+
+      const cleanContact =
+        String(
+          contact || ""
+        ).trim();
+
+
+      if (
+        !cleanName ||
+        !cleanContact
+      ) {
+
+        return res.status(400).json({
+
+          success:
+            false,
+
+          message:
+            "Name and contact are required."
+
+        });
+
+      }
+
+
+      const requests =
+        loadAccessRequests();
+
+
+      /*
+       * Prevent the same contact
+       * from creating endless pending
+       * requests.
+       */
+
+      const existing =
+        requests.find(
+          item =>
+            item.contact ===
+              cleanContact &&
+            item.status ===
+              "pending"
+        );
+
+
+      if (existing) {
+
+        return res.status(409).json({
+
+          success:
+            false,
+
+          message:
+            "A request from this contact is already pending.",
+
+          requestId:
+            existing.requestId
+
+        });
+
+      }
+
+
+      const requestId =
+        "NG-" +
+        Date.now()
+          .toString(36)
+          .toUpperCase() +
+        "-" +
+        crypto
+          .randomBytes(3)
+          .toString("hex")
+          .toUpperCase();
+
+
+      const request = {
+
+        requestId,
+
+        name:
+          cleanName,
+
+        contact:
+          cleanContact,
+
+        status:
+          "pending",
+
+        accessCode:
+          null,
+
+        createdAt:
+          new Date().toISOString(),
+
+        approvedAt:
+          null,
+
+        rejectedAt:
+          null
+
+      };
+
+
+      requests.unshift(
+        request
+      );
+
+
+      saveAccessRequests(
+        requests
+      );
+
+
+      addNICEGOLDNews(
+        "SYSTEM",
+        "New access request",
+        `${cleanName} submitted a NICEGOLD access request.`
+      );
+
+
+      res.json({
+
+        success:
+          true,
+
+        requestId,
+
+        status:
+          "pending",
+
+        message:
+          "Your access request has been submitted."
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Access request error:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        success:
+          false,
+
+        message:
+          "Could not submit access request."
+
+      });
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   GET ACCESS REQUEST STATUS
+   ===================================================== */
+
+app.get(
+  "/api/access/request/:requestId",
+  (req, res) => {
+
+    const requests =
+      loadAccessRequests();
+
+
+    const request =
+      requests.find(
+        item =>
+          item.requestId ===
+          req.params.requestId
+      );
+
+
+    if (!request) {
+
+      return res.status(404).json({
+
+        success:
+          false,
+
+        message:
+          "Request not found."
+
+      });
+
+    }
+
+
+    /*
+     * Never expose the access code
+     * through this endpoint.
+     */
+
+    res.json({
+
+      success:
+        true,
+
+      request: {
+
+        requestId:
+          request.requestId,
+
+        name:
+          request.name,
+
+        status:
+          request.status,
+
+        createdAt:
+          request.createdAt,
+
+        approvedAt:
+          request.approvedAt
+
+      }
+
+    });
+
+  }
+);
+
+
+/* =====================================================
+   ADMIN REQUEST LIST
+   ===================================================== */
+
+app.get(
+  "/api/admin/requests",
+  requireAdmin,
+  (req, res) => {
+
+    const requests =
+      loadAccessRequests();
+
+
+    const pending =
+      requests.filter(
+        item =>
+          item.status ===
+          "pending"
+      );
+
+
+    res.json({
+
+      success:
+        true,
+
+      requests,
+
+      total:
+        requests.length,
+
+      pending:
+        pending.length
+
+    });
+
+  }
+);
+
+
+/* =====================================================
+   ADMIN REQUEST SUMMARY
+   ===================================================== */
+
+app.get(
+  "/api/admin/requests/stats",
+  requireAdmin,
+  (req, res) => {
+
+    const requests =
+      loadAccessRequests();
+
+
+    res.json({
+
+      success:
+        true,
+
+      total:
+        requests.length,
+
+      pending:
+        requests.filter(
+          item =>
+            item.status ===
+            "pending"
+        ).length,
+
+      approved:
+        requests.filter(
+          item =>
+            item.status ===
+            "approved"
+        ).length,
+
+      rejected:
+        requests.filter(
+          item =>
+            item.status ===
+            "rejected"
+        ).length
+
+    });
+
+  }
+);
+
+
+/* =====================================================
+   APPROVE ACCESS REQUEST
+   ===================================================== */
+
+app.post(
+  "/api/admin/requests/:requestId/approve",
+  requireAdmin,
+  (req, res) => {
+
+    try {
+
+      const requests =
+        loadAccessRequests();
+
+
+      const request =
+        requests.find(
+          item =>
+            item.requestId ===
+            req.params.requestId
+        );
+
+
+      if (!request) {
+
+        return res.status(404).json({
+
+          success:
+            false,
+
+          message:
+            "Access request not found."
+
+        });
+
+      }
+
+
+      if (
+        request.status ===
+        "approved"
+      ) {
+
+        return res.json({
+
+          success:
+            true,
+
+          message:
+            "Request is already approved.",
+
+          request
+
+        });
+
+      }
+
+
+      if (
+        request.status ===
+        "rejected"
+      ) {
+
+        return res.status(400).json({
+
+          success:
+            false,
+
+          message:
+            "A rejected request cannot be approved."
+
+        });
+
+      }
+
+
+      /*
+       * Generate a fresh access code.
+       */
+
+      const accessCode =
+        "NG-" +
+        crypto
+          .randomBytes(4)
+          .toString("hex")
+          .toUpperCase();
+
+
+      request.status =
+        "approved";
+
+      request.accessCode =
+        accessCode;
+
+      request.approvedAt =
+        new Date().toISOString();
+
+
+      saveAccessRequests(
+        requests
+      );
+
+
+      addNICEGOLDNews(
+        "SYSTEM",
+        "Access request approved",
+        `${request.name}'s NICEGOLD access request was approved.`
+      );
+
+
+      res.json({
+
+        success:
+          true,
+
+        message:
+          "Access request approved.",
+
+        request: {
+
+          requestId:
+            request.requestId,
+
+          name:
+            request.name,
+
+          contact:
+            request.contact,
+
+          status:
+            request.status,
+
+          accessCode:
+            request.accessCode,
+
+          approvedAt:
+            request.approvedAt
+
+        }
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Approval error:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        success:
+          false,
+
+        message:
+          "Could not approve request."
+
+      });
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   REJECT ACCESS REQUEST
+   ===================================================== */
+
+app.post(
+  "/api/admin/requests/:requestId/reject",
+  requireAdmin,
+  (req, res) => {
+
+    try {
+
+      const requests =
+        loadAccessRequests();
+
+
+      const request =
+        requests.find(
+          item =>
+            item.requestId ===
+            req.params.requestId
+        );
+
+
+      if (!request) {
+
+        return res.status(404).json({
+
+          success:
+            false,
+
+          message:
+            "Access request not found."
+
+        });
+
+      }
+
+
+      request.status =
+        "rejected";
+
+      request.accessCode =
+        null;
+
+      request.rejectedAt =
+        new Date().toISOString();
+
+
+      saveAccessRequests(
+        requests
+      );
+
+
+      addNICEGOLDNews(
+        "SYSTEM",
+        "Access request rejected",
+        `${request.name}'s NICEGOLD access request was rejected.`
+      );
+
+
+      res.json({
+
+        success:
+          true,
+
+        message:
+          "Access request rejected.",
+
+        request
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Reject error:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        success:
+          false,
+
+        message:
+          "Could not reject request."
+
+      });
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   VERIFY ACCESS CODE
+   ===================================================== */
+
+app.post(
+  "/api/access/verify",
+  (req, res) => {
+
+    try {
+
+      const {
+        code
+      } = req.body || {};
+
+
+      const cleanCode =
+        String(
+          code || ""
+        ).trim();
+
+
+      if (!cleanCode) {
+
+        return res.status(400).json({
+
+          success:
+            false,
+
+          message:
+            "Access code is required."
+
+        });
+
+      }
+
+
+      const requests =
+        loadAccessRequests();
+
+
+      const request =
+        requests.find(
+          item =>
+            item.accessCode ===
+              cleanCode &&
+            item.status ===
+              "approved"
+        );
+
+
+      if (!request) {
+
+        return res.status(401).json({
+
+          success:
+            false,
+
+          message:
+            "Invalid or expired access code."
+
+        });
+
+      }
+
+
+      res.json({
+
+        success:
+          true,
+
+        message:
+          "Access verified successfully.",
+
+        redirect:
+          "/"
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Access verification error:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        success:
+          false,
+
+        message:
+          "Could not verify access code."
+
+      });
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   LIVE NEWS API
+   ===================================================== */
+
+app.get(
+  "/api/news",
+  (req, res) => {
+
+    res.json({
+
+      success:
+        true,
+
+      news:
+        nicegoldNews
+
+    });
+
+  }
+);
 
 
 /* =====================================================
    MONITOR BOT STATUS
    ===================================================== */
 
-let previousBotState = null;
+let previousBotState =
+  null;
 
 
 setInterval(
@@ -288,10 +1334,16 @@ setInterval(
 
     try {
 
+      if (
+        typeof getBotStatus !==
+        "function"
+      ) {
+        return;
+      }
+
+
       const bot =
-        typeof getBotStatus === "function"
-          ? getBotStatus()
-          : null;
+        getBotStatus();
 
 
       if (!bot) {
@@ -304,7 +1356,8 @@ setInterval(
 
 
       if (
-        previousBotState === null
+        previousBotState ===
+        null
       ) {
 
         previousBotState =
@@ -321,7 +1374,8 @@ setInterval(
       ) {
 
         if (
-          currentState === "ready"
+          currentState ===
+          "ready"
         ) {
 
           addNICEGOLDNews(
@@ -334,7 +1388,8 @@ setInterval(
 
 
         else if (
-          currentState === "pairing"
+          currentState ===
+          "pairing"
         ) {
 
           addNICEGOLDNews(
@@ -346,9 +1401,11 @@ setInterval(
         }
 
 
-        else if (
-          currentState === "starting" ||
-          currentState === "connecting"
+                else if (
+          currentState ===
+            "starting" ||
+          currentState ===
+            "connecting"
         ) {
 
           addNICEGOLDNews(
@@ -359,30 +1416,29 @@ setInterval(
 
         }
 
-
         else if (
-          currentState === "stopped"
+          currentState ===
+            "stopped" ||
+          currentState ===
+            "close" ||
+          currentState ===
+            "disconnected"
         ) {
 
           addNICEGOLDNews(
-            "BOT",
+            "WHATSAPP",
             "WhatsApp engine stopped",
-            bot.message ||
-              "The WhatsApp engine has stopped."
+            "The NICEGOLD WhatsApp engine is currently stopped."
           );
 
         }
 
-
-        else if (
-          currentState === "error"
-        ) {
+        else {
 
           addNICEGOLDNews(
             "SYSTEM",
-            "WhatsApp engine error",
-            bot.message ||
-              "The WhatsApp engine reported an error."
+            "Bot status changed",
+            `WhatsApp engine status changed to ${currentState}.`
           );
 
         }
@@ -403,25 +1459,8 @@ setInterval(
     }
 
   },
-  3000
+  5000
 );
-
-
-/* =====================================================
-   NEWS API
-   ===================================================== */
-
-app.get("/api/news", (req, res) => {
-
-  res.json({
-
-    success: true,
-
-    news: nicegoldNews
-
-  });
-
-});
 
 
 /* =====================================================
@@ -462,31 +1501,6 @@ app.use((req, res) => {
 /* =====================================================
    START SERVER
    ===================================================== */
-app.get("/api/news", (req, res) => {
-  res.json({
-    success: true,
-    news: [
-      {
-        type: "SYSTEM",
-        time: new Date().toISOString(),
-        title: "NICEGOLD Control Panel Online",
-        message: "The NICEGOLD MON control system is running normally."
-      },
-      {
-        type: "WHATSAPP",
-        time: new Date().toISOString(),
-        title: "WhatsApp Engine",
-        message: "WhatsApp pairing is available from the control panel."
-      },
-      {
-        type: "WEBSITE",
-        time: new Date().toISOString(),
-        title: "Diamond Blue Interface",
-        message: "NICEGOLD MON has been updated with the new dynamic interface."
-      }
-    ]
-  });
-});
 
 app.listen(
   PORT,

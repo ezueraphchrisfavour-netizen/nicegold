@@ -1,24 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
 
-  <meta
-    name="theme-color"
-    content="#080304"
-  >
+«»
 
-  <title>NICEGOLD MON • Admin Control</title>
+<meta
+name="theme-color"
+content="#03172b"
 
-  <style>
-    /* =====================================================
-       NICEGOLD MON
-       PREMIUM RED + GOLD GLASS CONTROL PANEL
-       ===================================================== */
+«»
+
+  <title>NICEGOLD MON • Admin Control</title>  <style>
 
     * {
       box-sizing: border-box;
@@ -27,31 +21,30 @@
     }
 
     :root {
-      --bg: #050304;
-      --bg2: #100407;
+      --bg: #020b16;
+      --bg2: #031b31;
 
-      --red: #ff2448;
-      --red-dark: #9d001f;
-      --red-soft: #ff7188;
+      --blue: #21a9ff;
+      --blue2: #006dff;
+      --cyan: #6eeaff;
 
-      --gold: #ffd45c;
-      --gold-light: #fff0a8;
-      --gold-dark: #b87900;
+      --glass: rgba(255,255,255,0.065);
+      --glass2: rgba(255,255,255,0.095);
 
-      --white: #fffaf0;
+      --border: rgba(80,200,255,0.25);
 
-      --glass:
-        rgba(255, 255, 255, 0.055);
+      --text: #e9f8ff;
+      --muted: rgba(210,235,250,0.58);
 
-      --glass-strong:
-        rgba(255, 255, 255, 0.085);
-
-      --border:
-        rgba(255, 215, 100, 0.20);
-
-      --shadow:
-        rgba(0, 0, 0, 0.55);
+      --green: #53f5b0;
+      --red: #ff6684;
+      --yellow: #ffe477;
     }
+
+
+    /* =====================================================
+       BODY
+       ===================================================== */
 
     html {
       scroll-behavior: smooth;
@@ -62,7 +55,7 @@
 
       overflow-x: hidden;
 
-      color: var(--white);
+      color: var(--text);
 
       font-family:
         Inter,
@@ -76,24 +69,25 @@
       background:
         radial-gradient(
           circle at 15% 10%,
-          rgba(255, 25, 60, 0.18),
-          transparent 30%
+          rgba(0,150,255,0.22),
+          transparent 32%
         ),
+
         radial-gradient(
-          circle at 85% 75%,
-          rgba(255, 190, 40, 0.13),
-          transparent 30%
+          circle at 85% 80%,
+          rgba(0,90,255,0.18),
+          transparent 34%
         ),
+
         linear-gradient(
           135deg,
           var(--bg),
           var(--bg2),
-          #030303
+          #01060c
         );
     }
 
-    button,
-    input {
+    button {
       font: inherit;
     }
 
@@ -103,10 +97,10 @@
 
 
     /* =====================================================
-       ANIMATED BACKGROUND
+       WATER BACKGROUND
        ===================================================== */
 
-    .background {
+    .water {
       position: fixed;
 
       inset: 0;
@@ -116,298 +110,347 @@
       overflow: hidden;
 
       pointer-events: none;
+
+      background:
+        radial-gradient(
+          ellipse at 50% 120%,
+          rgba(0,170,255,0.20),
+          transparent 55%
+        );
     }
 
-    .background::before {
+
+    /* moving liquid waves */
+
+    .water::before,
+    .water::after {
       content: "";
 
       position: absolute;
 
-      inset: -20%;
+      left: -20%;
+
+      width: 140%;
+
+      height: 42%;
+
+      border-radius: 48%;
+
+      border-top:
+        1px solid
+        rgba(80,220,255,0.12);
 
       background:
-        repeating-linear-gradient(
-          115deg,
-          transparent 0,
-          transparent 90px,
-          rgba(255, 215, 100, 0.018) 91px,
-          transparent 92px
+        radial-gradient(
+          ellipse,
+          rgba(0,160,255,0.07),
+          transparent 68%
         );
+
+      filter: blur(1px);
+    }
+
+    .water::before {
+      bottom: -22%;
 
       animation:
-        backgroundMove 18s linear infinite;
+        waterWave 12s ease-in-out infinite;
     }
 
-    @keyframes backgroundMove {
-      from {
-        transform:
-          translate3d(0, 0, 0);
-      }
+    .water::after {
+      bottom: -29%;
 
-      to {
-        transform:
-          translate3d(120px, 80px, 0);
-      }
-    }
-
-
-    /* =====================================================
-       GLOWING ORBS
-       ===================================================== */
-
-    .orb {
-      position: absolute;
-
-      width: 340px;
-      height: 340px;
-
-      border-radius: 50%;
-
-      filter: blur(70px);
-
-      opacity: 0.38;
+      opacity: 0.7;
 
       animation:
-        orbFloat 18s ease-in-out infinite alternate;
+        waterWave 16s ease-in-out infinite reverse;
     }
 
-    .orb-red {
-      left: -120px;
-      top: 5%;
+    @keyframes waterWave {
 
-      background:
-        radial-gradient(
-          circle,
-          rgba(255, 20, 55, 0.95),
-          rgba(150, 0, 25, 0.25),
-          transparent 70%
-        );
-    }
-
-    .orb-gold {
-      right: -130px;
-      top: 28%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(255, 210, 75, 0.9),
-          rgba(170, 90, 0, 0.20),
-          transparent 70%
-        );
-
-      animation-delay: -6s;
-    }
-
-    .orb-red-small {
-      left: 35%;
-      bottom: -150px;
-
-      width: 280px;
-      height: 280px;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(255, 45, 70, 0.75),
-          transparent 70%
-        );
-
-      animation-delay: -10s;
-    }
-
-    @keyframes orbFloat {
       0% {
         transform:
-          translate3d(-20px, -10px, 0)
-          scale(0.95);
+          translateX(-4%)
+          rotate(-2deg)
+          scaleX(1);
       }
 
       50% {
         transform:
-          translate3d(90px, 65px, 0)
-          scale(1.12);
+          translateX(4%)
+          rotate(2deg)
+          scaleX(1.06);
       }
 
       100% {
         transform:
-          translate3d(-25px, 130px, 0)
-          scale(0.9);
+          translateX(-4%)
+          rotate(-2deg)
+          scaleX(1);
       }
+
     }
 
 
     /* =====================================================
-       MOVING LIGHT
+       BLUE GLASS BOBBLES
        ===================================================== */
 
-    .light {
+    .bubble {
       position: absolute;
 
-      width: 60vw;
-      height: 2px;
-
-      left: -70%;
-      top: 90%;
-
-      opacity: 0.45;
-
-      filter: blur(2px);
-
-      transform:
-        rotate(-25deg);
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 215, 100, 0.9),
-          rgba(255, 40, 70, 0.75),
-          transparent
-        );
-
-      animation:
-        lightSweep 10s linear infinite;
-    }
-
-    @keyframes lightSweep {
-      0% {
-        left: -70%;
-        top: 110%;
-      }
-
-      100% {
-        left: 120%;
-        top: -20%;
-      }
-    }
-
-
-    /* =====================================================
-       FLOATING PARTICLES
-       ===================================================== */
-
-    .particle {
-      position: absolute;
-
-      bottom: -10px;
-
-      width: 4px;
-      height: 4px;
+      bottom: -100px;
 
       border-radius: 50%;
 
+      border:
+        1px solid
+        rgba(130,235,255,0.45);
+
       background:
-        var(--gold);
+        radial-gradient(
+          circle at 30% 25%,
+          rgba(255,255,255,0.42),
+          rgba(70,205,255,0.12) 35%,
+          rgba(0,110,255,0.04) 70%,
+          transparent
+        );
 
       box-shadow:
-        0 0 14px
-        rgba(255, 215, 100, 0.85);
+        inset 0 0 18px
+        rgba(150,240,255,0.20),
+
+        0 0 25px
+        rgba(0,150,255,0.12);
+
+      backdrop-filter:
+        blur(3px);
+
+      -webkit-backdrop-filter:
+        blur(3px);
 
       opacity: 0;
 
       animation:
-        particleRise 11s linear infinite;
+        bubbleRise linear infinite;
     }
 
-    .p1 {
+    .bubble::before {
+      content: "";
+
+      position: absolute;
+
+      width: 24%;
+      height: 24%;
+
+      left: 22%;
+      top: 17%;
+
+      border-radius: 50%;
+
+      background:
+        rgba(255,255,255,0.7);
+
+      filter: blur(2px);
+    }
+
+    .bubble1 {
+      width: 32px;
+      height: 32px;
       left: 8%;
-      animation-delay: 0s;
-    }
-
-    .p2 {
-      left: 23%;
+      animation-duration: 13s;
       animation-delay: -2s;
     }
 
-    .p3 {
-      left: 41%;
+    .bubble2 {
+      width: 18px;
+      height: 18px;
+      left: 21%;
+      animation-duration: 10s;
       animation-delay: -5s;
     }
 
-    .p4 {
-      left: 64%;
+    .bubble3 {
+      width: 48px;
+      height: 48px;
+      left: 38%;
+      animation-duration: 17s;
       animation-delay: -8s;
     }
 
-    .p5 {
-      left: 83%;
+    .bubble4 {
+      width: 23px;
+      height: 23px;
+      left: 57%;
+      animation-duration: 12s;
       animation-delay: -3s;
     }
 
-    .p6 {
-      left: 94%;
-      animation-delay: -6s;
+    .bubble5 {
+      width: 55px;
+      height: 55px;
+      left: 74%;
+      animation-duration: 19s;
+      animation-delay: -10s;
     }
 
-    @keyframes particleRise {
+    .bubble6 {
+      width: 27px;
+      height: 27px;
+      left: 91%;
+      animation-duration: 14s;
+      animation-delay: -7s;
+    }
+
+    @keyframes bubbleRise {
+
       0% {
         transform:
-          translateY(0)
-          translateX(0)
-          scale(0.5);
+          translate3d(0, 0, 0)
+          scale(0.75);
 
         opacity: 0;
       }
 
-      15% {
+      10% {
         opacity: 0.65;
       }
 
+      45% {
+        transform:
+          translate3d(35px, -45vh, 0)
+          scale(1);
+      }
+
       75% {
-        opacity: 0.3;
+        opacity: 0.35;
+
+        transform:
+          translate3d(-35px, -80vh, 0)
+          scale(0.9);
       }
 
       100% {
         transform:
-          translateY(-110vh)
-          translateX(60px)
-          scale(1.1);
+          translate3d(25px, -120vh, 0)
+          scale(1.15);
 
         opacity: 0;
       }
+
     }
 
 
     /* =====================================================
-       MAIN SHELL
+       FLOATING BLUE GLOWS
+       ===================================================== */
+
+    .glow {
+      position: absolute;
+
+      width: 350px;
+      height: 350px;
+
+      border-radius: 50%;
+
+      filter: blur(90px);
+
+      opacity: 0.35;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(0,170,255,0.9),
+          transparent 70%
+        );
+
+      animation:
+        glowFloat 18s ease-in-out infinite alternate;
+    }
+
+    .glow.one {
+      left: -150px;
+      top: 5%;
+    }
+
+    .glow.two {
+      right: -150px;
+      top: 45%;
+
+      animation-delay: -7s;
+    }
+
+    .glow.three {
+      left: 35%;
+      bottom: -180px;
+
+      animation-delay: -12s;
+    }
+
+    @keyframes glowFloat {
+
+      0% {
+        transform:
+          translate(0,0)
+          scale(0.9);
+      }
+
+      50% {
+        transform:
+          translate(80px,60px)
+          scale(1.15);
+      }
+
+      100% {
+        transform:
+          translate(-40px,120px)
+          scale(0.95);
+      }
+
+    }
+
+
+    /* =====================================================
+       MAIN GLASS
        ===================================================== */
 
     .shell {
-      width: min(1180px, 94%);
+      width:
+        min(1180px, 94%);
 
       margin:
-        25px auto 50px;
+        24px auto 50px;
 
-      padding: 22px;
-
-      border:
-        1px solid var(--border);
+      padding: 23px;
 
       border-radius: 30px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.25);
 
       background:
         linear-gradient(
           135deg,
-          rgba(255,255,255,0.085),
+          rgba(255,255,255,0.09),
           rgba(255,255,255,0.025)
         );
 
       backdrop-filter:
-        blur(28px);
+        blur(30px);
 
       -webkit-backdrop-filter:
-        blur(28px);
+        blur(30px);
 
       box-shadow:
         0 35px 100px
-        var(--shadow),
+        rgba(0,0,0,0.55),
 
         inset 0 1px 0
         rgba(255,255,255,0.12),
 
-        0 0 70px
-        rgba(255, 30, 60, 0.07);
+        0 0 80px
+        rgba(0,140,255,0.08);
     }
 
 
@@ -425,25 +468,25 @@
       gap: 20px;
 
       padding:
-        8px 8px 24px;
+        8px 8px 26px;
     }
 
     .brand {
       font-size:
-        clamp(22px, 5vw, 34px);
+        clamp(23px, 5vw, 35px);
 
-      font-weight: 900;
+      font-weight: 950;
 
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
 
       background:
         linear-gradient(
           90deg,
-          var(--gold-light),
-          var(--gold),
-          #ff5b72,
-          var(--gold),
-          var(--gold-light)
+          #dffbff,
+          #5bdcff,
+          #168fff,
+          #9defff,
+          #e8fbff
         );
 
       background-size:
@@ -456,30 +499,32 @@
       color: transparent;
 
       animation:
-        brandFlow 7s linear infinite;
+        brandFlow 6s linear infinite;
     }
 
     @keyframes brandFlow {
-      0% {
+
+      from {
         background-position: 0% center;
       }
 
-      100% {
+      to {
         background-position: 300% center;
       }
+
     }
 
     .subtitle {
       margin-top: 6px;
 
-      font-size: 12px;
+      font-size: 11px;
 
-      letter-spacing: 2px;
+      letter-spacing: 2.2px;
 
       text-transform: uppercase;
 
       color:
-        rgba(255,240,190,0.55);
+        rgba(205,235,250,0.55);
     }
 
     .online-badge {
@@ -496,18 +541,27 @@
 
       border:
         1px solid
-        rgba(255,215,100,0.20);
+        rgba(80,210,255,0.25);
 
       background:
-        rgba(255,255,255,0.045);
+        rgba(0,120,220,0.08);
 
       backdrop-filter:
-        blur(14px);
+        blur(15px);
 
       -webkit-backdrop-filter:
-        blur(14px);
+        blur(15px);
 
       white-space: nowrap;
+
+      color:
+        #b9f3ff;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
     }
 
     .online-dot {
@@ -517,32 +571,32 @@
       border-radius: 50%;
 
       background:
-        var(--gold);
+        var(--green);
 
       box-shadow:
-        0 0 16px
-        rgba(255,215,90,0.95);
+        0 0 18px
+        rgba(80,245,176,0.9);
 
       animation:
-        pulse 1.8s ease-in-out infinite;
+        pulse 1.7s ease-in-out infinite;
     }
 
     @keyframes pulse {
+
       0%,
       100% {
         transform: scale(1);
-        opacity: 1;
       }
 
       50% {
-        transform: scale(1.5);
-        opacity: 0.55;
+        transform: scale(1.55);
       }
+
     }
 
 
     /* =====================================================
-       STAT CARDS
+       STATISTICS
        ===================================================== */
 
     .stats {
@@ -556,7 +610,7 @@
 
       gap: 16px;
 
-      margin-bottom: 35px;
+      margin-bottom: 36px;
     }
 
     .card {
@@ -564,63 +618,63 @@
 
       overflow: hidden;
 
-      padding: 22px;
-
       min-height: 135px;
+
+      padding: 22px;
 
       border-radius: 22px;
 
       border:
         1px solid
-        rgba(255,215,100,0.16);
+        rgba(90,210,255,0.19);
 
       background:
         linear-gradient(
           145deg,
           rgba(255,255,255,0.075),
-          rgba(255,255,255,0.025)
+          rgba(20,130,220,0.025)
         );
 
       backdrop-filter:
-        blur(20px);
+        blur(22px);
 
       -webkit-backdrop-filter:
-        blur(20px);
+        blur(22px);
 
       box-shadow:
         inset 0 1px 0
         rgba(255,255,255,0.08),
 
-        0 18px 45px
+        0 18px 50px
         rgba(0,0,0,0.30);
 
       transition:
-        transform 0.35s ease,
-        border-color 0.35s ease,
-        box-shadow 0.35s ease;
+        transform .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
     }
 
-    .card::after {
+    .card::before {
       content: "";
 
       position: absolute;
 
-      width: 180px;
-      height: 180px;
+      width: 130px;
+      height: 130px;
 
-      right: -90px;
-      top: -110px;
+      right: -60px;
+      top: -70px;
 
       border-radius: 50%;
 
       background:
         radial-gradient(
           circle,
-          rgba(255,215,90,0.20),
+          rgba(50,210,255,0.23),
           transparent 70%
         );
 
-      filter: blur(12px);
+      filter: blur(8px);
     }
 
     .card:hover {
@@ -628,50 +682,60 @@
         translateY(-6px);
 
       border-color:
-        rgba(255,215,100,0.42);
+        rgba(90,220,255,0.45);
 
       box-shadow:
-        0 25px 60px
-        rgba(0,0,0,0.40),
+        0 25px 65px
+        rgba(0,0,0,0.4),
 
-        0 0 28px
-        rgba(255,35,65,0.08);
+        0 0 30px
+        rgba(0,150,255,0.10);
     }
 
     .label {
-      font-size: 11px;
+      margin-bottom: 12px;
+
+      font-size: 10px;
 
       letter-spacing: 2px;
 
       text-transform: uppercase;
 
       color:
-        rgba(255,240,190,0.58);
-
-      margin-bottom: 12px;
+        var(--muted);
     }
 
     .value {
-      font-size: 26px;
+      font-size: 27px;
 
       font-weight: 900;
 
       color:
-        var(--gold-light);
+        #dffaff;
 
       text-shadow:
-        0 0 20px
-        rgba(255,210,80,0.15);
+        0 0 22px
+        rgba(50,210,255,0.18);
     }
 
     .online {
       color:
-        #ffe38a;
+        var(--green);
+    }
+
+    #pendingCount {
+      color:
+        var(--yellow);
+    }
+
+    #whatsappStatus {
+      color:
+        var(--cyan);
     }
 
 
     /* =====================================================
-       SECTION TITLE
+       SECTION
        ===================================================== */
 
     .section-title {
@@ -683,35 +747,35 @@
 
       margin-bottom: 18px;
 
-      font-size: 20px;
-
       color:
-        var(--gold-light);
+        #dffaff;
+
+      font-size: 21px;
     }
 
     .section-title::before {
       content: "";
 
       width: 4px;
-      height: 24px;
+      height: 25px;
 
       border-radius: 10px;
 
       background:
         linear-gradient(
           180deg,
-          var(--red),
-          var(--gold)
+          #2edcff,
+          #006dff
         );
 
       box-shadow:
-        0 0 16px
-        rgba(255,40,70,0.35);
+        0 0 18px
+        rgba(30,190,255,0.65);
     }
 
 
     /* =====================================================
-       REQUEST CARDS
+       REQUEST AREA
        ===================================================== */
 
     #requests {
@@ -721,7 +785,7 @@
     }
 
     .empty {
-      padding: 35px;
+      padding: 38px 20px;
 
       text-align: center;
 
@@ -729,96 +793,151 @@
 
       border:
         1px dashed
-        rgba(255,215,100,0.18);
+        rgba(80,210,255,0.25);
 
       color:
-        rgba(255,240,190,0.55);
+        var(--muted);
 
       background:
-        rgba(255,255,255,0.025);
+        rgba(0,100,180,0.035);
 
       backdrop-filter:
         blur(15px);
     }
 
+
+    /* =====================================================
+       REQUEST CARD
+       ===================================================== */
+
     .request-card {
       position: relative;
 
-      padding: 20px;
+      overflow: hidden;
 
-      border-radius: 20px;
+      padding: 21px;
+
+      border-radius: 22px;
 
       border:
         1px solid
-        rgba(255,215,100,0.16);
+        rgba(80,210,255,0.18);
 
       background:
         linear-gradient(
           135deg,
           rgba(255,255,255,0.075),
-          rgba(255,255,255,0.025)
+          rgba(0,100,190,0.035)
         );
 
       backdrop-filter:
-        blur(18px);
+        blur(20px);
 
       -webkit-backdrop-filter:
-        blur(18px);
+        blur(20px);
 
       box-shadow:
-        0 15px 45px
-        rgba(0,0,0,0.25);
+        0 16px 50px
+        rgba(0,0,0,0.28);
 
       animation:
-        requestAppear 0.5s ease both;
+        requestAppear .45s ease both;
+    }
+
+    .request-card::before {
+      content: "";
+
+      position: absolute;
+
+      left: -30%;
+
+      top: 0;
+
+      width: 30%;
+
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(80,220,255,0.07),
+          transparent
+        );
+
+      transform:
+        skewX(-15deg);
+
+      animation:
+        glassSweep 6s ease-in-out infinite;
+    }
+
+    @keyframes glassSweep {
+
+      0%,
+      55% {
+        left: -35%;
+      }
+
+      100% {
+        left: 130%;
+      }
+
     }
 
     @keyframes requestAppear {
+
       from {
         opacity: 0;
 
         transform:
-          translateY(12px);
+          translateY(14px)
+          scale(.98);
       }
 
       to {
         opacity: 1;
 
         transform:
-          translateY(0);
+          translateY(0)
+          scale(1);
       }
+
     }
 
     .request-top {
-      display: flex;
+      position: relative;
+      z-index: 1;
 
-      justify-content: space-between;
+      display: flex;
 
       align-items: center;
 
+      justify-content: space-between;
+
       gap: 15px;
 
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
     .request-name {
       font-size: 18px;
 
-      font-weight: 800;
+      font-weight: 850;
 
       color:
-        var(--gold-light);
+        #dffaff;
     }
 
     .request-status {
       padding:
-        6px 10px;
+        6px 11px;
 
       border-radius: 999px;
 
-      font-size: 10px;
+      font-size: 9px;
 
-      font-weight: 800;
+      font-weight: 850;
 
       letter-spacing: 1px;
 
@@ -827,41 +946,50 @@
 
     .status-pending {
       color:
-        #ffd96a;
-
-      background:
-        rgba(255,190,40,0.10);
+        var(--yellow);
 
       border:
         1px solid
-        rgba(255,190,40,0.22);
+        rgba(255,225,100,0.25);
+
+      background:
+        rgba(255,210,50,0.08);
     }
 
     .status-approved {
       color:
-        #ff9aaa;
-
-      background:
-        rgba(255,30,65,0.10);
+        var(--green);
 
       border:
         1px solid
-        rgba(255,30,65,0.22);
+        rgba(80,245,176,0.25);
+
+      background:
+        rgba(80,245,176,0.07);
     }
 
+    .status-rejected,
     .status-denied {
       color:
-        #aaa;
-
-      background:
-        rgba(255,255,255,0.05);
+        var(--red);
 
       border:
         1px solid
-        rgba(255,255,255,0.10);
+        rgba(255,90,120,0.23);
+
+      background:
+        rgba(255,70,100,0.07);
     }
 
+
+    /* =====================================================
+       INFORMATION
+       ===================================================== */
+
     .request-info {
+      position: relative;
+      z-index: 1;
+
       display: grid;
 
       grid-template-columns:
@@ -878,17 +1006,19 @@
     .info-item {
       padding: 12px;
 
-      border-radius: 13px;
+      border-radius: 14px;
 
       background:
-        rgba(0,0,0,0.15);
+        rgba(0,20,40,0.30);
 
       border:
         1px solid
-        rgba(255,255,255,0.045);
+        rgba(100,220,255,0.07);
     }
 
     .info-label {
+      margin-bottom: 5px;
+
       font-size: 9px;
 
       letter-spacing: 1.5px;
@@ -896,18 +1026,16 @@
       text-transform: uppercase;
 
       color:
-        rgba(255,240,190,0.45);
-
-      margin-bottom: 5px;
+        rgba(190,230,245,0.42);
     }
 
     .info-value {
       font-size: 13px;
 
-      word-break: break-word;
-
       color:
-        rgba(255,250,235,0.88);
+        rgba(235,250,255,0.9);
+
+      word-break: break-word;
     }
 
 
@@ -916,6 +1044,9 @@
        ===================================================== */
 
     .actions {
+      position: relative;
+      z-index: 2;
+
       display: flex;
 
       flex-wrap: wrap;
@@ -928,25 +1059,640 @@
 
       overflow: hidden;
 
-      border: 1px solid
-        rgba(255,215,100,0.22);
+      padding:
+        11px 18px;
 
       border-radius: 13px;
 
-      padding:
-        11px 17px;
+      border:
+        1px solid
+        rgba(90,210,255,0.22);
 
-      color: white;
+      color:
+        #e9fbff;
 
-      font-weight: 750;
+      background:
+        rgba(255,255,255,0.055);
+
+      backdrop-filter:
+        blur(14px);
+
+      -webkit-backdrop-filter:
+        blur(14px);
+
+      font-weight: 800;
 
       cursor: pointer;
+
+      transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+    }
+
+    .btn:hover {
+      transform:
+        translateY(-3px);
+
+      border-color:
+        rgba(90,220,255,0.55);
+
+      box-shadow:
+        0 12px 35px
+        rgba(0,100,220,0.20);
+    }
+
+    .btn:disabled {
+      opacity: .5;
+
+      cursor:
+        not-allowed;
+
+      transform:
+        none;
+    }
+
+    .approve {
+      color:
+        #baffdf;
+
+      border-color:
+        rgba(80,245,176,0.25);
 
       background:
         linear-gradient(
           135deg,
-          rgba(255,255,255,0.09),
-          rgba(255,255,255,0.025)
+          rgba(50,230,160,0.13),
+          rgba(0,120,100,0.07)
+        );
+    }
+
+    .deny {
+      color:
+        #ffb7c5;
+
+      border-color:
+        rgba(255,90,120,0.25);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,60,100,0.12),
+          rgba(120,0,40,0.07)
+        );
+    }
+
+    .logout {
+      color:
+        #aeeaff;
+    }
+
+
+    /* =====================================================
+       ACCESS CODE MODAL
+       ===================================================== */
+
+    .modal {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 100;
+
+      display: none;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 20px;
+
+      background:
+        rgba(0,8,18,0.72);
+
+      backdrop-filter:
+        blur(12px);
+
+      -webkit-backdrop-filter:
+        blur(12px);
+    }
+
+    .modal.show {
+      display: flex;
+
+      animation:
+        fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-card {
+      width:
+        min(470px, 100%);
+
+      padding: 27px;
+
+      border-radius: 25px;
+
+      border:
+        1px solid
+        rgba(80,220,255,0.35);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(10,50,80,0.94),
+          rgba(2,18,35,0.96)
+        );
+
+      box-shadow:
+        0 35px 100px
+        rgba(0,0,0,0.65),
+
+        0 0 45px
+        rgba(0,150,255,0.15);
+
+      backdrop-filter:
+        blur(30px);
+
+      -webkit-backdrop-filter:
+        blur(30px);
+
+      text-align: center;
+
+      animation:
+        modalPop .35s ease;
+    }
+
+    @keyframes modalPop {
+
+      from {
+        transform:
+          translateY(20px)
+          scale(.95);
+
+        opacity: 0;
+      }
+
+      to {
+        transform:
+          translateY(0)
+          scale(1);
+
+        opacity: 1;
+      }
+
+    }
+
+    .modal-icon {
+      font-size: 42px;
+
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 21px;
+
+      font-weight: 900;
+
+      color:
+        #dffaff;
+
+      margin-bottom: 8px;
+    }
+
+    .modal-text {
+      color:
+        var(--muted);
+
+      font-size: 13px;
+
+      line-height: 1.6;
+
+      margin-bottom: 18px;
+    }
+
+    .code-box {
+      padding: 17px;
+
+      border-radius: 16px;
+
+      border:
+        1px solid
+        rgba(80,220,255,0.3);
+
+      background:
+        rgba(0,120,220,0.08);
+
+      color:
+        #7eeaff;
+
+      font-size: 25px;
+
+      font-weight: 950;
+
+      letter-spacing: 3px;
+
+      word-break: break-all;
+
+      text-shadow:
+        0 0 22px
+        rgba(60,210,255,0.35);
+
+      margin-bottom:  id="a7k31"
+: 28px;
+
+    }
+
+    .section-title::before {
+      content: "";
+
+      width: 4px;
+      height: 24px;
+
+      border-radius: 10px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #21c8ff,
+          #1976ff
+        );
+
+      box-shadow:
+        0 0 16px
+        rgba(30,190,255,0.45);
+    }
+
+
+    /* =====================================================
+       REQUEST AREA
+       ===================================================== */
+
+    #requests {
+      display: grid;
+      gap: 16px;
+    }
+
+
+    .empty {
+
+      padding: 38px 22px;
+
+      text-align: center;
+
+      border-radius: 22px;
+
+      border:
+        1px dashed
+        rgba(60,210,255,0.25);
+
+      color:
+        rgba(210,240,255,0.60);
+
+      background:
+        rgba(255,255,255,0.025);
+
+      backdrop-filter:
+        blur(18px);
+
+      -webkit-backdrop-filter:
+        blur(18px);
+
+      box-shadow:
+        inset 0 0 25px
+        rgba(40,180,255,0.025);
+    }
+
+
+    /* =====================================================
+       REQUEST CARDS
+       ===================================================== */
+
+    .request-card {
+
+      position: relative;
+
+      overflow: hidden;
+
+      padding: 21px;
+
+      border-radius: 22px;
+
+      border:
+        1px solid
+        rgba(60,210,255,0.20);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(20,110,170,0.18),
+          rgba(3,18,35,0.72)
+        );
+
+      backdrop-filter:
+        blur(22px);
+
+      -webkit-backdrop-filter:
+        blur(22px);
+
+      box-shadow:
+        0 18px 55px
+        rgba(0,0,0,0.35),
+
+        inset 0 1px 0
+        rgba(255,255,255,0.08);
+
+      animation:
+        requestAppear
+        0.55s ease both;
+
+      transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    }
+
+
+    .request-card::before {
+
+      content: "";
+
+      position: absolute;
+
+      width: 180px;
+      height: 180px;
+
+      right: -90px;
+      top: -100px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(40,200,255,0.20),
+          transparent 70%
+        );
+
+      filter: blur(12px);
+
+      pointer-events: none;
+    }
+
+
+    .request-card:hover {
+
+      transform:
+        translateY(-4px);
+
+      border-color:
+        rgba(70,220,255,0.40);
+
+      box-shadow:
+        0 25px 70px
+        rgba(0,0,0,0.45),
+
+        0 0 28px
+        rgba(30,190,255,0.08);
+    }
+
+
+    @keyframes requestAppear {
+
+      from {
+
+        opacity: 0;
+
+        transform:
+          translateY(15px)
+          scale(0.98);
+
+      }
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+
+      }
+
+    }
+
+
+    .request-top {
+
+      display: flex;
+
+      justify-content:
+        space-between;
+
+      align-items:
+        center;
+
+      gap: 15px;
+
+      margin-bottom: 16px;
+    }
+
+
+    .request-name {
+
+      font-size: 18px;
+
+      font-weight: 850;
+
+      color:
+        #dff8ff;
+
+      text-shadow:
+        0 0 18px
+        rgba(60,210,255,0.22);
+    }
+
+
+    .request-status {
+
+      padding:
+        7px 11px;
+
+      border-radius:
+        999px;
+
+      font-size: 10px;
+
+      font-weight: 850;
+
+      letter-spacing: 1px;
+
+      text-transform:
+        uppercase;
+
+      white-space:
+        nowrap;
+    }
+
+
+    .status-pending {
+
+      color:
+        #7ee7ff;
+
+      background:
+        rgba(30,190,255,0.09);
+
+      border:
+        1px solid
+        rgba(30,190,255,0.24);
+
+      box-shadow:
+        0 0 14px
+        rgba(30,190,255,0.06);
+    }
+
+
+    .status-approved {
+
+      color:
+        #8fffe0;
+
+      background:
+        rgba(40,220,180,0.08);
+
+      border:
+        1px solid
+        rgba(40,220,180,0.23);
+    }
+
+
+    .status-denied {
+
+      color:
+        #ff91a8;
+
+      background:
+        rgba(255,50,90,0.08);
+
+      border:
+        1px solid
+        rgba(255,50,90,0.20);
+    }
+
+
+    .request-info {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(180px,1fr)
+        );
+
+      gap: 10px;
+
+      margin-bottom: 18px;
+    }
+
+
+    .info-item {
+
+      padding: 13px;
+
+      border-radius: 14px;
+
+      background:
+        rgba(0,20,40,0.35);
+
+      border:
+        1px solid
+        rgba(70,200,255,0.08);
+    }
+
+
+    .info-label {
+
+      font-size: 9px;
+
+      letter-spacing: 1.5px;
+
+      text-transform:
+        uppercase;
+
+      color:
+        rgba(170,225,245,0.48);
+
+      margin-bottom: 5px;
+    }
+
+
+    .info-value {
+
+      font-size: 13px;
+
+      word-break:
+        break-word;
+
+      color:
+        rgba(235,250,255,0.90);
+    }
+
+
+    /* =====================================================
+       BUTTONS
+       ===================================================== */
+
+    .actions {
+
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 10px;
+    }
+
+
+    .btn {
+
+      position: relative;
+
+      overflow: hidden;
+
+      border:
+        1px solid
+        rgba(70,210,255,0.20);
+
+      border-radius:
+        13px;
+
+      padding:
+        11px 18px;
+
+      color:
+        #eafaff;
+
+      font-weight:
+        800;
+
+      cursor:
+        pointer;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(40,180,255,0.12),
+          rgba(255,255,255,0.035)
         );
 
       backdrop-filter:
@@ -957,10 +1703,10 @@
 
       box-shadow:
         inset 0 1px 0
-        rgba(255,255,255,0.10),
+        rgba(255,255,255,0.09),
 
         0 8px 25px
-        rgba(0,0,0,0.22);
+        rgba(0,0,0,0.25);
 
       transition:
         transform 0.25s ease,
@@ -968,15 +1714,19 @@
         border-color 0.25s ease;
     }
 
+
     .btn::before {
+
       content: "";
 
       position: absolute;
 
       top: 0;
+
       left: -120%;
 
       width: 75%;
+
       height: 100%;
 
       transform:
@@ -986,7 +1736,7 @@
         linear-gradient(
           90deg,
           transparent,
-          rgba(255,255,255,0.24),
+          rgba(255,255,255,0.30),
           transparent
         );
 
@@ -994,59 +1744,79 @@
         left 0.65s ease;
     }
 
+
     .btn:hover::before {
+
       left: 140%;
     }
 
+
     .btn:hover {
+
       transform:
         translateY(-3px);
 
       border-color:
-        rgba(255,215,100,0.48);
+        rgba(70,220,255,0.45);
 
       box-shadow:
-        0 13px 35px
-        rgba(0,0,0,0.35);
+        0 14px 35px
+        rgba(0,0,0,0.35),
+
+        0 0 20px
+        rgba(30,190,255,0.08);
     }
+
 
     .approve {
+
       background:
         linear-gradient(
           135deg,
-          rgba(255,210,70,0.25),
-          rgba(160,90,0,0.18)
+          rgba(40,220,180,0.18),
+          rgba(10,110,95,0.18)
         );
 
       color:
-        #fff0ad;
+        #8fffe0;
+
+      border-color:
+        rgba(60,230,190,0.25);
     }
+
 
     .deny {
+
       background:
         linear-gradient(
           135deg,
-          rgba(255,30,65,0.25),
-          rgba(130,0,25,0.18)
+          rgba(255,40,80,0.18),
+          rgba(130,0,30,0.16)
         );
 
       color:
-        #ffb3c0;
+        #ff9eb0;
+
+      border-color:
+        rgba(255,60,90,0.22);
     }
 
+
     .logout {
+
       border-color:
-        rgba(255,60,80,0.20);
+        rgba(70,210,255,0.18);
     }
 
 
     /* =====================================================
-       RESPONSIVE
+       MOBILE
        ===================================================== */
 
     @media (max-width: 650px) {
 
       .shell {
+
         width: 94%;
 
         margin-top: 14px;
@@ -1056,29 +1826,46 @@
         border-radius: 24px;
       }
 
-      header {
-        align-items: flex-start;
 
-        flex-direction: column;
+      header {
+
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
       }
+
 
       .stats {
-        grid-template-columns: 1fr;
+
+        grid-template-columns:
+          1fr;
       }
+
 
       .request-top {
-        align-items: flex-start;
 
-        flex-direction: column;
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
       }
+
 
       .actions {
-        flex-direction: column;
+
+        flex-direction:
+          column;
       }
 
+
       .btn {
+
         width: 100%;
       }
+
     }
 
 
@@ -1086,18 +1873,26 @@
        REDUCED MOTION
        ===================================================== */
 
-    @media (prefers-reduced-motion: reduce) {
+    @media (
+      prefers-reduced-motion: reduce
+    ) {
 
       *,
       *::before,
       *::after {
-        animation-duration: 0.01ms !important;
 
-        animation-iteration-count: 1 !important;
+        animation-duration:
+          0.01ms !important;
 
-        transition-duration: 0.01ms !important;
+        animation-iteration-count:
+          1 !important;
+
+        transition-duration:
+          0.01ms !important;
       }
+
     }
+
   </style>
 </head>
 
@@ -1105,16 +1900,16 @@
 <body>
 
   <!-- ===================================================
-       ANIMATED BACKGROUND
+       ANIMATED BLUE GLASS BACKGROUND
        =================================================== -->
 
   <div class="background">
 
-    <div class="orb orb-red"></div>
+    <div class="orb orb-blue"></div>
 
-    <div class="orb orb-gold"></div>
+    <div class="orb orb-cyan"></div>
 
-    <div class="orb orb-red-small"></div>
+    <div class="orb orb-deep"></div>
 
     <div class="light"></div>
 
@@ -1137,14 +1932,17 @@
     <header>
 
       <div>
+
         <div class="brand">
-          ✞ NICEGOLD MON
+          ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
         </div>
 
         <div class="subtitle">
           Premium Administration Control
         </div>
+
       </div>
+
 
       <div class="online-badge">
 
@@ -1198,7 +1996,10 @@
           WHATSAPP ENGINE
         </div>
 
-        <div class="value">
+        <div
+          class="value"
+          id="whatsappStatus"
+        >
           STOPPED
         </div>
 
@@ -1214,6 +2015,7 @@
     <h2 class="section-title">
       Access Requests
     </h2>
+
 
     <section id="requests">
 
@@ -1240,3 +2042,1359 @@
         class="btn logout"
         onclick="logout()"
       >
+        LOGOUT
+      </button>
+
+    </div>
+
+  </main>
+
+
+  <script>
+
+    /* =====================================================
+       ADMIN REQUESTS
+       ===================================================== */
+
+    const requestsBox =
+      document.getElementById(
+        "requests"
+      );
+
+
+    const pendingCount =
+      document.getElementById(
+        "pendingCount"
+      );
+
+
+    async function loadRequests() {
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/admin/requests",
+            {
+              credentials:
+                "include"
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.message ||
+            "Could not load requests."
+          );
+
+        }
+
+
+        const requests =
+          Array.isArray(
+            data.requests
+          )
+            ? data.requests
+            : [];
+
+
+        pendingCount.textContent =
+          data.pending ??
+          requests.filter(
+            item =>
+              item.status ===
+              "pending"
+          ).length;
+
+
+        if (!requests.length) {
+
+          requestsBox.innerHTML = `
+            <div class="empty">
+
+              <div
+                style="
+                  font-size:34px;
+                  margin-bottom:10px;
+                "
+              >
+                💧
+              </div>
+
+              <div
+                style="
+                  font-weight:800;
+                  color:#a8efff;
+                "
+              >
+                No Access Requests
+              </div>
+
+              <div
+                style="
+                  margin-top:8px;
+                "
+              >
+                New NICEGOLD access requests
+                will appear here.
+              </div>
+
+            </div>
+          `;
+
+          return;
+
+        }
+
+
+        requestsBox.innerHTML =
+          requests
+            .map(
+              renderRequest
+            )
+            .join("");
+
+
+      } catch (error) {
+
+        console.error(
+          "Request loading error:",
+          error
+        );
+
+
+        requestsBox.innerHTML = `
+          <div class="empty">
+
+            <div
+              style="
+                color:#ff91a8;
+                font-weight:800;
+              "
+            >
+              Unable to load requests
+            </div>
+
+            <div
+              style="
+                margin-top:8px;
+              "
+            >
+              ${escapeHTML(
+                error.message
+              )}
+            </div>
+
+          </div>
+        `;
+
+      }
+
+    }
+
+
+    /* =====================================================
+       RENDER REQUEST
+       ===================================================== */
+
+    function renderRequest(
+      request
+    ) {
+
+      const status =
+        String(
+          request.status ||
+          "pending"
+        ).toLowerCase();
+
+
+      const statusClass =
+        status ===
+          "approved"
+
+          ? "status-approved"
+
+          : status ===
+              "rejected" ||
+            status ===
+              "denied"
+
+            ? "status-denied"
+
+            : "status-pending";
+
+
+      const created =
+        request.createdAt
+          ? formatDate(
+              request.createdAt
+            )
+          : "Unknown";
+
+
+      let buttons = "";
+
+
+      if (
+        status === "pending"
+      ) {
+
+        buttons = `
+
+          <button
+            class="btn approve"
+            onclick="
+              approveRequest(
+                '${escapeAttr(
+                  request.requestId
+                )}'
+              )
+            "
+          >
+            ✓ APPROVE
+          </button>
+
+
+          <button
+            class="btn deny"
+            onclick="
+              rejectRequest(
+                '${escapeAttr(
+                  request.requestId
+                )}'
+              )
+            "
+          >
+            ✕ REJECT
+          </button>
+
+        `;
+
+      }
+
+
+      if (
+        status === "approved"
+      ) {
+
+        buttons = `
+
+          <div
+            style="
+              padding:11px 15px;
+              border-radius:13px;
+              color:#8fffe0;
+              background:rgba(40,220,180,.07);
+              border:1px solid rgba(40,220,180,.16);
+            "
+          >
+            ✓ ACCESS APPROVED
+          </div>
+
+        `;
+
+      }
+
+
+      if (
+        status === "rejected" ||
+        status === "denied"
+      ) {
+
+        buttons = `
+
+          <div
+            style="
+              padding:11px 15px;
+              border-radius:13px;
+              color:#ff9eb0;
+              background:rgba(255,40,80,.07);
+              border:1px solid rgba(255,40,80,.15);
+            "
+          >
+            REQUEST REJECTED
+          </div>
+
+        `;
+
+      }
+
+
+      return `
+
+        <article
+          class="request-card"
+        >
+
+          <div
+            class="request-top"
+          >
+
+            <div>
+
+              <div
+                class="request-name"
+              >
+                ${escapeHTML(
+                  request.name ||
+                  "Unknown User"
+                )}
+              </div>
+
+              <div
+                style="
+                  margin-top:5px;
+                  font-size:10px;
+                  color:rgba(170,225,245,.38);
+                  letter-spacing:1px;
+                "
+              >
+                NICEGOLD ACCESS REQUEST
+              </div>
+
+            </div>
+
+
+            <div
+              class="
+                request-status
+                ${statusClass}
+              "
+            >
+              ${escapeHTML(
+                status
+              )}
+            </div>
+
+          </div>
+
+
+          <div
+            class="request-info"
+          >
+
+            <div
+              class="info-item"
+            >
+
+              <div
+                class="info-label"
+              >
+                Request ID
+              </div>
+
+              <div
+                class="info-value"
+              >
+                ${escapeHTML(
+                  request.requestId ||
+                  "N/A"
+                )}
+              </div>
+
+            </div>
+
+
+            <div
+              class="info-item"
+            >
+
+              <div
+                class="info-label"
+              >
+                Contact
+              </div>
+
+              <div
+                class="info-value"
+              >
+                ${escapeHTML(
+                  request.contact ||
+                  "N/A"
+                )}
+              </div>
+
+            </div>
+
+
+            <div
+              class="info-item"
+            >
+
+              <div
+                class="info-label"
+              >
+                Submitted
+              </div>
+
+              <div
+                class="info-value"
+              >
+                ${escapeHTML(
+                  created
+                )}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="actions"
+          >
+
+            ${buttons}
+
+          </div>
+
+        </article>
+
+      `;
+
+    }
+
+
+    /* =====================================================
+       APPROVE
+       ===================================================== */
+
+    async function approveRequest(
+      requestId
+    ) {
+
+      if (
+        !confirm(
+          "Approve this NICEGOLD access request?"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      try {
+
+        const response =
+          await fetch(
+            `/api/admin/requests/${encodeURIComponent(
+              requestId
+            )}/approve`,
+            {
+              method:
+                "POST",
+
+              credentials:
+                "include"
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.message ||
+            "Could not approve request."
+          );
+
+        }
+
+
+        if (
+          data.request &&
+          data.request.accessCode
+        ) {
+
+          alert(
+            "ACCESS APPROVED\n\n" +
+            "Request ID: " +
+            data.request.requestId +
+            "\n\nAccess Code: " +
+            data.request.accessCode +
+            "\n\nSave this code securely."
+          );
+
+        } else {
+
+          alert(
+            data.message ||
+            "Access request approved."
+          );
+
+        }
+
+
+        await loadRequests();
+
+
+      } catch (error) {
+
+        alert(
+          error.message ||
+          "Approval failed."
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       REJECT
+       ===================================================== */
+
+    async function rejectRequest(
+      requestId
+    ) {
+
+      if (
+        !confirm(
+          "Reject this NICEGOLD access request?"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      try {
+
+        const response =
+          await fetch(
+            `/api/admin/requests/${encodeURIComponent(
+              requestId
+            )}/reject`,
+            {
+              method:
+                "POST",
+
+              credentials:
+                "include"
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+  throw new Error(
+    data.message ||
+    "Request failed."
+  );
+
+}
+
+
+const request =
+  data.request;
+
+
+if (!request) {
+
+  throw new Error(
+    "No request data returned."
+  );
+
+}
+
+
+/* =====================================================
+   SUCCESS MESSAGE
+   ===================================================== */
+
+showToast(
+  "SUCCESS",
+  "Access request updated successfully."
+);
+
+
+/* =====================================================
+   REFRESH ADMIN PANEL
+   ===================================================== */
+
+await loadRequests();
+
+await loadStats();
+
+
+} catch (error) {
+
+  console.error(
+    "Admin action error:",
+    error
+  );
+
+  showToast(
+    "ERROR",
+    error.message ||
+    "Something went wrong."
+  );
+
+} finally {
+
+  button.disabled = false;
+
+  button.classList.remove(
+    "loading"
+  );
+
+}
+
+}
+
+
+/* =====================================================
+   APPROVE REQUEST
+   ===================================================== */
+
+async function approveRequest(
+  requestId,
+  button
+) {
+
+  if (!requestId) {
+    return;
+  }
+
+  const confirmed =
+    confirm(
+      "Approve this NICEGOLD access request?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  await processRequestAction(
+    `/api/admin/requests/${encodeURIComponent(requestId)}/approve`,
+    button
+  );
+
+}
+
+
+/* =====================================================
+   REJECT REQUEST
+   ===================================================== */
+
+async function rejectRequest(
+  requestId,
+  button
+) {
+
+  if (!requestId) {
+    return;
+  }
+
+  const confirmed =
+    confirm(
+      "Reject this NICEGOLD access request?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  await processRequestAction(
+    `/api/admin/requests/${encodeURIComponent(requestId)}/reject`,
+    button
+  );
+
+}
+
+
+/* =====================================================
+   LOAD REQUESTS
+   ===================================================== */
+
+async function loadRequests() {
+
+  const container =
+    document.getElementById(
+      "requests"
+    );
+
+  if (!container) {
+    return;
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/admin/requests",
+        {
+          credentials: "same-origin"
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Could not load requests."
+      );
+
+    }
+
+
+    const requests =
+      Array.isArray(data.requests)
+        ? data.requests
+        : [];
+
+
+    const pending =
+      requests.filter(
+        item =>
+          item.status ===
+          "pending"
+      );
+
+
+    const pendingCount =
+      document.getElementById(
+        "pendingCount"
+      );
+
+
+    if (pendingCount) {
+
+      pendingCount.textContent =
+        pending.length;
+
+    }
+
+
+    if (!requests.length) {
+
+      container.innerHTML = `
+        <div class="empty">
+          <div style="font-size:32px;margin-bottom:10px;">
+            ◇
+          </div>
+
+          <div>
+            No access requests yet.
+          </div>
+
+          <small style="
+            display:block;
+            margin-top:8px;
+            opacity:.55;
+          ">
+            New requests will appear here automatically.
+          </small>
+        </div>
+      `;
+
+      return;
+    }
+
+
+    container.innerHTML =
+      requests
+        .map(
+          (request, index) =>
+            createRequestCard(
+              request,
+              index
+            )
+        )
+        .join("");
+
+
+  } catch (error) {
+
+    console.error(
+      "Load requests error:",
+      error
+    );
+
+
+    container.innerHTML = `
+      <div class="empty">
+        <div style="font-size:28px;margin-bottom:10px;">
+          ⚠
+        </div>
+
+        <div>
+          Could not load access requests.
+        </div>
+
+        <button
+          class="btn"
+          style="margin-top:15px;"
+          onclick="loadRequests()"
+        >
+          TRY AGAIN
+        </button>
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* =====================================================
+   CREATE REQUEST CARD
+   ===================================================== */
+
+function createRequestCard(
+  request,
+  index
+) {
+
+  const status =
+    String(
+      request.status ||
+      "pending"
+    ).toLowerCase();
+
+
+  let statusClass =
+    "status-pending";
+
+
+  if (status === "approved") {
+
+    statusClass =
+      "status-approved";
+
+  }
+
+  else if (
+    status === "rejected" ||
+    status === "denied"
+  ) {
+
+    statusClass =
+      "status-denied";
+
+  }
+
+
+  const name =
+    escapeHTML(
+      request.name ||
+      "Unknown User"
+    );
+
+
+  const contact =
+    escapeHTML(
+      request.contact ||
+      "Not provided"
+    );
+
+
+  const requestId =
+    escapeHTML(
+      request.requestId ||
+      "N/A"
+    );
+
+
+  const createdAt =
+    formatDate(
+      request.createdAt
+    );
+
+
+  const approvedAt =
+    formatDate(
+      request.approvedAt
+    );
+
+
+  let actions = "";
+
+
+  if (status === "pending") {
+
+    actions = `
+      <div class="actions">
+
+        <button
+          class="btn approve"
+          onclick="
+            approveRequest(
+              '${escapeJS(request.requestId)}',
+              this
+            )
+          "
+        >
+          ✓ APPROVE
+        </button>
+
+        <button
+          class="btn deny"
+          onclick="
+            rejectRequest(
+              '${escapeJS(request.requestId)}',
+              this
+            )
+          "
+        >
+          ✕ REJECT
+        </button>
+
+      </div>
+    `;
+
+  }
+
+  else if (status === "approved") {
+
+    actions = `
+      <div class="actions">
+
+        <div class="info-item" style="flex:1;">
+          <div class="info-label">
+            ACCESS CODE
+          </div>
+
+          <div
+            class="info-value"
+            style="
+              color:#9eeaff;
+              font-weight:800;
+              letter-spacing:1px;
+            "
+          >
+            ${escapeHTML(
+              request.accessCode ||
+              "Generated"
+            )}
+          </div>
+        </div>
+
+      </div>
+    `;
+
+  }
+
+
+  return `
+    <article
+      class="request-card"
+      style="
+        animation-delay:${index * 60}ms;
+      "
+    >
+
+      <div class="request-top">
+
+        <div>
+
+          <div class="request-name">
+            ${name}
+          </div>
+
+          <div style="
+            margin-top:5px;
+            font-size:11px;
+            opacity:.45;
+          ">
+            ${requestId}
+          </div>
+
+        </div>
+
+        <div
+          class="request-status ${statusClass}"
+        >
+          ${escapeHTML(status)}
+        </div>
+
+      </div>
+
+
+      <div class="request-info">
+
+        <div class="info-item">
+
+          <div class="info-label">
+            CONTACT
+          </div>
+
+          <div class="info-value">
+            ${contact}
+          </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <div class="info-label">
+            REQUESTED
+          </div>
+
+          <div class="info-value">
+            ${createdAt}
+          </div>
+
+        </div>
+
+
+        ${
+          approvedAt !== "—"
+            ? `
+              <div class="info-item">
+
+                <div class="info-label">
+                  APPROVED
+                </div>
+
+                <div class="info-value">
+                  ${approvedAt}
+                </div>
+
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
+
+      ${actions}
+
+    </article>
+  `;
+
+}
+
+
+/* =====================================================
+   LOAD STATISTICS
+   ===================================================== */
+
+async function loadStats() {
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/admin/requests/stats",
+        {
+          credentials: "same-origin"
+        }
+      );
+
+
+    if (!response.ok) {
+      return;
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const pending =
+      document.getElementById(
+        "pendingCount"
+      );
+
+
+    if (pending) {
+
+      pending.textContent =
+        Number(
+          data.pending || 0
+        );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Stats error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   DATE FORMATTER
+   ===================================================== */
+
+function formatDate(
+  value
+) {
+
+  if (!value) {
+    return "—";
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return escapeHTML(
+      String(value)
+    );
+
+  }
+
+
+  return date.toLocaleString(
+    [],
+    {
+      dateStyle: "medium",
+      timeStyle: "short"
+    }
+  );
+
+}
+
+
+/* =====================================================
+   HTML SAFETY
+   ===================================================== */
+
+function escapeHTML(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   JAVASCRIPT STRING SAFETY
+   ===================================================== */
+
+function escapeJS(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    )
+    .replace(
+      /"/g,
+      '\\"'
+    )
+    .replace(
+      /\r/g,
+      "\\r"
+    )
+    .replace(
+      /\n/g,
+      "\\n"
+    );
+
+}
+
+
+/* =====================================================
+   TOAST NOTIFICATION
+   ===================================================== */
+
+function showToast(
+  type,
+  text
+) {
+
+  let toast =
+    document.getElementById(
+      "ngToast"
+    );
+
+
+  if (!toast) {
+
+    toast =
+      document.createElement(
+        "div"
+      );
+
+    toast.id =
+      "ngToast";
+
+    toast.style.cssText = `
+      position:fixed;
+      left:50%;
+      bottom:25px;
+      transform:translateX(-50%) translateY(20px);
+      z-index:9999;
+      min-width:260px;
+      max-width:90%;
+      padding:15px 20px;
+      border-radius:16px;
+      border:1px solid rgba(90,210,255,.35);
+      background:rgba(4,18,35,.88);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      box-shadow:
+        0 15px 50px rgba(0,0,0,.45),
+        0 0 30px rgba(30,180,255,.12);
+      color:#e9fbff;
+      text-align:center;
+      font-size:13px;
+      font-weight:700;
+      opacity:0;
+      transition:
+        opacity .3s ease,
+        transform .3s ease;
+    `;
+
+    document.body.appendChild(
+      toast
+    );
+
+  }
+
+
+  toast.textContent =
+    text;
+
+
+  toast.style.borderColor =
+    type === "ERROR"
+      ? "rgba(255,70,100,.45)"
+      : "rgba(90,210,255,.45)";
+
+
+  requestAnimationFrame(
+    () => {
+
+      toast.style.opacity =
+        "1";
+
+      toast.style.transform =
+        "translateX(-50%) translateY(0)";
+
+    }
+  );
+
+
+  clearTimeout(
+    window.ngToastTimer
+  );
+
+
+  window.ngToastTimer =
+    setTimeout(
+      () => {
+
+        toast.style.opacity =
+          "0";
+
+        toast.style.transform =
+          "translateX(-50%) translateY(20px)";
+
+      },
+      3000
+    );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+   ===================================================== */
+
+function logout() {
+
+  window.location.href =
+    "/login.html";
+
+}
+
+
+/* =====================================================
+   INITIALIZE ADMIN PANEL
+   ===================================================== */
+
+loadRequests();
+
+loadStats();
+
+
+/* =====================================================
+   AUTOMATIC REFRESH
+   ===================================================== */
+
+setInterval(
+  () => {
+
+    loadRequests();
+    loadStats();
+
+  },
+  5000
+);
+
+</script>
+
+</body>
+</html>
