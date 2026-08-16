@@ -283,7 +283,7 @@
     async function checkAdmin() {
       try {
         const response =
-          await fetch("/api/admin/status");
+          await fetch("/api/admin/status", { credentials: "include" });
 
         const data =
           await response.json();
@@ -313,7 +313,7 @@
 
         const response =
           await fetch(
-            "/api/admin/access-requests"
+            "/api/admin/access-requests", { credentials: "include" }
           );
 
         const data =
@@ -445,7 +445,8 @@
         await fetch(
           `/api/admin/access-requests/${id}/approve`,
           {
-            method: "POST"
+            method: "POST",
+          credentials: "include",
           }
         );
 
@@ -482,7 +483,8 @@
         await fetch(
           `/api/admin/access-requests/${id}/deny`,
           {
-            method: "POST"
+            method: "POST",
+          credentials: "include",
           }
         );
 
@@ -508,7 +510,8 @@
       await fetch(
         "/api/logout",
         {
-          method: "POST"
+          method: "POST",
+          credentials: "include",
         }
       );
 
