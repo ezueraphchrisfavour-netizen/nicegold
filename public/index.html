@@ -19,1117 +19,480 @@
 
   <style>
 
-    /* =====================================================
-       RESET
-       ===================================================== */
+/* =====================================================
+   NICEGOLD DIAMOND BLUE CONTROL UI
+   ===================================================== */
+
+.ng-blue-zone {
+  position: relative;
+  margin-top: 28px;
+  padding: 28px;
+  overflow: hidden;
+  border-radius: 28px;
+
+  background:
+    radial-gradient(circle at 15% 20%, rgba(0, 190, 255, .22), transparent 28%),
+    radial-gradient(circle at 85% 80%, rgba(70, 120, 255, .20), transparent 30%),
+    linear-gradient(135deg, rgba(4, 15, 35, .94), rgba(5, 27, 55, .82));
+
+  border: 1px solid rgba(100, 210, 255, .24);
+
+  box-shadow:
+    0 25px 80px rgba(0, 80, 180, .18),
+    inset 0 1px 0 rgba(255,255,255,.12);
+
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.ng-blue-zone::before,
+.ng-blue-zone::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  filter: blur(55px);
+  pointer-events: none;
+  opacity: .55;
+}
+
+.ng-blue-zone::before {
+  background: #00bfff;
+  top: -100px;
+  left: -80px;
+  animation: ngFloatOne 7s ease-in-out infinite;
+}
+
+.ng-blue-zone::after {
+  background: #4169ff;
+  right: -90px;
+  bottom: -110px;
+  animation: ngFloatTwo 9s ease-in-out infinite;
+}
+
+@keyframes ngFloatOne {
+  0%,100% {
+    transform: translate(0,0) scale(1);
+  }
+  50% {
+    transform: translate(80px,45px) scale(1.18);
+  }
+}
+
+@keyframes ngFloatTwo {
+  0%,100% {
+    transform: translate(0,0) scale(1);
+  }
+  50% {
+    transform: translate(-65px,-45px) scale(1.12);
+  }
+}
+
+.ng-blue-title {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 7px;
+
+  color: #e9faff;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: .4px;
+
+  text-shadow:
+    0 0 18px rgba(0, 200, 255, .55);
+}
+
+.ng-blue-subtitle {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 22px;
+
+  color: rgba(210,240,255,.68);
+  font-size: 13px;
+}
+
+.ng-whatsapp-card {
+  position: relative;
+  z-index: 2;
+
+  padding: 22px;
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.09),
+      rgba(255,255,255,.035)
+    );
+
+  border: 1px solid rgba(125,220,255,.20);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 18px 50px rgba(0,0,0,.25);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+.ng-wa-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.ng-wa-icon {
+  width: 52px;
+  height: 52px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 17px;
 
+  background:
+    linear-gradient(
+      145deg,
+      rgba(0,210,255,.24),
+      rgba(45,100,255,.22)
+    );
 
-    /* =====================================================
-       THEME
-       ===================================================== */
+  border: 1px solid rgba(110,220,255,.30);
+
+  box-shadow:
+    0 0 28px rgba(0,180,255,.20);
 
-    :root {
+  font-size: 26px;
+}
 
-      --black: #050204;
-      --black-2: #100407;
+.ng-wa-name {
+  color: #f2fbff;
+  font-size: 17px;
+  font-weight: 800;
+}
 
-      --red: #ff1744;
-      --red-light: #ff6b82;
-      --red-dark: #87001d;
+.ng-wa-description {
+  margin-top: 4px;
+  color: rgba(210,235,250,.60);
+  font-size: 12px;
+}
 
-      --gold: #ffd45a;
-      --gold-light: #fff0a5;
-      --gold-dark: #a66b00;
+.ng-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
-      --white: #fffaf0;
+  margin-bottom: 18px;
+  padding: 8px 12px;
 
-      --glass:
-        rgba(255, 255, 255, 0.055);
+  border-radius: 999px;
 
-      --glass-light:
-        rgba(255, 255, 255, 0.085);
+  background: rgba(0,20,45,.55);
+  border: 1px solid rgba(100,200,255,.16);
 
-      --border:
-        rgba(255, 215, 100, 0.18);
-    }
+  color: #bcecff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ng-status-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 
+  background: #49d9ff;
 
-    /* =====================================================
-       BODY
-       ===================================================== */
+  box-shadow:
+    0 0 8px #49d9ff,
+    0 0 18px rgba(73,217,255,.65);
 
-    body {
+  animation: ngPulse 1.8s ease-in-out infinite;
+}
 
-      min-height: 100vh;
+@keyframes ngPulse {
+  0%,100% {
+    opacity: .55;
+    transform: scale(.85);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
 
-      overflow-x: hidden;
+.ng-phone-input {
+  width: 100%;
+  padding: 14px 15px;
 
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+  border-radius: 14px;
 
-      color: var(--white);
+  background: rgba(0,10,25,.62);
+  border: 1px solid rgba(120,210,255,.16);
 
-      background:
+  color: #eafaff;
+  outline: none;
 
-        radial-gradient(
-          circle at 10% 5%,
-          rgba(255, 20, 60, 0.18),
-          transparent 30%
-        ),
+  font-size: 14px;
 
-        radial-gradient(
-          circle at 90% 75%,
-          rgba(255, 195, 50, 0.13),
-          transparent 32%
-        ),
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease,
+    background .25s ease;
+}
 
-        linear-gradient(
-          135deg,
-          var(--black),
-          var(--black-2),
-          #020202
-        );
-    }
+.ng-phone-input::placeholder {
+  color: rgba(210,235,250,.38);
+}
+
+.ng-phone-input:focus {
+  border-color: rgba(55,205,255,.65);
+
+  background: rgba(0,15,35,.78);
 
+  box-shadow:
+    0 0 0 3px rgba(0,180,255,.08),
+    0 0 25px rgba(0,180,255,.12);
+}
+
+.ng-button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  margin-top: 13px;
+}
+
+.ng-blue-button {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 48px;
+  padding: 12px 16px;
 
-    /* =====================================================
-       ANIMATED BACKGROUND
-       ===================================================== */
+  border: 1px solid rgba(120,225,255,.28);
+  border-radius: 14px;
 
-    .background {
+  color: #f5fdff;
+  font-weight: 800;
+  font-size: 13px;
+
+  cursor: pointer;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,190,255,.30),
+      rgba(45,95,255,.30)
+    );
+
+  box-shadow:
+    0 10px 30px rgba(0,100,220,.15),
+    inset 0 1px 0 rgba(255,255,255,.14);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+.ng-blue-button::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: -120%;
+
+  width: 80%;
+  height: 100%;
 
-      position: fixed;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.25),
+      transparent
+    );
 
-      inset: 0;
+  transform: skewX(-20deg);
 
-      overflow: hidden;
+  transition: left .6s ease;
+}
 
-      z-index: -20;
+.ng-blue-button:hover::before {
+  left: 140%;
+}
 
-      pointer-events: none;
-    }
+.ng-blue-button:hover {
+  transform: translateY(-2px);
 
+  border-color: rgba(120,225,255,.55);
 
-    .background::before {
+  box-shadow:
+    0 14px 38px rgba(0,120,255,.24),
+    0 0 25px rgba(0,200,255,.10);
+}
 
-      content: "";
+.ng-blue-button:active {
+  transform: translateY(0);
+}
 
-      position: absolute;
+.ng-blue-button.primary {
+  background:
+    linear-gradient(
+      135deg,
+      #009fe8,
+      #315eff
+    );
 
-      inset: -50%;
+  box-shadow:
+    0 10px 35px rgba(0,145,255,.28);
+}
 
-      background:
+.ng-blue-button.danger {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,65,95,.18),
+      rgba(160,35,65,.18)
+    );
 
-        repeating-linear-gradient(
-          115deg,
-          transparent 0,
-          transparent 100px,
-          rgba(255, 215, 100, 0.018) 101px,
-          transparent 103px
-        );
+  border-color: rgba(255,100,130,.22);
+}
 
-      animation:
-        backgroundMove 20s linear infinite;
-    }
+.ng-pairing-box {
+  display: none;
 
+  margin-top: 16px;
+  padding: 18px;
 
-    @keyframes backgroundMove {
+  text-align: center;
 
-      from {
-        transform:
-          translate3d(0, 0, 0);
-      }
+  border-radius: 18px;
 
-      to {
-        transform:
-          translate3d(150px, 100px, 0);
-      }
-    }
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(0,190,255,.12),
+      rgba(0,20,50,.55)
+    );
 
+  border: 1px solid rgba(80,210,255,.20);
+}
 
-    /* =====================================================
-       GLOWING ORBS
-       ===================================================== */
-
-    .orb {
-
-      position: absolute;
-
-      border-radius: 50%;
-
-      filter: blur(75px);
-
-      opacity: 0.42;
-
-      animation:
-        floatOrb 17s ease-in-out infinite alternate;
-    }
-
-
-    .orb-red {
-
-      width: 360px;
-      height: 360px;
-
-      left: -130px;
-      top: 4%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(255, 20, 55, 0.95),
-          rgba(130, 0, 25, 0.2),
-          transparent 70%
-        );
-    }
-
-
-    .orb-gold {
-
-      width: 330px;
-      height: 330px;
-
-      right: -120px;
-      top: 32%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(255, 210, 65, 0.9),
-          rgba(150, 80, 0, 0.2),
-          transparent 70%
-        );
-
-      animation-delay:
-        -6s;
-    }
-
-
-    .orb-bottom {
-
-      width: 280px;
-      height: 280px;
-
-      left: 38%;
-      bottom: -160px;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(255, 25, 60, 0.8),
-          transparent 70%
-        );
-
-      animation-delay:
-        -10s;
-    }
-
-
-    @keyframes floatOrb {
-
-      0% {
-        transform:
-          translate(-20px, -10px)
-          scale(0.9);
-      }
-
-      50% {
-        transform:
-          translate(80px, 70px)
-          scale(1.12);
-      }
-
-      100% {
-        transform:
-          translate(-30px, 130px)
-          scale(0.95);
-      }
-    }
-
-
-    /* =====================================================
-       MOVING LIGHT
-       ===================================================== */
-
-    .light {
-
-      position: absolute;
-
-      width: 70vw;
-      height: 2px;
-
-      left: -70%;
-      top: 100%;
-
-      background:
-
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 215, 90, 0.95),
-          rgba(255, 40, 70, 0.8),
-          transparent
-        );
-
-      filter: blur(2px);
-
-      transform:
-        rotate(-25deg);
-
-      opacity: 0.5;
-
-      animation:
-        lightMove 11s linear infinite;
-    }
-
-
-    @keyframes lightMove {
-
-      from {
-        left: -70%;
-        top: 110%;
-      }
-
-      to {
-        left: 120%;
-        top: -20%;
-      }
-    }
-
-
-    /* =====================================================
-       PARTICLES
-       ===================================================== */
-
-    .particle {
-
-      position: absolute;
-
-      bottom: -10px;
-
-      width: 4px;
-      height: 4px;
-
-      border-radius: 50%;
-
-      background:
-        var(--gold);
-
-      box-shadow:
-        0 0 14px
-        rgba(255, 215, 90, 0.9);
-
-      opacity: 0;
-
-      animation:
-        rise 11s linear infinite;
-    }
-
-
-    .p1 {
-      left: 8%;
-      animation-delay: 0s;
-    }
-
-    .p2 {
-      left: 21%;
-      animation-delay: -2s;
-    }
-
-    .p3 {
-      left: 38%;
-      animation-delay: -5s;
-    }
-
-    .p4 {
-      left: 58%;
-      animation-delay: -7s;
-    }
-
-    .p5 {
-      left: 77%;
-      animation-delay: -3s;
-    }
-
-    .p6 {
-      left: 92%;
-      animation-delay: -9s;
-    }
-
-
-    @keyframes rise {
-
-      0% {
-
-        transform:
-          translateY(0)
-          scale(0.4);
-
-        opacity: 0;
-      }
-
-      15% {
-        opacity: 0.7;
-      }
-
-      75% {
-        opacity: 0.3;
-      }
-
-      100% {
-
-        transform:
-          translateY(-110vh)
-          translateX(60px)
-          scale(1);
-
-        opacity: 0;
-      }
-    }
-
-
-    /* =====================================================
-       HEADER
-       ===================================================== */
-
-    .header {
-
-      position: relative;
-
-      padding:
-        30px 20px;
-
-      border-bottom:
-        1px solid
-        rgba(255, 215, 100, 0.13);
-
-      background:
-        rgba(0, 0, 0, 0.18);
-
-      backdrop-filter:
-        blur(22px);
-
-      -webkit-backdrop-filter:
-        blur(22px);
-
-      box-shadow:
-        0 15px 50px
-        rgba(0,0,0,0.25);
-    }
-
-
-    .header-inner {
-
-      width: 92%;
-
-      max-width: 900px;
-
-      margin: auto;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 20px;
-    }
-
-
-    .brand {
-
-      font-size:
-        clamp(
-          18px,
-          4vw,
-          27px
-        );
-
-      font-weight: 900;
-
-      line-height: 1.4;
-
-      background:
-
-        linear-gradient(
-          90deg,
-          var(--gold-light),
-          var(--gold),
-          var(--red-light),
-          var(--gold),
-          var(--gold-light)
-        );
-
-      background-size:
-        300% auto;
-
-      -webkit-background-clip:
-        text;
-
-      background-clip:
-        text;
-
-      color:
-        transparent;
-
-      animation:
-        brandFlow 7s linear infinite;
-    }
-
-
-    @keyframes brandFlow {
-
-      0% {
-        background-position:
-          0% center;
-      }
-
-      100% {
-        background-position:
-          300% center;
-      }
-    }
-
-
-    .subtitle {
-
-      margin-top: 7px;
-
-      color:
-        rgba(255, 240, 190, 0.55);
-
-      font-size: 12px;
-
-      letter-spacing: 2px;
-
-      text-transform:
-        uppercase;
-    }
-
-
-    .live-badge {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 8px;
-
-      padding:
-        10px 14px;
-
-      border-radius:
-        999px;
-
-      border:
-        1px solid
-        rgba(255, 215, 100, 0.18);
-
-      background:
-        rgba(255,255,255,0.045);
-
-      backdrop-filter:
-        blur(14px);
-
-      -webkit-backdrop-filter:
-        blur(14px);
-
-      white-space:
-        nowrap;
-
-      font-size: 11px;
-
-      font-weight: 800;
-
-      letter-spacing: 1px;
-
-      color:
-        var(--gold-light);
-    }
-
-
-    .live-dot {
-
-      width: 8px;
-      height: 8px;
-
-      border-radius: 50%;
-
-      background:
-        var(--gold);
-
-      box-shadow:
-        0 0 14px
-        rgba(255,215,90,0.9);
-
-      animation:
-        pulse 1.8s ease-in-out infinite;
-    }
-
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        transform:
-          scale(1);
-
-        opacity: 1;
-      }
-
-      50% {
-        transform:
-          scale(1.5);
-
-        opacity: 0.55;
-      }
-    }
-
-
-    /* =====================================================
-       CONTAINER
-       ===================================================== */
-
-    .container {
-
-      width: 92%;
-
-      max-width: 900px;
-
-      margin:
-        30px auto 50px;
-    }
-
-
-    /* =====================================================
-       HERO
-       ===================================================== */
-
-    .hero {
-
-      position: relative;
-
-      overflow: hidden;
-
-      padding: 27px;
-
-      margin-bottom: 18px;
-
-      border-radius: 25px;
-
-      border:
-        1px solid
-        var(--border);
-
-      background:
-
-        linear-gradient(
-          135deg,
-          rgba(255,255,255,0.085),
-          rgba(255,255,255,0.025)
-        );
-
-      backdrop-filter:
-        blur(28px);
-
-      -webkit-backdrop-filter:
-        blur(28px);
-
-      box-shadow:
-
-        inset 0 1px 0
-        rgba(255,255,255,0.10),
-
-        0 25px 70px
-        rgba(0,0,0,0.4);
-    }
-
-
-    .hero::after {
-
-      content: "";
-
-      position: absolute;
-
-      width: 220px;
-      height: 220px;
-
-      right: -100px;
-      top: -110px;
-
-      border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(255,215,80,0.18),
-          transparent 70%
-        );
-
-      filter:
-        blur(10px);
-    }
-
-
-    .label {
-
-      color:
-        rgba(255, 240, 190, 0.55);
-
-      font-size: 11px;
-
-      margin-bottom: 12px;
-
-      letter-spacing: 2px;
-
-      font-weight: 700;
-    }
-
-
-    .main-status {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 12px;
-
-      font-size:
-        clamp(
-          21px,
-          5vw,
-          27px
-        );
-
-      font-weight: 800;
-    }
-
-
-    .dot {
-
-      width: 14px;
-      height: 14px;
-
-      flex-shrink: 0;
-
-      border-radius: 50%;
-
-      background:
-        #ffd45a;
-
-      box-shadow:
-        0 0 18px
-        rgba(255, 210, 80, 0.85);
-
-      animation:
-        pulse 1.8s ease-in-out infinite;
-    }
-
-
-    .dot.offline {
-
-      background:
-        var(--red);
-
-      box-shadow:
-        0 0 18px
-        rgba(255, 25, 60, 0.65);
-    }
-
-
-    .online {
-
-      color:
-        var(--gold-light);
-    }
-
-
-    .offline {
-
-      color:
-        #ff8092;
-    }
-
-
-    .updated {
-
-      margin-top: 11px;
-
-      color:
-        rgba(255, 240, 200, 0.43);
-
-      font-size: 12px;
-    }
-
-
-    /* =====================================================
-       CARDS
-       ===================================================== */
-
-    .grid {
-
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, 1fr);
-
-      gap: 15px;
-    }
-
-
-    .card {
-
-      position: relative;
-
-      overflow: hidden;
-
-      min-height: 150px;
-
-      padding: 22px;
-
-      border-radius: 21px;
-
-      border:
-        1px solid
-        rgba(255, 215, 100, 0.15);
-
-      background:
-
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,0.075),
-          rgba(255,255,255,0.025)
-        );
-
-      backdrop-filter:
-        blur(22px);
-
-      -webkit-backdrop-filter:
-        blur(22px);
-
-      box-shadow:
-
-        inset 0 1px 0
-        rgba(255,255,255,0.08),
-
-        0 18px 50px
-        rgba(0,0,0,0.28);
-
-      transition:
-        transform 0.3s ease,
-        border-color 0.3s ease,
-        box-shadow 0.3s ease;
-    }
-
-
-    .card::before {
-
-      content: "";
-
-      position: absolute;
-
-      width: 170px;
-      height: 170px;
-
-      right: -90px;
-      bottom: -100px;
-
-      border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(255, 35, 65, 0.16),
-          transparent 70%
-        );
-
-      filter:
-        blur(12px);
-    }
-
-
-    .card:hover {
-
-      transform:
-        translateY(-6px);
-
-      border-color:
-        rgba(255, 215, 100, 0.35);
-
-      box-shadow:
-
-        0 25px 65px
-        rgba(0,0,0,0.4),
-
-        0 0 28px
-        rgba(255,35,65,0.07);
-    }
-
-
-    .card-title {
-
-      font-size: 16px;
-
-      font-weight: 800;
-
-      margin-bottom: 15px;
-
-      color:
-        var(--gold-light);
-    }
-
-
-    .value {
-
-      font-size: 20px;
-
-      font-weight: 900;
-
-      letter-spacing: 0.4px;
-    }
-
-
-    .small {
-
-      color:
-        rgba(255,240,200,0.47);
-
-      font-size: 12px;
-
-      margin-top: 8px;
-
-      line-height: 1.6;
-    }
-
-
-    /* =====================================================
-       REFRESH BUTTON
-       ===================================================== */
-
-    .refresh {
-
-      position: relative;
-
-      overflow: hidden;
-
-      width: 100%;
-
-      margin-top: 20px;
-
-      padding: 15px;
-
-      border:
-        1px solid
-        rgba(255, 215, 100, 0.25);
-
-      border-radius: 15px;
-
-      background:
-
-        linear-gradient(
-          135deg,
-          rgba(255, 215, 75, 0.18),
-          rgba(255, 35, 65, 0.16)
-        );
-
-      color:
-        var(--gold-light);
-
-      font-size: 14px;
-
-      font-weight: 800;
-
-      cursor: pointer;
-
-      backdrop-filter:
-        blur(18px);
-
-      -webkit-backdrop-filter:
-        blur(18px);
-
-      box-shadow:
-
-        inset 0 1px 0
-        rgba(255,255,255,0.1),
-
-        0 12px 35px
-        rgba(0,0,0,0.3);
-
-      transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
-    }
-
-
-    .refresh::before {
-
-      content: "";
-
-      position: absolute;
-
-      left: -120%;
-
-      top: 0;
-
-      width: 75%;
-
-      height: 100%;
-
-      transform:
-        skewX(-20deg);
-
-      background:
-
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255,255,255,0.28),
-          transparent
-        );
-
-      transition:
-        left 0.7s ease;
-    }
-
-
-    .refresh:hover::before {
-
-      left: 140%;
-    }
-
-
-    .refresh:hover {
-
-      transform:
-        translateY(-3px);
-
-      border-color:
-        rgba(255,215,100,0.5);
-
-      box-shadow:
-
-        0 18px 45px
-        rgba(0,0,0,0.4),
-
-        0 0 25px
-        rgba(255,35,65,0.1);
-    }
-
-
-    .refresh:active {
-
-      transform:
-        scale(0.98);
-    }
-
-
-    /* =====================================================
-       FOOTER
-       ===================================================== */
-
-    .footer {
-
-      text-align:
-        center;
-
-      padding:
-        35px 10px;
-
-      color:
-        rgba(255,240,200,0.30);
-
-      font-size: 11px;
-
-      letter-spacing: 1px;
-    }
-
-
-    /* =====================================================
-       MOBILE
-       ===================================================== */
-
-    @media (max-width: 600px) {
-
-      .header {
-        padding:
-          23px 16px;
-      }
-
-
-      .header-inner {
-
-        width: 94%;
-
-        align-items:
-          flex-start;
-
-        flex-direction:
-          column;
-      }
-
-
-      .live-badge {
-        align-self:
-          flex-start;
-      }
-
-
-      .container {
-        width: 94%;
-        margin-top: 20px;
-      }
-
-
-      .hero {
-        padding: 22px;
-        border-radius: 22px;
-      }
-
-
-      .grid {
-
-        grid-template-columns:
-          1fr;
-      }
-
-
-      .card {
-        min-height:
-          135px;
-      }
-    }
-
-
-    /* =====================================================
-       REDUCED MOTION
-       ===================================================== */
-
-    @media (prefers-reduced-motion: reduce) {
-
-      *,
-      *::before,
-      *::after {
-
-        animation-duration:
-          0.01ms !important;
-
-        animation-iteration-count:
-          1 !important;
-
-        transition-duration:
-          0.01ms !important;
-      }
-    }
-
+.ng-pairing-label {
+  color: rgba(215,240,255,.60);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.ng-pairing-code {
+  margin-top: 8px;
+
+  color: #ecfbff;
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 5px;
+
+  text-shadow:
+    0 0 18px rgba(0,210,255,.65);
+}
+
+.ng-feature-grid {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.ng-feature {
+  padding: 16px;
+
+  border-radius: 17px;
+
+  background:
+    rgba(255,255,255,.045);
+
+  border:
+    1px solid rgba(130,220,255,.12);
+
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.ng-feature:hover {
+  transform: translateY(-3px);
+
+  background:
+    rgba(40,150,255,.08);
+
+  border-color:
+    rgba(100,220,255,.28);
+}
+
+.ng-feature-icon {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.ng-feature-name {
+  color: #e9faff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ng-feature-text {
+  margin-top: 4px;
+  color: rgba(205,230,245,.52);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+@media (max-width: 650px) {
+
+  .ng-blue-zone {
+    padding: 18px;
+    border-radius: 23px;
+  }
+
+  .ng-button-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ng-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ng-pairing-code {
+    font-size: 25px;
+    letter-spacing: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ng-blue-zone::before,
+  .ng-blue-zone::after,
+  .ng-status-light {
+    animation: none;
+  }
+  }
+    
   </style>
 
 </head>
@@ -1239,112 +602,174 @@
 
     <!-- DASHBOARD CARDS -->
 
-    <section class="grid">
+    <!-- ===================================================
+     NICEGOLD DIAMOND BLUE BOT CONTROL
+     =================================================== -->
+
+<section class="ng-blue-zone">
+
+  <div class="ng-blue-title">
+    ◈ NICEGOLD BOT CONTROL
+  </div>
+
+  <div class="ng-blue-subtitle">
+    Premium bot management interface
+  </div>
 
 
-      <!-- BOT -->
+  <!-- WHATSAPP -->
 
-      <div class="card">
+  <div class="ng-whatsapp-card">
 
-        <div class="card-title">
-          🤖 Bot
-        </div>
+    <div class="ng-wa-header">
 
-
-        <div
-          id="botStatus"
-          class="value"
-        >
-          Checking...
-        </div>
-
-
-        <div
-          id="botMessage"
-          class="small"
-        >
-          Checking bot status...
-        </div>
-
+      <div class="ng-wa-icon">
+        📱
       </div>
 
-
-      <!-- API -->
-
-      <div class="card">
-
-        <div class="card-title">
-          📡 API
+      <div>
+        <div class="ng-wa-name">
+          WhatsApp Connection
         </div>
 
-
-        <div
-          id="apiStatus"
-          class="value"
-        >
-          Checking...
+        <div class="ng-wa-description">
+          Connect the NICEGOLD engine to WhatsApp
         </div>
-
-
-        <div class="small">
-          NICEGOLD API connection
-        </div>
-
       </div>
 
-
-      <!-- WEBSITE -->
-
-      <div class="card">
-
-        <div class="card-title">
-          🌐 Website
-        </div>
+    </div>
 
 
-        <div class="value online">
-          ONLINE
-        </div>
+    <div class="ng-status-pill">
+
+      <span class="ng-status-light"></span>
+
+      <span id="ngWhatsAppStatus">
+        Authentication available
+      </span>
+
+    </div>
 
 
-        <div class="small">
-          Public NICEGOLD website
-        </div>
-
-      </div>
-
-
-      <!-- SYSTEM -->
-
-      <div class="card">
-
-        <div class="card-title">
-          ⚙️ System
-        </div>
-
-
-        <div class="value">
-          NICEGOLD MON
-        </div>
-
-
-        <div class="small">
-          Premium control panel
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- REFRESH -->
-
-    <button
-      class="refresh"
-      onclick="updateDashboard()"
+    <input
+      id="ngPhoneNumber"
+      class="ng-phone-input"
+      type="tel"
+      placeholder="Enter WhatsApp number"
+      autocomplete="tel"
     >
-      🔄 Refresh Status
-    </button>
+
+
+    <div class="ng-button-row">
+
+      <button
+        type="button"
+        class="ng-blue-button primary"
+        onclick="requestNGBotPairing()"
+      >
+        🔐 Pair WhatsApp
+      </button>
+
+
+      <button
+        type="button"
+        class="ng-blue-button"
+        onclick="refreshNGWhatsApp()"
+      >
+        ↻ Check Status
+      </button>
+
+    </div>
+
+
+    <div
+      id="ngPairingBox"
+      class="ng-pairing-box"
+    >
+
+      <div class="ng-pairing-label">
+        Pairing Code
+      </div>
+
+      <div
+        id="ngPairingCode"
+        class="ng-pairing-code"
+      >
+        --------
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- BOT FEATURES -->
+
+  <div class="ng-feature-grid">
+
+    <div class="ng-feature">
+
+      <div class="ng-feature-icon">
+        🤖
+      </div>
+
+      <div class="ng-feature-name">
+        Bot Engine
+      </div>
+
+      <div class="ng-feature-text">
+        Control the NICEGOLD automation engine.
+      </div>
+
+    </div>
+
+
+    <div class="ng-feature">
+
+      <div class="ng-feature-icon">
+        💬
+      </div>
+
+      <div class="ng-feature-name">
+        Commands
+      </div>
+
+      <div class="ng-feature-text">
+        Manage available bot commands and actions.
+      </div>
+
+    </div>
+
+
+    <div class="ng-feature">
+
+      <div class="ng-feature-icon">
+        🔐
+      </div>
+
+      <div class="ng-feature-name">
+        Permissions
+      </div>
+
+      <div class="ng-feature-text">
+        Access remains controlled by the NICEGOLD owner.
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- REFRESH -->
+
+<button
+  class="refresh"
+  onclick="updateDashboard()"
+>
+  🔄 Refresh Status
+</button>
 
 
     <!-- FOOTER -->
@@ -1364,213 +789,229 @@
   <script>
 
 
-    async function updateDashboard() {
+    /* =====================================================
+   NICEGOLD DIAMOND BLUE WHATSAPP CONTROLS
+   ===================================================== */
+
+async function requestNGBotPairing() {
+
+  const phoneInput =
+    document.getElementById("ngPhoneNumber");
+
+  const statusText =
+    document.getElementById("ngWhatsAppStatus");
+
+  const pairingBox =
+    document.getElementById("ngPairingBox");
+
+  const pairingCode =
+    document.getElementById("ngPairingCode");
+
+  const phoneNumber =
+    phoneInput.value.replace(/\D/g, "");
+
+  if (!phoneNumber) {
+    statusText.textContent =
+      "Enter a WhatsApp number first";
+    return;
+  }
+
+  statusText.textContent =
+    "Starting WhatsApp engine...";
+
+  pairingBox.style.display = "none";
+  pairingCode.textContent = "--------";
+
+  try {
+
+    const response = await fetch(
+      "/api/bot/connect",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          phoneNumber: phoneNumber
+        })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Unable to start bot");
+    }
+
+    statusText.textContent =
+      "Engine starting...";
+
+    /*
+     * Give the server a moment to create
+     * the WhatsApp socket.
+     */
+
+    setTimeout(
+      checkNGPairingCode,
+      3000
+    );
+
+  } catch (error) {
+
+    console.error(
+      "NICEGOLD pairing request:",
+      error
+    );
+
+    statusText.textContent =
+      "Could not start WhatsApp engine";
+  }
+}
 
 
-      const serverStatus =
-        document.getElementById(
-          "serverStatus"
-        );
+async function checkNGPairingCode() {
 
+  const statusText =
+    document.getElementById("ngWhatsAppStatus");
 
-      const serverDot =
-        document.getElementById(
-          "serverDot"
-        );
+  const pairingBox =
+    document.getElementById("ngPairingBox");
 
+  const pairingCode =
+    document.getElementById("ngPairingCode");
 
-      const lastUpdated =
-  document.getElementById(
-    "lastUpdated"
-  );
+  try {
 
-
-const botStatus =
-  document.getElementById(
-    "botStatus"
-  );
-
-
-const botMessage =
-  document.getElementById(
-    "botMessage"
-  );
-
-
-const apiStatus =
-  document.getElementById(
-    "apiStatus"
-  );
-
-
-/*
- * Check server
- */
-
-try {
-
-  const response =
-    await fetch(
-      "/api/health",
+    const response = await fetch(
+      "/api/whatsapp/pairing",
       {
         cache: "no-store"
       }
     );
 
+    if (!response.ok) {
+      throw new Error("Pairing API error");
+    }
 
-  if (!response.ok) {
+    const data =
+      await response.json();
 
-    throw new Error(
-      "Server error"
+    if (
+      data.available &&
+      data.pairingCode
+    ) {
+
+      pairingCode.textContent =
+        data.pairingCode;
+
+      pairingBox.style.display =
+        "block";
+
+      statusText.textContent =
+        "Pairing code ready";
+
+      return;
+    }
+
+    statusText.textContent =
+      "Waiting for pairing code...";
+
+    /*
+     * Check again shortly.
+     */
+
+    setTimeout(
+      checkNGPairingCode,
+      2500
     );
+
+  } catch (error) {
+
+    console.error(
+      "NICEGOLD pairing check:",
+      error
+    );
+
+    statusText.textContent =
+      "Unable to retrieve pairing code";
   }
-
-
-  const data =
-    await response.json();
-
-
-  serverStatus.textContent =
-    "NICEGOLD MON is online";
-
-
-  serverStatus.className =
-    "online";
-
-
-  serverDot.className =
-    "dot";
-
-
-  apiStatus.textContent =
-    "CONNECTED";
-
-
-  apiStatus.className =
-    "value online";
-
-
-  lastUpdated.textContent =
-    "Last checked: " +
-    new Date()
-      .toLocaleTimeString();
-
-
-} catch (error) {
-
-  serverStatus.textContent =
-    "Server unavailable";
-
-
-  serverStatus.className =
-    "offline";
-
-
-  serverDot.className =
-    "dot offline";
-
-
-  apiStatus.textContent =
-    "OFFLINE";
-
-
-  apiStatus.className =
-    "value offline";
-
-
-  lastUpdated.textContent =
-    "Unable to reach NICEGOLD API";
-
 }
 
 
-/*
- * Check bot
- */
+async function refreshNGWhatsApp() {
 
-try {
+  const statusText =
+    document.getElementById("ngWhatsAppStatus");
 
-  const response =
-    await fetch(
+  try {
+
+    const response = await fetch(
       "/api/whatsapp/status",
       {
         cache: "no-store"
       }
     );
 
+    if (!response.ok) {
+      throw new Error("Status API error");
+    }
 
-  if (!response.ok) {
+    const data =
+      await response.json();
 
-    throw new Error(
-      "Bot API error"
+    const state =
+      String(data.state || "")
+        .toLowerCase();
+
+    if (state === "ready") {
+
+      statusText.textContent =
+        "WhatsApp connected ✓";
+
+    } else if (state === "pairing") {
+
+      statusText.textContent =
+        "Pairing code ready";
+
+      checkNGPairingCode();
+
+    } else if (
+      state === "connecting" ||
+      state === "starting"
+    ) {
+
+      statusText.textContent =
+        "Connecting to WhatsApp...";
+
+    } else if (state === "error") {
+
+      statusText.textContent =
+        "WhatsApp engine error";
+
+    } else {
+
+      statusText.textContent =
+        data.message ||
+        "WhatsApp engine stopped";
+    }
+
+  } catch (error) {
+
+    console.error(
+      "NICEGOLD WhatsApp status:",
+      error
     );
+
+    statusText.textContent =
+      "Unable to check WhatsApp";
   }
-
-
-  const data =
-    await response.json();
-
-
-  botStatus.textContent =
-    String(
-      data.state
-    ).toUpperCase();
-
-
-  botMessage.textContent =
-    data.message;
-
-
-  if (
-    data.state ===
-    "ready"
-  ) {
-
-    botStatus.className =
-      "value online";
-
-  } else {
-
-    botStatus.className =
-      "value offline";
-
-  }
-
-
-} catch (error) {
-
-  botStatus.textContent =
-    "UNAVAILABLE";
-
-
-  botStatus.className =
-    "value offline";
-
-
-  botMessage.textContent =
-    "Could not retrieve bot status.";
-
-}
-
 }
 
 
 /*
- * Initial check
+ * Check the WhatsApp status when
+ * the dashboard opens.
  */
 
-updateDashboard();
-
-
-/*
- * Automatically update
- * every 10 seconds
- */
-
-setInterval(
-  updateDashboard,
-  10000
-);
+refreshNGWhatsApp();
 
 
 </script>
