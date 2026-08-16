@@ -43,153 +43,153 @@ async function startBot(phoneNumber) {
   };
 
   try {
-    const authFolder =
-      path.join(__dirname, "auth");
+    const authFolder = path.join(__dirname, "auth");
 
-    const {
-      state,
-      saveCreds
-    } = await useMultiFileAuthState(authFolder);
+    const { state, saveCreds } =
+      await useMultiFileAuthState(authFolder);
 
     sock = makeWASocket({
-      auth: state
+      auth: state,
+      printQRInTerminal: false
     });
 
-    sock.ev.on(
-      "creds.update",
-      saveCreds
-    );
+    sock.ev.on("creds.update", saveCreds);
 
-    sock.ev.on(
-      "connection.update",
-      async (update) => {
-        const {
-          connection,
-          lastDisconnect
-        } = update;
+    sock.ev.on("connection.update", async (update) => {
+      const { connection, lastDisconnect } = update;
 
-        if (connection === "connecting") {
+      console.log(
+        "NICEGOLD connection update:",
+        connection || "no-change"
+      );
 
-          botStatus = {
-            state: "connecting",
-            message:
-              "Connecting to WhatsApp..."
-          };
+      if (connection === "connecting") {
+        botStatus = {
+          state: "connecting",
+          message: "Connecting to WhatsApp..."
+        };
 
-          /*
-           * Pairing code must be requested
-           * after the socket starts connecting.
-           */
-          if (
-            !state.creds.registered &&
-            !pairingCode
-          ) {
-            try {
-              await delay(1500);
+        /*
+         * Only request a pairing code once.
+         * Give the socket time to establish its transport first.
+         */
+        if (!state.creds.registered && !pairingCode) {
+          try {
+            await delay(2500);
 
-              const cleanNumber =
-                String(phoneNumber)
-                  .replace(/\D/g, "");
-
-              console.log(
-                "Requesting WhatsApp pairing code..."
-              );
-
-              pairingCode =
-                await sock.requestPairingCode(
-                  cleanNumber
-                );
-
-              botStatus = {
-                state: "pairing",
-                message:
-                  "WhatsApp pairing code generated"
-              };
-
-              console.log(
-                "NICEGOLD pairing code:",
-                pairingCode
-              );
-
-            } catch (error) {
-
-              console.error(
-                "NICEGOLD pairing error:",
-                error
-              );
-
-              pairingCode = null;
-
-              botStatus = {
-                state: "error",
-                message:
-                  "Failed to generate WhatsApp pairing code"
-              };
-
-              starting = false;
+            if (!sock) {
+              return;
             }
-          }
 
-          return;
+            const cleanNumber = String(phoneNumber)
+              .replace(/\D/g, "");
+
+            console.log(
+              "Requesting WhatsApp pairing code..."
+            );
+
+            const code =
+              await sock.requestPairingCode(cleanNumber);
+
+            pairingCode = code;
+
+            botStatus = {
+              state: "pairing",
+              message: "WhatsApp pairing code generated"
+            };
+
+            console.log(
+              "NICEGOLD pairing code:",
+              pairingCode
+            );
+
+          } catch (error) {
+            console.error(
+              "NICEGOLD pairing error:",
+              error
+            );
+
+            pairingCode = null;
+
+            /*
+             * Do not immediately destroy the socket here.
+             * The connection handler will decide what happens next.
+             */
+            botStatus = {
+              state: "error",
+              message:
+                "Failed to generate WhatsApp pairing code"
+            };
+          }
         }
 
-        if (connection === "open") {
+        return;
+      }
 
+      if (connection === "open") {
+        pairingCode = null;
+        starting = false;
+
+        botStatus = {
+          state: "ready",
+          message: "WhatsApp engine is connected"
+        };
+
+        console.log(
+          "NICEGOLD WhatsApp engine connected."
+        );
+
+        return;
+      }
+
+      if (connection === "close") {
+        const statusCode =
+          lastDisconnect
+            ?.error
+            ?.output
+            ?.statusCode;
+
+        console.log(
+          "NICEGOLD WhatsApp connection closed.",
+          "status:",
+          statusCode
+        );
+
+        sock = null;
+        starting = false;
+
+        if (
+          statusCode ===
+          DisconnectReason.loggedOut
+        ) {
           pairingCode = null;
-          starting = false;
 
           botStatus = {
-            state: "ready",
+            state: "stopped",
             message:
-              "WhatsApp engine is connected"
+              "WhatsApp session logged out"
           };
-
-          console.log(
-            "NICEGOLD WhatsApp engine connected."
-          );
-
-          return;
+        } else {
+          /*
+           * Keep the status clear instead of immediately
+           * trying to request another code from a dead socket.
+           */
+          botStatus = {
+            state: "stopped",
+            message:
+              "WhatsApp connection closed"
+          };
         }
 
-        if (connection === "close") {
-
-          const statusCode =
-            lastDisconnect
-              ?.error
-              ?.output
-              ?.statusCode;
-
-          sock = null;
-          starting = false;
-
-          if (
-            statusCode ===
-            DisconnectReason.loggedOut
-          ) {
-
-            botStatus = {
-              state: "stopped",
-              message:
-                "WhatsApp session logged out"
-            };
-
-          } else {
-
-            botStatus = {
-              state: "stopped",
-              message:
-                "WhatsApp connection closed"
-            };
-          }
-
-          console.log(
-            "NICEGOLD WhatsApp connection closed."
-          );
-        }
+        return;
       }
-    );
+    });
 
   } catch (error) {
+    console.error(
+      "NICEGOLD WhatsApp error:",
+      error
+    );
 
     sock = null;
     starting = false;
@@ -200,20 +200,13 @@ async function startBot(phoneNumber) {
       message:
         "Failed to start WhatsApp engine"
     };
-
-    console.error(
-      "NICEGOLD WhatsApp error:",
-      error
-    );
   }
 
   return botStatus;
 }
 
 async function stopBot() {
-
   if (!sock) {
-
     botStatus = {
       state: "stopped",
       message:
