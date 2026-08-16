@@ -3622,6 +3622,235 @@ function showNewsMessage() {
 window.showNewsMessage =
   showNewsMessage;
 
+  /* =====================================================
+   NICEGOLD DYNAMIC NEWS
+   ===================================================== */
+
+async function loadNICEGOLDNews() {
+
+  const newsList =
+    document.querySelector(".news-list");
+
+  if (!newsList) {
+    return;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/news",
+        {
+          cache: "no-store"
+        }
+      );
+
+    if (!response.ok) {
+
+      throw new Error(
+        "News API unavailable"
+      );
+
+    }
+
+    const data =
+      await response.json();
+
+    if (
+      !data.success ||
+      !Array.isArray(data.news)
+    ) {
+
+      throw new Error(
+        "Invalid news response"
+      );
+
+    }
+
+
+    newsList.innerHTML = "";
+
+
+    data.news.forEach(
+      function (item, index) {
+
+        const article =
+          document.createElement(
+            "article"
+          );
+
+        article.className =
+          "news-item";
+
+
+        let badgeClass =
+          "system";
+
+        if (
+          item.type === "BOT"
+        ) {
+
+          badgeClass = "bot";
+
+        }
+
+        if (
+          item.type === "UPDATE"
+        ) {
+
+          badgeClass = "update";
+
+        }
+
+
+        const isNew =
+          index === 0;
+
+
+        article.innerHTML = `
+
+          <div class="news-item-top">
+
+            <div>
+
+              <span
+                class="news-badge ${badgeClass}"
+              >
+                ${escapeNewsHTML(item.type)}
+              </span>
+
+              ${
+                isNew
+                  ? `
+                    <span class="news-badge new">
+                      NEW
+                    </span>
+                  `
+                  : ""
+              }
+
+            </div>
+
+            <span class="news-time">
+              ${escapeNewsHTML(item.time)}
+            </span>
+
+          </div>
+
+
+          <h3>
+            ${escapeNewsHTML(item.title)}
+          </h3>
+
+
+          <p>
+            ${escapeNewsHTML(item.message)}
+          </p>
+
+        `;
+
+
+        newsList.appendChild(
+          article
+        );
+
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "NICEGOLD News Error:",
+      error
+    );
+
+
+    newsList.innerHTML = `
+
+      <article class="news-item">
+
+        <div class="news-item-top">
+
+          <span class="news-badge system">
+            SYSTEM
+          </span>
+
+          <span class="news-time">
+            OFFLINE
+          </span>
+
+        </div>
+
+
+        <h3>
+          News service unavailable
+        </h3>
+
+
+        <p>
+          NICEGOLD news could not be
+          retrieved right now.
+        </p>
+
+      </article>
+
+    `;
+
+  }
+
+}
+
+
+/* =====================================================
+   SAFE NEWS TEXT
+   ===================================================== */
+
+function escapeNewsHTML(value) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   INITIAL NEWS LOAD
+   ===================================================== */
+
+loadNICEGOLDNews();
+
+
+/* =====================================================
+   AUTOMATIC NEWS REFRESH
+   ===================================================== */
+
+setInterval(
+  loadNICEGOLDNews,
+  30000
+);
+
 </script>
 
 </body>

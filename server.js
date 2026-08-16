@@ -199,63 +199,212 @@ app.post("/api/bot/disconnect", async (req, res) => {
 
 
 /* =====================================================
-   NICEGOLD DYNAMIC NEWS
+   NICEGOLD LIVE ACTIVITY NEWS
    ===================================================== */
 
 let nicegoldNews = [
-
   {
     type: "SYSTEM",
-
-    title:
-      "NICEGOLD Control Center is online",
-
+    title: "NICEGOLD Control Center is online",
     message:
       "The NICEGOLD MON control panel is running normally.",
-
-    time: "LIVE"
-  },
-
-
-  {
-    type: "BOT",
-
-    title:
-      "WhatsApp connection interface updated",
-
-    message:
-      "The WhatsApp connection interface is available from the control center.",
-
-    time: "TODAY"
-  },
-
-
-  {
-    type: "UPDATE",
-
-    title:
-      "Diamond Blue interface deployed",
-
-    message:
-      "The NICEGOLD dashboard has received the new Diamond Blue interface.",
-
-    time: "TODAY"
-  },
-
-
-  {
-    type: "SYSTEM",
-
-    title:
-      "NICEGOLD monitoring is active",
-
-    message:
-      "Server and system status can be monitored from the dashboard.",
-
     time: "LIVE"
   }
-
 ];
+
+
+/* =====================================================
+   ADD NEWS EVENT
+   ===================================================== */
+
+function addNICEGOLDNews(
+  type,
+  title,
+  message
+) {
+
+  nicegoldNews.unshift({
+
+    type,
+    title,
+    message,
+
+    time:
+      new Date().toISOString()
+
+  });
+
+
+  /* Keep the latest 20 events */
+
+  if (nicegoldNews.length > 20) {
+
+    nicegoldNews =
+      nicegoldNews.slice(0, 20);
+
+  }
+
+}
+
+
+/* =====================================================
+   SERVER START EVENT
+   ===================================================== */
+
+addNICEGOLDNews(
+  "SYSTEM",
+  "NICEGOLD server started",
+  "The NICEGOLD server has successfully started."
+);
+
+
+/* =====================================================
+   NEWS API
+   ===================================================== */
+
+app.get("/api/news", (req, res) => {
+
+  res.json({
+
+    success: true,
+
+    news:
+      nicegoldNews
+
+  });
+
+});
+
+
+/* =====================================================
+   MONITOR BOT STATUS
+   ===================================================== */
+
+let previousBotState = null;
+
+
+setInterval(
+  () => {
+
+    try {
+
+      const bot =
+        typeof getBotStatus === "function"
+          ? getBotStatus()
+          : null;
+
+
+      if (!bot) {
+        return;
+      }
+
+
+      const currentState =
+        bot.state;
+
+
+      if (
+        previousBotState === null
+      ) {
+
+        previousBotState =
+          currentState;
+
+        return;
+
+      }
+
+
+      if (
+        currentState !==
+        previousBotState
+      ) {
+
+        if (
+          currentState === "ready"
+        ) {
+
+          addNICEGOLDNews(
+            "BOT",
+            "WhatsApp connected",
+            "The NICEGOLD WhatsApp engine is now connected."
+          );
+
+        }
+
+
+        else if (
+          currentState === "pairing"
+        ) {
+
+          addNICEGOLDNews(
+            "WHATSAPP",
+            "Pairing code generated",
+            "A WhatsApp pairing code has been generated."
+          );
+
+        }
+
+
+        else if (
+          currentState === "starting" ||
+          currentState === "connecting"
+        ) {
+
+          addNICEGOLDNews(
+            "BOT",
+            "WhatsApp engine starting",
+            "The NICEGOLD WhatsApp engine is starting."
+          );
+
+        }
+
+
+        else if (
+          currentState === "stopped"
+        ) {
+
+          addNICEGOLDNews(
+            "BOT",
+            "WhatsApp engine stopped",
+            bot.message ||
+              "The WhatsApp engine has stopped."
+          );
+
+        }
+
+
+        else if (
+          currentState === "error"
+        ) {
+
+          addNICEGOLDNews(
+            "SYSTEM",
+            "WhatsApp engine error",
+            bot.message ||
+              "The WhatsApp engine reported an error."
+          );
+
+        }
+
+
+        previousBotState =
+          currentState;
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "NICEGOLD news monitor error:",
+        error
+      );
+
+    }
+
+  },
+  3000
+);
 
 
 /* =====================================================
