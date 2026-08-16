@@ -17,6 +17,563 @@
 
 <style>
 
+/* =====================================================
+   NICEGOLD LIVE NEWS CENTER
+   ===================================================== */
+
+.news-section {
+  position: relative;
+  margin-top: 28px;
+  padding: 24px;
+  border-radius: 26px;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(8, 36, 78, 0.94),
+      rgba(3, 15, 36, 0.97)
+    );
+
+  border: 1px solid
+    rgba(100, 190, 255, 0.28);
+
+  box-shadow:
+    0 20px 60px
+      rgba(0, 20, 60, 0.45),
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(18px);
+}
+
+
+.news-section::before {
+  content: "";
+
+  position: absolute;
+
+  width: 240px;
+  height: 240px;
+
+  top: -120px;
+  right: -100px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(80, 190, 255, 0.25),
+      transparent 70%
+    );
+
+  animation:
+    newsOrb 7s ease-in-out infinite;
+}
+
+
+.news-section::after {
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  bottom: -100px;
+  left: -70px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(0, 120, 255, 0.18),
+      transparent 70%
+    );
+
+  animation:
+    newsOrb 9s ease-in-out infinite reverse;
+}
+
+
+.news-header {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 20px;
+}
+
+
+.news-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+}
+
+
+.news-live-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  font-size: 21px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(75, 190, 255, 0.3),
+      rgba(30, 100, 220, 0.16)
+    );
+
+  border: 1px solid
+    rgba(100, 200, 255, 0.35);
+
+  box-shadow:
+    0 0 25px
+      rgba(50, 170, 255, 0.18);
+
+  animation:
+    newsPulse 2.8s ease-in-out infinite;
+}
+
+
+.news-title {
+  font-size: 20px;
+  font-weight: 800;
+
+  letter-spacing: 0.4px;
+}
+
+
+.news-subtitle {
+  margin-top: 3px;
+
+  color:
+    rgba(210, 235, 255, 0.58);
+
+  font-size: 12px;
+}
+
+
+.news-live {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 7px 11px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  color: #bfeaff;
+
+  background:
+    rgba(40, 150, 255, 0.10);
+
+  border: 1px solid
+    rgba(90, 190, 255, 0.25);
+}
+
+
+.news-live-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #55d8ff;
+
+  box-shadow:
+    0 0 12px
+      rgba(80, 210, 255, 0.95);
+
+  animation:
+    liveBlink 1.4s ease-in-out infinite;
+}
+
+
+/* =====================================================
+   NEWS LIST
+   ===================================================== */
+
+.news-list {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+
+  gap: 12px;
+}
+
+
+.news-item {
+  position: relative;
+
+  padding: 17px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.055),
+      rgba(40, 130, 210, 0.035)
+    );
+
+  border: 1px solid
+    rgba(120, 205, 255, 0.12);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+
+  animation:
+    newsEnter 0.55s ease both;
+}
+
+
+.news-item:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    rgba(100, 205, 255, 0.34);
+
+  background:
+    rgba(60, 150, 220, 0.08);
+
+  box-shadow:
+    0 12px 35px
+      rgba(0, 30, 70, 0.28);
+}
+
+
+.news-item.new-item {
+  animation:
+    newsNew 0.8s ease both;
+}
+
+
+.news-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 9px;
+}
+
+
+.news-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 0.8px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.12);
+}
+
+
+.news-badge.system {
+  color: #bcecff;
+  background:
+    rgba(40, 170, 255, 0.10);
+}
+
+
+.news-badge.bot {
+  color: #a9ffe4;
+  background:
+    rgba(40, 220, 170, 0.10);
+}
+
+
+.news-badge.update {
+  color: #d5c8ff;
+  background:
+    rgba(110, 100, 255, 0.12);
+}
+
+
+.news-badge.whatsapp {
+  color: #baffd9;
+  background:
+    rgba(30, 210, 130, 0.10);
+}
+
+
+.news-badge.new {
+  margin-left: 5px;
+
+  color: #dff7ff;
+
+  background:
+    rgba(60, 190, 255, 0.14);
+
+  border-color:
+    rgba(90, 205, 255, 0.25);
+
+  animation:
+    newBadge 1.8s ease-in-out infinite;
+}
+
+
+.news-time {
+  color:
+    rgba(205, 230, 250, 0.48);
+
+  font-size: 10px;
+
+  white-space: nowrap;
+}
+
+
+.news-item h3 {
+  margin: 0 0 6px;
+
+  color: #eefaff;
+
+  font-size: 15px;
+  font-weight: 750;
+}
+
+
+.news-item p {
+  margin: 0;
+
+  color:
+    rgba(210, 232, 248, 0.62);
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* =====================================================
+   NEWS LOADING
+   ===================================================== */
+
+.news-loading {
+  padding: 25px;
+
+  text-align: center;
+
+  color:
+    rgba(205, 230, 250, 0.55);
+
+  font-size: 12px;
+}
+
+
+.news-spinner {
+  width: 24px;
+  height: 24px;
+
+  margin:
+    0 auto 10px;
+
+  border-radius: 50%;
+
+  border:
+    2px solid
+      rgba(100, 200, 255, 0.12);
+
+  border-top-color:
+    rgba(100, 210, 255, 0.85);
+
+  animation:
+    newsSpin 0.8s linear infinite;
+}
+
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes newsEnter {
+
+  from {
+    opacity: 0;
+    transform:
+      translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+@keyframes newsNew {
+
+  0% {
+    opacity: 0;
+    transform:
+      translateY(-18px)
+      scale(0.98);
+  }
+
+  60% {
+    opacity: 1;
+    transform:
+      translateY(3px)
+      scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+@keyframes newsOrb {
+
+  0%,
+  100% {
+    transform:
+      translate(0, 0)
+      scale(1);
+  }
+
+  50% {
+    transform:
+      translate(-25px, 20px)
+      scale(1.15);
+  }
+
+}
+
+
+@keyframes newsPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 20px
+        rgba(50, 170, 255, 0.12);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow:
+      0 0 32px
+        rgba(50, 190, 255, 0.25);
+  }
+
+}
+
+
+@keyframes liveBlink {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.35;
+    transform: scale(0.72);
+  }
+
+}
+
+
+@keyframes newBadge {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 0
+        rgba(70, 200, 255, 0);
+  }
+
+  50% {
+    box-shadow:
+      0 0 14px
+        rgba(70, 200, 255, 0.25);
+  }
+
+}
+
+
+@keyframes newsSpin {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+  .news-section {
+    padding: 18px;
+    border-radius: 21px;
+  }
+
+
+  .news-title {
+    font-size: 17px;
+  }
+
+
+  .news-live {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+
+
+  .news-item {
+    padding: 14px;
+  }
+
+  }
+  
 /* =========================================================
    RESET
    ========================================================= */
@@ -2404,6 +2961,63 @@ body {
 
 </section>
 
+<!-- =====================================================
+     NICEGOLD LIVE NEWS CENTER
+     ===================================================== -->
+
+<section class="news-section">
+
+  <div class="news-header">
+
+    <div class="news-heading">
+
+      <div class="news-live-icon">
+        🛰️
+      </div>
+
+      <div>
+
+        <div class="news-title">
+          NICEGOLD News Center
+        </div>
+
+        <div class="news-subtitle">
+          Live system activity and updates
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="news-live">
+
+      <span class="news-live-dot"></span>
+
+      LIVE
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="newsList"
+    class="news-list"
+  >
+
+    <div class="news-loading">
+
+      <div class="news-spinner"></div>
+
+      Loading NICEGOLD updates...
+
+    </div>
+
+  </div>
+
+</section>
+  
   <!-- ===================================================
        WHATSAPP
        =================================================== -->
@@ -3623,17 +4237,24 @@ window.showNewsMessage =
   showNewsMessage;
 
   /* =====================================================
-   NICEGOLD DYNAMIC NEWS
+   NICEGOLD DYNAMIC NEWS CENTER
    ===================================================== */
+
+let previousNewsSignature = "";
+
 
 async function loadNICEGOLDNews() {
 
   const newsList =
-    document.querySelector(".news-list");
+    document.getElementById(
+      "newsList"
+    );
+
 
   if (!newsList) {
     return;
   }
+
 
   try {
 
@@ -3645,6 +4266,7 @@ async function loadNICEGOLDNews() {
         }
       );
 
+
     if (!response.ok) {
 
       throw new Error(
@@ -3653,8 +4275,10 @@ async function loadNICEGOLDNews() {
 
     }
 
+
     const data =
       await response.json();
+
 
     if (
       !data.success ||
@@ -3668,10 +4292,54 @@ async function loadNICEGOLDNews() {
     }
 
 
+    const news =
+      data.news;
+
+
+    const signature =
+      JSON.stringify(news);
+
+
+    const hasChanged =
+      signature !==
+      previousNewsSignature;
+
+
+    if (
+      !hasChanged &&
+      newsList.children.length
+    ) {
+
+      return;
+
+    }
+
+
+    previousNewsSignature =
+      signature;
+
+
+    if (!news.length) {
+
+      newsList.innerHTML = `
+
+        <div class="news-loading">
+
+          No NICEGOLD activity yet.
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
     newsList.innerHTML = "";
 
 
-    data.news.forEach(
+    news.forEach(
       function (item, index) {
 
         const article =
@@ -3679,32 +4347,79 @@ async function loadNICEGOLDNews() {
             "article"
           );
 
+
         article.className =
           "news-item";
+
+
+        if (
+          hasChanged &&
+          index === 0
+        ) {
+
+          article.classList.add(
+            "new-item"
+          );
+
+        }
 
 
         let badgeClass =
           "system";
 
+
+        const type =
+          String(
+            item.type || "SYSTEM"
+          ).toUpperCase();
+
+
         if (
-          item.type === "BOT"
+          type === "BOT"
         ) {
 
-          badgeClass = "bot";
+          badgeClass =
+            "bot";
 
         }
 
-        if (
-          item.type === "UPDATE"
+
+        else if (
+          type === "UPDATE"
         ) {
 
-          badgeClass = "update";
+          badgeClass =
+            "update";
 
         }
 
 
-        const isNew =
-          index === 0;
+        else if (
+          type === "WHATSAPP"
+        ) {
+
+          badgeClass =
+            "whatsapp";
+
+        }
+
+
+        const title =
+          escapeNewsHTML(
+            item.title
+          );
+
+
+        const message =
+          escapeNewsHTML(
+            item.message
+          );
+
+
+        const time =
+          formatNewsTime(
+            item.time
+          );
 
 
         article.innerHTML = `
@@ -3716,13 +4431,16 @@ async function loadNICEGOLDNews() {
               <span
                 class="news-badge ${badgeClass}"
               >
-                ${escapeNewsHTML(item.type)}
+                ${escapeNewsHTML(type)}
               </span>
 
+
               ${
-                isNew
+                index === 0
                   ? `
-                    <span class="news-badge new">
+                    <span
+                      class="news-badge new"
+                    >
                       NEW
                     </span>
                   `
@@ -3731,20 +4449,21 @@ async function loadNICEGOLDNews() {
 
             </div>
 
+
             <span class="news-time">
-              ${escapeNewsHTML(item.time)}
+              ${time}
             </span>
 
           </div>
 
 
           <h3>
-            ${escapeNewsHTML(item.title)}
+            ${title}
           </h3>
 
 
           <p>
-            ${escapeNewsHTML(item.message)}
+            ${message}
           </p>
 
         `;
@@ -3768,36 +4487,62 @@ async function loadNICEGOLDNews() {
 
     newsList.innerHTML = `
 
-      <article class="news-item">
+      <div class="news-loading">
 
-        <div class="news-item-top">
+        Unable to load NICEGOLD news.
 
-          <span class="news-badge system">
-            SYSTEM
-          </span>
-
-          <span class="news-time">
-            OFFLINE
-          </span>
-
-        </div>
-
-
-        <h3>
-          News service unavailable
-        </h3>
-
-
-        <p>
-          NICEGOLD news could not be
-          retrieved right now.
-        </p>
-
-      </article>
+      </div>
 
     `;
 
   }
+
+}
+
+
+/* =====================================================
+   FORMAT NEWS TIME
+   ===================================================== */
+
+function formatNewsTime(value) {
+
+  if (
+    !value ||
+    value === "LIVE" ||
+    value === "TODAY"
+  ) {
+
+    return escapeNewsHTML(
+      value || "NOW"
+    );
+
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return escapeNewsHTML(
+      value
+    );
+
+  }
+
+
+  return date.toLocaleTimeString(
+    [],
+    {
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  );
 
 }
 
@@ -3836,20 +4581,8 @@ function escapeNewsHTML(value) {
 
 
 /* =====================================================
-   INITIAL NEWS LOAD
+   INITIAL LOAD
    ===================================================== */
-
-loadNICEGOLDNews();
-
-
-/* =====================================================
-   AUTOMATIC NEWS REFRESH
-   ===================================================== */
-
-setInterval(
-  loadNICEGOLDNews,
-  30000
-);
 
 </script>
 
