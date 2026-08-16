@@ -12,8 +12,226 @@ content="#03172b"
 
 «»
 
-  <title>NICEGOLD MON • Admin Control</title>  <style>
+  <title>NICEGOLD MON • Admin Control</title> 
+  <style>
+/* =====================================================
+   BIG WATER GLASS BUBBLES 💧
+   ===================================================== */
 
+.water-bubble {
+  position: absolute;
+
+  bottom: -180px;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 30% 25%,
+      rgba(255,255,255,0.42),
+      rgba(120,220,255,0.16) 22%,
+      rgba(30,160,255,0.08) 55%,
+      rgba(0,90,180,0.025) 75%,
+      transparent 78%
+    );
+
+  border:
+    1px solid
+    rgba(150,235,255,0.35);
+
+  box-shadow:
+    inset
+    -12px -15px 30px
+    rgba(0,70,150,0.18),
+
+    inset
+    10px 8px 22px
+    rgba(255,255,255,0.12),
+
+    0 0 35px
+    rgba(40,190,255,0.14);
+
+  backdrop-filter:
+    blur(2px);
+
+  -webkit-backdrop-filter:
+    blur(2px);
+
+  opacity: 0;
+
+  animation:
+    bubbleRise 18s linear infinite;
+}
+
+
+/* LARGE BUBBLE */
+
+.bubble-1 {
+  width: 150px;
+  height: 150px;
+
+  left: 4%;
+
+  animation-delay: -2s;
+}
+
+
+/* EXTRA LARGE */
+
+.bubble-2 {
+  width: 230px;
+  height: 230px;
+
+  left: 24%;
+
+  animation-delay: -10s;
+
+  animation-duration: 25s;
+}
+
+
+/* MEDIUM */
+
+.bubble-3 {
+  width: 105px;
+  height: 105px;
+
+  left: 48%;
+
+  animation-delay: -6s;
+
+  animation-duration: 16s;
+}
+
+
+/* HUGE BUBBLE */
+
+.bubble-4 {
+  width: 190px;
+  height: 190px;
+
+  right: 10%;
+
+  animation-delay: -14s;
+
+  animation-duration: 23s;
+}
+
+
+/* SMALLER BUBBLE */
+
+.bubble-5 {
+  width: 75px;
+  height: 75px;
+
+  left: 70%;
+
+  animation-delay: -4s;
+
+  animation-duration: 14s;
+}
+
+
+/* BIG FLOATING BUBBLE */
+
+.bubble-6 {
+  width: 125px;
+  height: 125px;
+
+  left: 85%;
+
+  animation-delay: -17s;
+
+  animation-duration: 20s;
+}
+
+
+/* =====================================================
+   BUBBLE MOVEMENT
+   ===================================================== */
+
+@keyframes bubbleRise {
+
+  0% {
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(0.75)
+      rotate(0deg);
+
+    opacity: 0;
+
+  }
+
+  10% {
+
+    opacity: 0.45;
+
+  }
+
+  30% {
+
+    transform:
+      translate3d(
+        35px,
+        -28vh,
+        0
+      )
+      scale(0.95)
+      rotate(8deg);
+
+  }
+
+  55% {
+
+    transform:
+      translate3d(
+        -30px,
+        -55vh,
+        0
+      )
+      scale(1.05)
+      rotate(-8deg);
+
+  }
+
+  78% {
+
+    opacity: 0.32;
+
+    transform:
+      translate3d(
+        45px,
+        -82vh,
+        0
+      )
+      scale(1.12)
+      rotate(12deg);
+
+  }
+
+  100% {
+
+    transform:
+      translate3d(
+        -20px,
+        -125vh,
+        0
+      )
+      scale(1.2)
+      rotate(-10deg);
+
+    opacity: 0;
+
+  }
+
+}
     * {
       box-sizing: border-box;
       margin: 0;
@@ -1308,7 +1526,7 @@ content="#03172b"
         rgba(60,210,255,0.35);
 
       margin-bottom:  id="a7k31"
-: 28px;
+     : 28px;
 
     }
 
@@ -1905,6 +2123,15 @@ content="#03172b"
 
   <div class="background">
 
+<!-- BIG WATER BUBBLES -->
+
+<div class="water-bubble bubble-1"></div>
+<div class="water-bubble bubble-2"></div>
+<div class="water-bubble bubble-3"></div>
+<div class="water-bubble bubble-4"></div>
+<div class="water-bubble bubble-5"></div>
+<div class="water-bubble bubble-6"></div>
+    
     <div class="orb orb-blue"></div>
 
     <div class="orb orb-cyan"></div>
