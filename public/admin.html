@@ -2,543 +2,1241 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#020817">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <title>NICEGOLD MON • Admin Panel</title>
+  <meta
+    name="theme-color"
+    content="#080304"
+  >
+
+  <title>NICEGOLD MON • Admin Control</title>
 
   <style>
+    /* =====================================================
+       NICEGOLD MON
+       PREMIUM RED + GOLD GLASS CONTROL PANEL
+       ===================================================== */
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    :root {
+      --bg: #050304;
+      --bg2: #100407;
+
+      --red: #ff2448;
+      --red-dark: #9d001f;
+      --red-soft: #ff7188;
+
+      --gold: #ffd45c;
+      --gold-light: #fff0a8;
+      --gold-dark: #b87900;
+
+      --white: #fffaf0;
+
+      --glass:
+        rgba(255, 255, 255, 0.055);
+
+      --glass-strong:
+        rgba(255, 255, 255, 0.085);
+
+      --border:
+        rgba(255, 215, 100, 0.20);
+
+      --shadow:
+        rgba(0, 0, 0, 0.55);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       min-height: 100vh;
-      font-family: Arial, sans-serif;
-      color: white;
+
+      overflow-x: hidden;
+
+      color: var(--white);
+
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
       background:
-        radial-gradient(circle at 10% 10%, rgba(0,120,255,.30), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(0,210,255,.20), transparent 30%),
-        radial-gradient(circle at 50% 100%, rgba(80,50,255,.25), transparent 35%),
-        #020817;
-      padding: 20px;
+        radial-gradient(
+          circle at 15% 10%,
+          rgba(255, 25, 60, 0.18),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 85% 75%,
+          rgba(255, 190, 40, 0.13),
+          transparent 30%
+        ),
+        linear-gradient(
+          135deg,
+          var(--bg),
+          var(--bg2),
+          #030303
+        );
     }
 
-    .orb {
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+
+    /* =====================================================
+       ANIMATED BACKGROUND
+       ===================================================== */
+
+    .background {
       position: fixed;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: .35;
+
+      inset: 0;
+
+      z-index: -10;
+
+      overflow: hidden;
+
       pointer-events: none;
-      animation: float 12s ease-in-out infinite alternate;
     }
 
-    .orb.one {
-      background: #0077ff;
-      left: -100px;
-      top: -100px;
+    .background::before {
+      content: "";
+
+      position: absolute;
+
+      inset: -20%;
+
+      background:
+        repeating-linear-gradient(
+          115deg,
+          transparent 0,
+          transparent 90px,
+          rgba(255, 215, 100, 0.018) 91px,
+          transparent 92px
+        );
+
+      animation:
+        backgroundMove 18s linear infinite;
     }
 
-    .orb.two {
-      background: #00d9ff;
-      right: -100px;
-      bottom: -100px;
-      animation-delay: -5s;
-    }
+    @keyframes backgroundMove {
+      from {
+        transform:
+          translate3d(0, 0, 0);
+      }
 
-    @keyframes float {
       to {
-        transform: translate(70px, 50px) scale(1.15);
+        transform:
+          translate3d(120px, 80px, 0);
       }
     }
 
-    .container {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 950px;
-      margin: auto;
+
+    /* =====================================================
+       GLOWING ORBS
+       ===================================================== */
+
+    .orb {
+      position: absolute;
+
+      width: 340px;
+      height: 340px;
+
+      border-radius: 50%;
+
+      filter: blur(70px);
+
+      opacity: 0.38;
+
+      animation:
+        orbFloat 18s ease-in-out infinite alternate;
     }
+
+    .orb-red {
+      left: -120px;
+      top: 5%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 20, 55, 0.95),
+          rgba(150, 0, 25, 0.25),
+          transparent 70%
+        );
+    }
+
+    .orb-gold {
+      right: -130px;
+      top: 28%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 210, 75, 0.9),
+          rgba(170, 90, 0, 0.20),
+          transparent 70%
+        );
+
+      animation-delay: -6s;
+    }
+
+    .orb-red-small {
+      left: 35%;
+      bottom: -150px;
+
+      width: 280px;
+      height: 280px;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 45, 70, 0.75),
+          transparent 70%
+        );
+
+      animation-delay: -10s;
+    }
+
+    @keyframes orbFloat {
+      0% {
+        transform:
+          translate3d(-20px, -10px, 0)
+          scale(0.95);
+      }
+
+      50% {
+        transform:
+          translate3d(90px, 65px, 0)
+          scale(1.12);
+      }
+
+      100% {
+        transform:
+          translate3d(-25px, 130px, 0)
+          scale(0.9);
+      }
+    }
+
+
+    /* =====================================================
+       MOVING LIGHT
+       ===================================================== */
+
+    .light {
+      position: absolute;
+
+      width: 60vw;
+      height: 2px;
+
+      left: -70%;
+      top: 90%;
+
+      opacity: 0.45;
+
+      filter: blur(2px);
+
+      transform:
+        rotate(-25deg);
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 215, 100, 0.9),
+          rgba(255, 40, 70, 0.75),
+          transparent
+        );
+
+      animation:
+        lightSweep 10s linear infinite;
+    }
+
+    @keyframes lightSweep {
+      0% {
+        left: -70%;
+        top: 110%;
+      }
+
+      100% {
+        left: 120%;
+        top: -20%;
+      }
+    }
+
+
+    /* =====================================================
+       FLOATING PARTICLES
+       ===================================================== */
+
+    .particle {
+      position: absolute;
+
+      bottom: -10px;
+
+      width: 4px;
+      height: 4px;
+
+      border-radius: 50%;
+
+      background:
+        var(--gold);
+
+      box-shadow:
+        0 0 14px
+        rgba(255, 215, 100, 0.85);
+
+      opacity: 0;
+
+      animation:
+        particleRise 11s linear infinite;
+    }
+
+    .p1 {
+      left: 8%;
+      animation-delay: 0s;
+    }
+
+    .p2 {
+      left: 23%;
+      animation-delay: -2s;
+    }
+
+    .p3 {
+      left: 41%;
+      animation-delay: -5s;
+    }
+
+    .p4 {
+      left: 64%;
+      animation-delay: -8s;
+    }
+
+    .p5 {
+      left: 83%;
+      animation-delay: -3s;
+    }
+
+    .p6 {
+      left: 94%;
+      animation-delay: -6s;
+    }
+
+    @keyframes particleRise {
+      0% {
+        transform:
+          translateY(0)
+          translateX(0)
+          scale(0.5);
+
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 0.65;
+      }
+
+      75% {
+        opacity: 0.3;
+      }
+
+      100% {
+        transform:
+          translateY(-110vh)
+          translateX(60px)
+          scale(1.1);
+
+        opacity: 0;
+      }
+    }
+
+
+    /* =====================================================
+       MAIN SHELL
+       ===================================================== */
+
+    .shell {
+      width: min(1180px, 94%);
+
+      margin:
+        25px auto 50px;
+
+      padding: 22px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 30px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.085),
+          rgba(255,255,255,0.025)
+        );
+
+      backdrop-filter:
+        blur(28px);
+
+      -webkit-backdrop-filter:
+        blur(28px);
+
+      box-shadow:
+        0 35px 100px
+        var(--shadow),
+
+        inset 0 1px 0
+        rgba(255,255,255,0.12),
+
+        0 0 70px
+        rgba(255, 30, 60, 0.07);
+    }
+
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
 
     header {
       display: flex;
+
       align-items: center;
+
       justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 25px;
-      padding: 22px;
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 22px;
-      background: rgba(4,15,35,.65);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+
+      gap: 20px;
+
+      padding:
+        8px 8px 24px;
     }
 
     .brand {
-      font-size: 20px;
-      font-weight: 800;
+      font-size:
+        clamp(22px, 5vw, 34px);
+
+      font-weight: 900;
+
+      letter-spacing: 0.8px;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--gold-light),
+          var(--gold),
+          #ff5b72,
+          var(--gold),
+          var(--gold-light)
+        );
+
+      background-size:
+        300% auto;
+
+      -webkit-background-clip: text;
+
+      background-clip: text;
+
+      color: transparent;
+
+      animation:
+        brandFlow 7s linear infinite;
+    }
+
+    @keyframes brandFlow {
+      0% {
+        background-position: 0% center;
+      }
+
+      100% {
+        background-position: 300% center;
+      }
     }
 
     .subtitle {
-      color: #91a4bf;
-      font-size: 12px;
       margin-top: 6px;
+
+      font-size: 12px;
+
+      letter-spacing: 2px;
+
+      text-transform: uppercase;
+
+      color:
+        rgba(255,240,190,0.55);
     }
 
-    .logout {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 14px;
-      background: rgba(255,255,255,.08);
-      color: white;
-      cursor: pointer;
+    .online-badge {
+      display: flex;
+
+      align-items: center;
+
+      gap: 9px;
+
+      padding:
+        10px 15px;
+
+      border-radius: 999px;
+
+      border:
+        1px solid
+        rgba(255,215,100,0.20);
+
+      background:
+        rgba(255,255,255,0.045);
+
+      backdrop-filter:
+        blur(14px);
+
+      -webkit-backdrop-filter:
+        blur(14px);
+
+      white-space: nowrap;
     }
 
-    .logout:hover {
-      background: rgba(255,255,255,.14);
+    .online-dot {
+      width: 9px;
+      height: 9px;
+
+      border-radius: 50%;
+
+      background:
+        var(--gold);
+
+      box-shadow:
+        0 0 16px
+        rgba(255,215,90,0.95);
+
+      animation:
+        pulse 1.8s ease-in-out infinite;
     }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.5);
+        opacity: 0.55;
+      }
+    }
+
+
+    /* =====================================================
+       STAT CARDS
+       ===================================================== */
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-bottom: 20px;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(200px, 1fr)
+        );
+
+      gap: 16px;
+
+      margin-bottom: 35px;
     }
 
     .card {
-      padding: 20px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.09);
-      background: rgba(4,15,35,.62);
-      backdrop-filter: blur(18px);
-      box-shadow: 0 15px 40px rgba(0,0,0,.25);
+      position: relative;
+
+      overflow: hidden;
+
+      padding: 22px;
+
+      min-height: 135px;
+
+      border-radius: 22px;
+
+      border:
+        1px solid
+        rgba(255,215,100,0.16);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,0.075),
+          rgba(255,255,255,0.025)
+        );
+
+      backdrop-filter:
+        blur(20px);
+
+      -webkit-backdrop-filter:
+        blur(20px);
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.08),
+
+        0 18px 45px
+        rgba(0,0,0,0.30);
+
+      transition:
+        transform 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+    }
+
+    .card::after {
+      content: "";
+
+      position: absolute;
+
+      width: 180px;
+      height: 180px;
+
+      right: -90px;
+      top: -110px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,215,90,0.20),
+          transparent 70%
+        );
+
+      filter: blur(12px);
+    }
+
+    .card:hover {
+      transform:
+        translateY(-6px);
+
+      border-color:
+        rgba(255,215,100,0.42);
+
+      box-shadow:
+        0 25px 60px
+        rgba(0,0,0,0.40),
+
+        0 0 28px
+        rgba(255,35,65,0.08);
     }
 
     .label {
-      color: #8194af;
       font-size: 11px;
-      margin-bottom: 8px;
+
+      letter-spacing: 2px;
+
+      text-transform: uppercase;
+
+      color:
+        rgba(255,240,190,0.58);
+
+      margin-bottom: 12px;
     }
 
     .value {
-      font-size: 25px;
-      font-weight: 800;
+      font-size: 26px;
+
+      font-weight: 900;
+
+      color:
+        var(--gold-light);
+
+      text-shadow:
+        0 0 20px
+        rgba(255,210,80,0.15);
     }
 
     .online {
-      color: #43e58b;
+      color:
+        #ffe38a;
     }
 
+
+    /* =====================================================
+       SECTION TITLE
+       ===================================================== */
+
     .section-title {
-      margin-bottom: 14px;
-      font-size: 17px;
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      margin-bottom: 18px;
+
+      font-size: 20px;
+
+      color:
+        var(--gold-light);
     }
+
+    .section-title::before {
+      content: "";
+
+      width: 4px;
+      height: 24px;
+
+      border-radius: 10px;
+
+      background:
+        linear-gradient(
+          180deg,
+          var(--red),
+          var(--gold)
+        );
+
+      box-shadow:
+        0 0 16px
+        rgba(255,40,70,0.35);
+    }
+
+
+    /* =====================================================
+       REQUEST CARDS
+       ===================================================== */
 
     #requests {
       display: grid;
-      gap: 12px;
-    }
 
-    .request {
-      padding: 18px;
-      border-radius: 17px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(4,15,35,.68);
-      backdrop-filter: blur(18px);
-    }
-
-    .request-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .name {
-      font-weight: 700;
-    }
-
-    .status {
-      color: #ffd166;
-      font-size: 11px;
-    }
-
-    .details {
-      color: #9aabc2;
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .approve,
-    .deny {
-      border: 0;
-      border-radius: 10px;
-      padding: 11px 15px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .approve {
-      background: #d9f7ff;
-      color: #06111d;
-    }
-
-    .deny {
-      background: rgba(255,80,80,.12);
-      color: #ff8585;
-      border: 1px solid rgba(255,80,80,.18);
+      gap: 15px;
     }
 
     .empty {
       padding: 35px;
+
       text-align: center;
-      color: #72849d;
-      border-radius: 18px;
-      background: rgba(4,15,35,.55);
+
+      border-radius: 20px;
+
+      border:
+        1px dashed
+        rgba(255,215,100,0.18);
+
+      color:
+        rgba(255,240,190,0.55);
+
+      background:
+        rgba(255,255,255,0.025);
+
+      backdrop-filter:
+        blur(15px);
     }
 
+    .request-card {
+      position: relative;
+
+      padding: 20px;
+
+      border-radius: 20px;
+
+      border:
+        1px solid
+        rgba(255,215,100,0.16);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.075),
+          rgba(255,255,255,0.025)
+        );
+
+      backdrop-filter:
+        blur(18px);
+
+      -webkit-backdrop-filter:
+        blur(18px);
+
+      box-shadow:
+        0 15px 45px
+        rgba(0,0,0,0.25);
+
+      animation:
+        requestAppear 0.5s ease both;
+    }
+
+    @keyframes requestAppear {
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+    }
+
+    .request-top {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 15px;
+
+      margin-bottom: 15px;
+    }
+
+    .request-name {
+      font-size: 18px;
+
+      font-weight: 800;
+
+      color:
+        var(--gold-light);
+    }
+
+    .request-status {
+      padding:
+        6px 10px;
+
+      border-radius: 999px;
+
+      font-size: 10px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+
+      text-transform: uppercase;
+    }
+
+    .status-pending {
+      color:
+        #ffd96a;
+
+      background:
+        rgba(255,190,40,0.10);
+
+      border:
+        1px solid
+        rgba(255,190,40,0.22);
+    }
+
+    .status-approved {
+      color:
+        #ff9aaa;
+
+      background:
+        rgba(255,30,65,0.10);
+
+      border:
+        1px solid
+        rgba(255,30,65,0.22);
+    }
+
+    .status-denied {
+      color:
+        #aaa;
+
+      background:
+        rgba(255,255,255,0.05);
+
+      border:
+        1px solid
+        rgba(255,255,255,0.10);
+    }
+
+    .request-info {
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(180px, 1fr)
+        );
+
+      gap: 10px;
+
+      margin-bottom: 18px;
+    }
+
+    .info-item {
+      padding: 12px;
+
+      border-radius: 13px;
+
+      background:
+        rgba(0,0,0,0.15);
+
+      border:
+        1px solid
+        rgba(255,255,255,0.045);
+    }
+
+    .info-label {
+      font-size: 9px;
+
+      letter-spacing: 1.5px;
+
+      text-transform: uppercase;
+
+      color:
+        rgba(255,240,190,0.45);
+
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 13px;
+
+      word-break: break-word;
+
+      color:
+        rgba(255,250,235,0.88);
+    }
+
+
+    /* =====================================================
+       BUTTONS
+       ===================================================== */
+
+    .actions {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 10px;
+    }
+
+    .btn {
+      position: relative;
+
+      overflow: hidden;
+
+      border: 1px solid
+        rgba(255,215,100,0.22);
+
+      border-radius: 13px;
+
+      padding:
+        11px 17px;
+
+      color: white;
+
+      font-weight: 750;
+
+      cursor: pointer;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.09),
+          rgba(255,255,255,0.025)
+        );
+
+      backdrop-filter:
+        blur(15px);
+
+      -webkit-backdrop-filter:
+        blur(15px);
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.10),
+
+        0 8px 25px
+        rgba(0,0,0,0.22);
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+    }
+
+    .btn::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+      left: -120%;
+
+      width: 75%;
+      height: 100%;
+
+      transform:
+        skewX(-20deg);
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,0.24),
+          transparent
+        );
+
+      transition:
+        left 0.65s ease;
+    }
+
+    .btn:hover::before {
+      left: 140%;
+    }
+
+    .btn:hover {
+      transform:
+        translateY(-3px);
+
+      border-color:
+        rgba(255,215,100,0.48);
+
+      box-shadow:
+        0 13px 35px
+        rgba(0,0,0,0.35);
+    }
+
+    .approve {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,210,70,0.25),
+          rgba(160,90,0,0.18)
+        );
+
+      color:
+        #fff0ad;
+    }
+
+    .deny {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,30,65,0.25),
+          rgba(130,0,25,0.18)
+        );
+
+      color:
+        #ffb3c0;
+    }
+
+    .logout {
+      border-color:
+        rgba(255,60,80,0.20);
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+
     @media (max-width: 650px) {
-      .stats {
-        grid-template-columns: 1fr;
+
+      .shell {
+        width: 94%;
+
+        margin-top: 14px;
+
+        padding: 17px;
+
+        border-radius: 24px;
       }
 
       header {
         align-items: flex-start;
+
         flex-direction: column;
       }
 
-      .logout {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .request-top {
+        align-items: flex-start;
+
+        flex-direction: column;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
         width: 100%;
+      }
+    }
+
+
+    /* =====================================================
+       REDUCED MOTION
+       ===================================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
 </head>
 
+
 <body>
 
-  <div class="orb one"></div>
-  <div class="orb two"></div>
+  <!-- ===================================================
+       ANIMATED BACKGROUND
+       =================================================== -->
 
-  <main class="container">
+  <div class="background">
+
+    <div class="orb orb-red"></div>
+
+    <div class="orb orb-gold"></div>
+
+    <div class="orb orb-red-small"></div>
+
+    <div class="light"></div>
+
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+
+  </div>
+
+
+  <!-- ===================================================
+       CONTROL PANEL
+       =================================================== -->
+
+  <main class="shell">
 
     <header>
+
       <div>
         <div class="brand">
-          ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+          ✞ NICEGOLD MON
         </div>
 
         <div class="subtitle">
-          Administrator Control Center
+          Premium Administration Control
         </div>
       </div>
 
-      <button class="logout" onclick="logout()">
-        Log out
-      </button>
+      <div class="online-badge">
+
+        <span class="online-dot"></span>
+
+        SYSTEM ONLINE
+
+      </div>
+
     </header>
+
+
+    <!-- =================================================
+         STATISTICS
+         ================================================= -->
 
     <section class="stats">
 
       <div class="card">
-        <div class="label">SERVER</div>
-        <div class="value online">● ONLINE</div>
+
+        <div class="label">
+          SERVER
+        </div>
+
+        <div class="value online">
+          ● ONLINE
+        </div>
+
       </div>
 
-      <div class="card">
-        <div class="label">PENDING REQUESTS</div>
-        <div class="value" id="pendingCount">0</div>
-      </div>
 
       <div class="card">
-        <div class="label">WHATSAPP ENGINE</div>
-        <div class="value">STOPPED</div>
+
+        <div class="label">
+          PENDING REQUESTS
+        </div>
+
+        <div
+          class="value"
+          id="pendingCount"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="label">
+          WHATSAPP ENGINE
+        </div>
+
+        <div class="value">
+          STOPPED
+        </div>
+
       </div>
 
     </section>
+
+
+    <!-- =================================================
+         ACCESS REQUESTS
+         ================================================= -->
 
     <h2 class="section-title">
       Access Requests
     </h2>
 
     <section id="requests">
+
       <div class="empty">
         Loading requests...
       </div>
+
     </section>
 
-  </main>
 
-  <script>
-
-    async function checkAdmin() {
-      try {
-        const response =
-          await fetch("/api/admin/status", { credentials: "include" });
-
-        const data =
-          await response.json();
-
-        if (!data.authenticated) {
-          window.location.href = "/login.html";
-          return false;
-        }
-
-        return true;
-
-      } catch (error) {
-        window.location.href = "/login.html";
-        return false;
-      }
-    }
-
-
-    async function loadRequests() {
-
-      const allowed =
-        await checkAdmin();
-
-      if (!allowed) return;
-
-      try {
-
-        const response =
-          await fetch(
-            "/api/admin/access-requests", { credentials: "include" }
-          );
-
-        const data =
-          await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data.message ||
-            "Could not load requests."
-          );
-        }
-
-        const requests =
-          data.requests || [];
-
-        const pending =
-          requests.filter(
-            r => r.status === "pending"
-          ).length;
-
-        document.getElementById(
-          "pendingCount"
-        ).textContent = pending;
-
-        const container =
-          document.getElementById(
-            "requests"
-          );
-
-        if (requests.length === 0) {
-
-          container.innerHTML = `
-            <div class="empty">
-              No access requests yet.
-            </div>
-          `;
-
-          return;
-        }
-
-        container.innerHTML =
-          requests.map(
-            request => renderRequest(request)
-          ).join("");
-
-      } catch (error) {
-
-        document.getElementById(
-          "requests"
-        ).innerHTML = `
-          <div class="empty">
-            ${escapeHtml(error.message)}
-          </div>
-        `;
-      }
-    }
-
-
-    function renderRequest(request) {
-
-      const date =
-        new Date(
-          request.createdAt
-        ).toLocaleString();
-
-      const actions =
-        request.status === "pending"
-          ? `
-            <div class="actions">
-
-              <button
-                class="approve"
-                onclick="approveRequest('${request.id}')"
-              >
-                ✓ Approve
-              </button>
-
-              <button
-                class="deny"
-                onclick="denyRequest('${request.id}')"
-              >
-                ✕ Deny
-              </button>
-
-            </div>
-          `
-          : `
-            <div class="details">
-              Status: ${escapeHtml(request.status)}
-            </div>
-          `;
-
-      return `
-        <div class="request">
-
-          <div class="request-top">
-
-            <div class="name">
-              👤 ${escapeHtml(request.name)}
-            </div>
-
-            <div class="status">
-              ${escapeHtml(request.status)}
-            </div>
-
-          </div>
-
-          <div class="details">
-
-            Contact:
-            ${escapeHtml(request.contact)}
-            <br>
-
-            Requested:
-            ${escapeHtml(date)}
-
-          </div>
-
-          ${actions}
-
-        </div>
-      `;
-    }
-
-
-    async function approveRequest(id) {
-
-      const response =
-        await fetch(
-          `/api/admin/access-requests/${id}/approve`,
-          {
-            method: "POST",
-          credentials: "include",
-          }
-        );
-
-      const data =
-        await response.json();
-
-      if (!response.ok) {
-
-        alert(
-          data.message ||
-          "Could not approve request."
-        );
-
-        return;
-      }
-
-      alert(
-        "Access approved.\n\n" +
-        "Temporary code: " +
-        data.accessCode +
-        "\n\nExpires: " +
-        new Date(
-          data.expiresAt
-        ).toLocaleString()
-      );
-
-      loadRequests();
-    }
-
-
-    async function denyRequest(id) {
-
-      const response =
-        await fetch(
-          `/api/admin/access-requests/${id}/deny`,
-          {
-            method: "POST",
-          credentials: "include",
-          }
-        );
-
-      const data =
-        await response.json();
-
-      if (!response.ok) {
-
-        alert(
-          data.message ||
-          "Could not deny request."
-        );
-
-        return;
-      }
-
-      loadRequests();
-    }
-
-
-    async function logout() {
-
-      await fetch(
-        "/api/logout",
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
-
-      window.location.href =
-        "/login.html";
-    }
-
-
-    function escapeHtml(value) {
-
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-
-    loadRequests();
-
-    setInterval(
-      loadRequests,
-      10000
-    );
-
-  </script>
-
-</body>
-</html>
+    <!-- =================================================
+         LOGOUT
+         ================================================= -->
+
+    <div
+      style="
+        margin-top: 28px;
+        display: flex;
+        justify-content: flex-end;
+      "
+    >
+
+      <button
+        class="btn logout"
+        onclick="logout()"
+      >

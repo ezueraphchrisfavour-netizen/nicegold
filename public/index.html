@@ -1,205 +1,1248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>NICEGOLD MON</title>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#070204"
+  >
+
+  <title>NICEGOLD MON • Control Panel</title>
+
 
   <style>
+
+    /* =====================================================
+       RESET
+       ===================================================== */
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #08080c;
-      color: #ffffff;
-      min-height: 100vh;
+
+    /* =====================================================
+       THEME
+       ===================================================== */
+
+    :root {
+
+      --black: #050204;
+      --black-2: #100407;
+
+      --red: #ff1744;
+      --red-light: #ff6b82;
+      --red-dark: #87001d;
+
+      --gold: #ffd45a;
+      --gold-light: #fff0a5;
+      --gold-dark: #a66b00;
+
+      --white: #fffaf0;
+
+      --glass:
+        rgba(255, 255, 255, 0.055);
+
+      --glass-light:
+        rgba(255, 255, 255, 0.085);
+
+      --border:
+        rgba(255, 215, 100, 0.18);
     }
+
+
+    /* =====================================================
+       BODY
+       ===================================================== */
+
+    body {
+
+      min-height: 100vh;
+
+      overflow-x: hidden;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      color: var(--white);
+
+      background:
+
+        radial-gradient(
+          circle at 10% 5%,
+          rgba(255, 20, 60, 0.18),
+          transparent 30%
+        ),
+
+        radial-gradient(
+          circle at 90% 75%,
+          rgba(255, 195, 50, 0.13),
+          transparent 32%
+        ),
+
+        linear-gradient(
+          135deg,
+          var(--black),
+          var(--black-2),
+          #020202
+        );
+    }
+
+
+    /* =====================================================
+       ANIMATED BACKGROUND
+       ===================================================== */
+
+    .background {
+
+      position: fixed;
+
+      inset: 0;
+
+      overflow: hidden;
+
+      z-index: -20;
+
+      pointer-events: none;
+    }
+
+
+    .background::before {
+
+      content: "";
+
+      position: absolute;
+
+      inset: -50%;
+
+      background:
+
+        repeating-linear-gradient(
+          115deg,
+          transparent 0,
+          transparent 100px,
+          rgba(255, 215, 100, 0.018) 101px,
+          transparent 103px
+        );
+
+      animation:
+        backgroundMove 20s linear infinite;
+    }
+
+
+    @keyframes backgroundMove {
+
+      from {
+        transform:
+          translate3d(0, 0, 0);
+      }
+
+      to {
+        transform:
+          translate3d(150px, 100px, 0);
+      }
+    }
+
+
+    /* =====================================================
+       GLOWING ORBS
+       ===================================================== */
+
+    .orb {
+
+      position: absolute;
+
+      border-radius: 50%;
+
+      filter: blur(75px);
+
+      opacity: 0.42;
+
+      animation:
+        floatOrb 17s ease-in-out infinite alternate;
+    }
+
+
+    .orb-red {
+
+      width: 360px;
+      height: 360px;
+
+      left: -130px;
+      top: 4%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 20, 55, 0.95),
+          rgba(130, 0, 25, 0.2),
+          transparent 70%
+        );
+    }
+
+
+    .orb-gold {
+
+      width: 330px;
+      height: 330px;
+
+      right: -120px;
+      top: 32%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 210, 65, 0.9),
+          rgba(150, 80, 0, 0.2),
+          transparent 70%
+        );
+
+      animation-delay:
+        -6s;
+    }
+
+
+    .orb-bottom {
+
+      width: 280px;
+      height: 280px;
+
+      left: 38%;
+      bottom: -160px;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 25, 60, 0.8),
+          transparent 70%
+        );
+
+      animation-delay:
+        -10s;
+    }
+
+
+    @keyframes floatOrb {
+
+      0% {
+        transform:
+          translate(-20px, -10px)
+          scale(0.9);
+      }
+
+      50% {
+        transform:
+          translate(80px, 70px)
+          scale(1.12);
+      }
+
+      100% {
+        transform:
+          translate(-30px, 130px)
+          scale(0.95);
+      }
+    }
+
+
+    /* =====================================================
+       MOVING LIGHT
+       ===================================================== */
+
+    .light {
+
+      position: absolute;
+
+      width: 70vw;
+      height: 2px;
+
+      left: -70%;
+      top: 100%;
+
+      background:
+
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 215, 90, 0.95),
+          rgba(255, 40, 70, 0.8),
+          transparent
+        );
+
+      filter: blur(2px);
+
+      transform:
+        rotate(-25deg);
+
+      opacity: 0.5;
+
+      animation:
+        lightMove 11s linear infinite;
+    }
+
+
+    @keyframes lightMove {
+
+      from {
+        left: -70%;
+        top: 110%;
+      }
+
+      to {
+        left: 120%;
+        top: -20%;
+      }
+    }
+
+
+    /* =====================================================
+       PARTICLES
+       ===================================================== */
+
+    .particle {
+
+      position: absolute;
+
+      bottom: -10px;
+
+      width: 4px;
+      height: 4px;
+
+      border-radius: 50%;
+
+      background:
+        var(--gold);
+
+      box-shadow:
+        0 0 14px
+        rgba(255, 215, 90, 0.9);
+
+      opacity: 0;
+
+      animation:
+        rise 11s linear infinite;
+    }
+
+
+    .p1 {
+      left: 8%;
+      animation-delay: 0s;
+    }
+
+    .p2 {
+      left: 21%;
+      animation-delay: -2s;
+    }
+
+    .p3 {
+      left: 38%;
+      animation-delay: -5s;
+    }
+
+    .p4 {
+      left: 58%;
+      animation-delay: -7s;
+    }
+
+    .p5 {
+      left: 77%;
+      animation-delay: -3s;
+    }
+
+    .p6 {
+      left: 92%;
+      animation-delay: -9s;
+    }
+
+
+    @keyframes rise {
+
+      0% {
+
+        transform:
+          translateY(0)
+          scale(0.4);
+
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 0.7;
+      }
+
+      75% {
+        opacity: 0.3;
+      }
+
+      100% {
+
+        transform:
+          translateY(-110vh)
+          translateX(60px)
+          scale(1);
+
+        opacity: 0;
+      }
+    }
+
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
 
     .header {
-      padding: 24px 18px;
-      background: #111118;
-      border-bottom: 1px solid #292933;
+
+      position: relative;
+
+      padding:
+        30px 20px;
+
+      border-bottom:
+        1px solid
+        rgba(255, 215, 100, 0.13);
+
+      background:
+        rgba(0, 0, 0, 0.18);
+
+      backdrop-filter:
+        blur(22px);
+
+      -webkit-backdrop-filter:
+        blur(22px);
+
+      box-shadow:
+        0 15px 50px
+        rgba(0,0,0,0.25);
     }
+
+
+    .header-inner {
+
+      width: 92%;
+
+      max-width: 900px;
+
+      margin: auto;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 20px;
+    }
+
 
     .brand {
-      font-size: 21px;
-      font-weight: 700;
+
+      font-size:
+        clamp(
+          18px,
+          4vw,
+          27px
+        );
+
+      font-weight: 900;
+
       line-height: 1.4;
+
+      background:
+
+        linear-gradient(
+          90deg,
+          var(--gold-light),
+          var(--gold),
+          var(--red-light),
+          var(--gold),
+          var(--gold-light)
+        );
+
+      background-size:
+        300% auto;
+
+      -webkit-background-clip:
+        text;
+
+      background-clip:
+        text;
+
+      color:
+        transparent;
+
+      animation:
+        brandFlow 7s linear infinite;
     }
+
+
+    @keyframes brandFlow {
+
+      0% {
+        background-position:
+          0% center;
+      }
+
+      100% {
+        background-position:
+          300% center;
+      }
+    }
+
 
     .subtitle {
-      margin-top: 6px;
-      color: #888894;
-      font-size: 13px;
+
+      margin-top: 7px;
+
+      color:
+        rgba(255, 240, 190, 0.55);
+
+      font-size: 12px;
+
+      letter-spacing: 2px;
+
+      text-transform:
+        uppercase;
     }
+
+
+    .live-badge {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      padding:
+        10px 14px;
+
+      border-radius:
+        999px;
+
+      border:
+        1px solid
+        rgba(255, 215, 100, 0.18);
+
+      background:
+        rgba(255,255,255,0.045);
+
+      backdrop-filter:
+        blur(14px);
+
+      -webkit-backdrop-filter:
+        blur(14px);
+
+      white-space:
+        nowrap;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+
+      color:
+        var(--gold-light);
+    }
+
+
+    .live-dot {
+
+      width: 8px;
+      height: 8px;
+
+      border-radius: 50%;
+
+      background:
+        var(--gold);
+
+      box-shadow:
+        0 0 14px
+        rgba(255,215,90,0.9);
+
+      animation:
+        pulse 1.8s ease-in-out infinite;
+    }
+
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform:
+          scale(1);
+
+        opacity: 1;
+      }
+
+      50% {
+        transform:
+          scale(1.5);
+
+        opacity: 0.55;
+      }
+    }
+
+
+    /* =====================================================
+       CONTAINER
+       ===================================================== */
 
     .container {
+
       width: 92%;
-      max-width: 850px;
-      margin: 25px auto;
+
+      max-width: 900px;
+
+      margin:
+        30px auto 50px;
     }
+
+
+    /* =====================================================
+       HERO
+       ===================================================== */
 
     .hero {
-      background: #14141c;
-      border: 1px solid #2a2a35;
-      border-radius: 20px;
-      padding: 23px;
+
+      position: relative;
+
+      overflow: hidden;
+
+      padding: 27px;
+
       margin-bottom: 18px;
+
+      border-radius: 25px;
+
+      border:
+        1px solid
+        var(--border);
+
+      background:
+
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.085),
+          rgba(255,255,255,0.025)
+        );
+
+      backdrop-filter:
+        blur(28px);
+
+      -webkit-backdrop-filter:
+        blur(28px);
+
+      box-shadow:
+
+        inset 0 1px 0
+        rgba(255,255,255,0.10),
+
+        0 25px 70px
+        rgba(0,0,0,0.4);
     }
+
+
+    .hero::after {
+
+      content: "";
+
+      position: absolute;
+
+      width: 220px;
+      height: 220px;
+
+      right: -100px;
+      top: -110px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,215,80,0.18),
+          transparent 70%
+        );
+
+      filter:
+        blur(10px);
+    }
+
 
     .label {
-      color: #888894;
-      font-size: 12px;
-      margin-bottom: 10px;
-      letter-spacing: 1px;
-    }
 
-    .main-status {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      font-size: 23px;
+      color:
+        rgba(255, 240, 190, 0.55);
+
+      font-size: 11px;
+
+      margin-bottom: 12px;
+
+      letter-spacing: 2px;
+
       font-weight: 700;
     }
 
-    .dot {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: #32d477;
-      box-shadow: 0 0 14px rgba(50, 212, 119, 0.7);
+
+    .main-status {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      font-size:
+        clamp(
+          21px,
+          5vw,
+          27px
+        );
+
+      font-weight: 800;
     }
+
+
+    .dot {
+
+      width: 14px;
+      height: 14px;
+
+      flex-shrink: 0;
+
+      border-radius: 50%;
+
+      background:
+        #ffd45a;
+
+      box-shadow:
+        0 0 18px
+        rgba(255, 210, 80, 0.85);
+
+      animation:
+        pulse 1.8s ease-in-out infinite;
+    }
+
 
     .dot.offline {
-      background: #e04b4b;
-      box-shadow: 0 0 14px rgba(224, 75, 75, 0.5);
+
+      background:
+        var(--red);
+
+      box-shadow:
+        0 0 18px
+        rgba(255, 25, 60, 0.65);
     }
 
+
+    .online {
+
+      color:
+        var(--gold-light);
+    }
+
+
+    .offline {
+
+      color:
+        #ff8092;
+    }
+
+
     .updated {
-      margin-top: 10px;
-      color: #777782;
+
+      margin-top: 11px;
+
+      color:
+        rgba(255, 240, 200, 0.43);
+
       font-size: 12px;
     }
 
+
+    /* =====================================================
+       CARDS
+       ===================================================== */
+
     .grid {
+
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+
+      grid-template-columns:
+        repeat(2, 1fr);
+
       gap: 15px;
     }
 
+
     .card {
-      background: #14141c;
-      border: 1px solid #292933;
-      border-radius: 18px;
-      padding: 20px;
+
+      position: relative;
+
+      overflow: hidden;
+
+      min-height: 150px;
+
+      padding: 22px;
+
+      border-radius: 21px;
+
+      border:
+        1px solid
+        rgba(255, 215, 100, 0.15);
+
+      background:
+
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,0.075),
+          rgba(255,255,255,0.025)
+        );
+
+      backdrop-filter:
+        blur(22px);
+
+      -webkit-backdrop-filter:
+        blur(22px);
+
+      box-shadow:
+
+        inset 0 1px 0
+        rgba(255,255,255,0.08),
+
+        0 18px 50px
+        rgba(0,0,0,0.28);
+
+      transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
     }
+
+
+    .card::before {
+
+      content: "";
+
+      position: absolute;
+
+      width: 170px;
+      height: 170px;
+
+      right: -90px;
+      bottom: -100px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 35, 65, 0.16),
+          transparent 70%
+        );
+
+      filter:
+        blur(12px);
+    }
+
+
+    .card:hover {
+
+      transform:
+        translateY(-6px);
+
+      border-color:
+        rgba(255, 215, 100, 0.35);
+
+      box-shadow:
+
+        0 25px 65px
+        rgba(0,0,0,0.4),
+
+        0 0 28px
+        rgba(255,35,65,0.07);
+    }
+
 
     .card-title {
+
       font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 13px;
+
+      font-weight: 800;
+
+      margin-bottom: 15px;
+
+      color:
+        var(--gold-light);
     }
+
 
     .value {
-      font-size: 18px;
-      font-weight: 700;
+
+      font-size: 20px;
+
+      font-weight: 900;
+
+      letter-spacing: 0.4px;
     }
+
 
     .small {
-      color: #858591;
+
+      color:
+        rgba(255,240,200,0.47);
+
       font-size: 12px;
-      margin-top: 7px;
-      line-height: 1.5;
+
+      margin-top: 8px;
+
+      line-height: 1.6;
     }
 
-    .online {
-      color: #32d477;
-    }
 
-    .offline {
-      color: #e04b4b;
-    }
+    /* =====================================================
+       REFRESH BUTTON
+       ===================================================== */
 
     .refresh {
+
+      position: relative;
+
+      overflow: hidden;
+
       width: 100%;
-      margin-top: 18px;
-      padding: 14px;
-      border: 0;
-      border-radius: 12px;
-      background: #ffffff;
-      color: #111118;
+
+      margin-top: 20px;
+
+      padding: 15px;
+
+      border:
+        1px solid
+        rgba(255, 215, 100, 0.25);
+
+      border-radius: 15px;
+
+      background:
+
+        linear-gradient(
+          135deg,
+          rgba(255, 215, 75, 0.18),
+          rgba(255, 35, 65, 0.16)
+        );
+
+      color:
+        var(--gold-light);
+
       font-size: 14px;
-      font-weight: 700;
+
+      font-weight: 800;
+
       cursor: pointer;
+
+      backdrop-filter:
+        blur(18px);
+
+      -webkit-backdrop-filter:
+        blur(18px);
+
+      box-shadow:
+
+        inset 0 1px 0
+        rgba(255,255,255,0.1),
+
+        0 12px 35px
+        rgba(0,0,0,0.3);
+
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
     }
+
+
+    .refresh::before {
+
+      content: "";
+
+      position: absolute;
+
+      left: -120%;
+
+      top: 0;
+
+      width: 75%;
+
+      height: 100%;
+
+      transform:
+        skewX(-20deg);
+
+      background:
+
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,0.28),
+          transparent
+        );
+
+      transition:
+        left 0.7s ease;
+    }
+
+
+    .refresh:hover::before {
+
+      left: 140%;
+    }
+
+
+    .refresh:hover {
+
+      transform:
+        translateY(-3px);
+
+      border-color:
+        rgba(255,215,100,0.5);
+
+      box-shadow:
+
+        0 18px 45px
+        rgba(0,0,0,0.4),
+
+        0 0 25px
+        rgba(255,35,65,0.1);
+    }
+
 
     .refresh:active {
-      transform: scale(0.98);
+
+      transform:
+        scale(0.98);
     }
+
+
+    /* =====================================================
+       FOOTER
+       ===================================================== */
 
     .footer {
-      text-align: center;
-      padding: 30px 10px;
-      color: #666671;
-      font-size: 12px;
+
+      text-align:
+        center;
+
+      padding:
+        35px 10px;
+
+      color:
+        rgba(255,240,200,0.30);
+
+      font-size: 11px;
+
+      letter-spacing: 1px;
     }
+
+
+    /* =====================================================
+       MOBILE
+       ===================================================== */
 
     @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr;
+
+      .header {
+        padding:
+          23px 16px;
       }
 
-      .brand {
-        font-size: 18px;
+
+      .header-inner {
+
+        width: 94%;
+
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
+      }
+
+
+      .live-badge {
+        align-self:
+          flex-start;
+      }
+
+
+      .container {
+        width: 94%;
+        margin-top: 20px;
+      }
+
+
+      .hero {
+        padding: 22px;
+        border-radius: 22px;
+      }
+
+
+      .grid {
+
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .card {
+        min-height:
+          135px;
       }
     }
+
+
+    /* =====================================================
+       REDUCED MOTION
+       ===================================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+
+        animation-duration:
+          0.01ms !important;
+
+        animation-iteration-count:
+          1 !important;
+
+        transition-duration:
+          0.01ms !important;
+      }
+    }
+
   </style>
+
 </head>
+
 
 <body>
 
+
+  <!-- ===================================================
+       ANIMATED BACKGROUND
+       =================================================== -->
+
+  <div class="background">
+
+    <div class="orb orb-red"></div>
+
+    <div class="orb orb-gold"></div>
+
+    <div class="orb orb-bottom"></div>
+
+    <div class="light"></div>
+
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+
+  </div>
+
+
+  <!-- ===================================================
+       HEADER
+       =================================================== -->
+
   <header class="header">
-    <div class="brand">
-      ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+
+    <div class="header-inner">
+
+      <div>
+
+        <div class="brand">
+          ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+        </div>
+
+        <div class="subtitle">
+          NICEGOLD MON Control Panel
+        </div>
+
+      </div>
+
+
+      <div class="live-badge">
+
+        <span class="live-dot"></span>
+
+        LIVE SYSTEM
+
+      </div>
+
     </div>
 
-    <div class="subtitle">
-      NICEGOLD MON Control Panel
-    </div>
   </header>
 
 
+  <!-- ===================================================
+       MAIN
+       =================================================== -->
+
   <main class="container">
 
-    <!-- Main server status -->
+
+    <!-- SERVER STATUS -->
+
     <section class="hero">
 
       <div class="label">
         SERVER STATUS
       </div>
 
+
       <div class="main-status">
-        <span id="serverDot" class="dot"></span>
+
+        <span
+          id="serverDot"
+          class="dot"
+        ></span>
+
 
         <span id="serverStatus">
           Checking...
         </span>
+
       </div>
 
-      <div id="lastUpdated" class="updated">
+
+      <div
+        id="lastUpdated"
+        class="updated"
+      >
         Checking server...
       </div>
 
     </section>
 
 
-    <!-- Dashboard cards -->
+    <!-- DASHBOARD CARDS -->
+
     <section class="grid">
+
+
+      <!-- BOT -->
 
       <div class="card">
 
@@ -207,16 +1250,26 @@
           🤖 Bot
         </div>
 
-        <div id="botStatus" class="value">
+
+        <div
+          id="botStatus"
+          class="value"
+        >
           Checking...
         </div>
 
-        <div id="botMessage" class="small">
+
+        <div
+          id="botMessage"
+          class="small"
+        >
           Checking bot status...
         </div>
 
       </div>
 
+
+      <!-- API -->
 
       <div class="card">
 
@@ -224,9 +1277,14 @@
           📡 API
         </div>
 
-        <div id="apiStatus" class="value">
+
+        <div
+          id="apiStatus"
+          class="value"
+        >
           Checking...
         </div>
+
 
         <div class="small">
           NICEGOLD API connection
@@ -235,15 +1293,19 @@
       </div>
 
 
+      <!-- WEBSITE -->
+
       <div class="card">
 
         <div class="card-title">
           🌐 Website
         </div>
 
+
         <div class="value online">
           ONLINE
         </div>
+
 
         <div class="small">
           Public NICEGOLD website
@@ -252,18 +1314,22 @@
       </div>
 
 
+      <!-- SYSTEM -->
+
       <div class="card">
 
         <div class="card-title">
           ⚙️ System
         </div>
 
+
         <div class="value">
           NICEGOLD MON
         </div>
 
+
         <div class="small">
-          Control panel
+          Premium control panel
         </div>
 
       </div>
@@ -271,170 +1337,244 @@
     </section>
 
 
-    <button class="refresh" onclick="updateDashboard()">
+    <!-- REFRESH -->
+
+    <button
+      class="refresh"
+      onclick="updateDashboard()"
+    >
       🔄 Refresh Status
     </button>
 
 
+    <!-- FOOTER -->
+
     <div class="footer">
-      NICEGOLD MON • Live Control Panel
+      ✞ NICEGOLD MON • Live Control Panel
     </div>
 
   </main>
 
 
+  <!-- ===================================================
+       JAVASCRIPT
+       Existing dashboard functionality preserved
+       =================================================== -->
+
   <script>
+
 
     async function updateDashboard() {
 
+
       const serverStatus =
-        document.getElementById("serverStatus");
+        document.getElementById(
+          "serverStatus"
+        );
+
 
       const serverDot =
-        document.getElementById("serverDot");
+        document.getElementById(
+          "serverDot"
+        );
+
 
       const lastUpdated =
-        document.getElementById("lastUpdated");
-
-      const botStatus =
-        document.getElementById("botStatus");
-
-      const botMessage =
-        document.getElementById("botMessage");
-
-      const apiStatus =
-        document.getElementById("apiStatus");
+  document.getElementById(
+    "lastUpdated"
+  );
 
 
-      /*
-       * Check server
-       */
-
-      try {
-
-        const response =
-          await fetch("/api/health", {
-            cache: "no-store"
-          });
-
-        if (!response.ok) {
-          throw new Error("Server error");
-        }
-
-        const data =
-          await response.json();
+const botStatus =
+  document.getElementById(
+    "botStatus"
+  );
 
 
-        serverStatus.textContent =
-          "NICEGOLD MON is online";
-
-        serverStatus.className =
-          "online";
-
-        serverDot.className =
-          "dot";
-
-        apiStatus.textContent =
-          "CONNECTED";
-
-        apiStatus.className =
-          "value online";
+const botMessage =
+  document.getElementById(
+    "botMessage"
+  );
 
 
-        lastUpdated.textContent =
-          "Last checked: " +
-          new Date().toLocaleTimeString();
+const apiStatus =
+  document.getElementById(
+    "apiStatus"
+  );
 
 
-      } catch (error) {
+/*
+ * Check server
+ */
 
-        serverStatus.textContent =
-          "Server unavailable";
+try {
 
-        serverStatus.className =
-          "offline";
-
-        serverDot.className =
-          "dot offline";
-
-        apiStatus.textContent =
-          "OFFLINE";
-
-        apiStatus.className =
-          "value offline";
-
-        lastUpdated.textContent =
-          "Unable to reach NICEGOLD API";
+  const response =
+    await fetch(
+      "/api/health",
+      {
+        cache: "no-store"
       }
+    );
 
 
-      /*
-       * Check bot
-       */
+  if (!response.ok) {
 
-      try {
-
-        const response =
-          await fetch("/api/whatsapp/status", {
-            cache: "no-store"
-          });
-
-        if (!response.ok) {
-          throw new Error("Bot API error");
-        }
-
-        const data =
-          await response.json();
+    throw new Error(
+      "Server error"
+    );
+  }
 
 
-        botStatus.textContent =
-          data.state.toUpperCase();
-
-        botMessage.textContent =
-          data.message;
+  const data =
+    await response.json();
 
 
-        if (data.state === "ready") {
-
-          botStatus.className =
-            "value online";
-
-        } else {
-
-          botStatus.className =
-            "value offline";
-        }
+  serverStatus.textContent =
+    "NICEGOLD MON is online";
 
 
-      } catch (error) {
+  serverStatus.className =
+    "online";
 
-        botStatus.textContent =
-          "UNAVAILABLE";
 
-        botStatus.className =
-          "value offline";
+  serverDot.className =
+    "dot";
 
-        botMessage.textContent =
-          "Could not retrieve bot status.";
+
+  apiStatus.textContent =
+    "CONNECTED";
+
+
+  apiStatus.className =
+    "value online";
+
+
+  lastUpdated.textContent =
+    "Last checked: " +
+    new Date()
+      .toLocaleTimeString();
+
+
+} catch (error) {
+
+  serverStatus.textContent =
+    "Server unavailable";
+
+
+  serverStatus.className =
+    "offline";
+
+
+  serverDot.className =
+    "dot offline";
+
+
+  apiStatus.textContent =
+    "OFFLINE";
+
+
+  apiStatus.className =
+    "value offline";
+
+
+  lastUpdated.textContent =
+    "Unable to reach NICEGOLD API";
+
+}
+
+
+/*
+ * Check bot
+ */
+
+try {
+
+  const response =
+    await fetch(
+      "/api/whatsapp/status",
+      {
+        cache: "no-store"
       }
-
-    }
-
-
-    /*
-     * Initial check
-     */
-
-    updateDashboard();
+    );
 
 
-    /*
-     * Automatically update every 10 seconds
-     */
+  if (!response.ok) {
 
-    setInterval(updateDashboard, 10000);
+    throw new Error(
+      "Bot API error"
+    );
+  }
 
-  </script>
+
+  const data =
+    await response.json();
+
+
+  botStatus.textContent =
+    String(
+      data.state
+    ).toUpperCase();
+
+
+  botMessage.textContent =
+    data.message;
+
+
+  if (
+    data.state ===
+    "ready"
+  ) {
+
+    botStatus.className =
+      "value online";
+
+  } else {
+
+    botStatus.className =
+      "value offline";
+
+  }
+
+
+} catch (error) {
+
+  botStatus.textContent =
+    "UNAVAILABLE";
+
+
+  botStatus.className =
+    "value offline";
+
+
+  botMessage.textContent =
+    "Could not retrieve bot status.";
+
+}
+
+}
+
+
+/*
+ * Initial check
+ */
+
+updateDashboard();
+
+
+/*
+ * Automatically update
+ * every 10 seconds
+ */
+
+setInterval(
+  updateDashboard,
+  10000
+);
+
+
+</script>
+
 
 </body>
 </html>
