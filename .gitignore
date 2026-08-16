@@ -8,3 +8,5 @@ session/
 creds/
 credentials/
 baileys_auth/
+auth/
+auth.backup/

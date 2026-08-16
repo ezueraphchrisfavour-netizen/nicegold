@@ -12,7 +12,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@vansnowi/baileys": "^1.5.4",
+    "@pasqua-baileys/baileys": "^2.7.7",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
