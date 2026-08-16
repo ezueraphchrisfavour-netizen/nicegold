@@ -1,7 +1,11 @@
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
-const crypto = require("crypto");
+const {
+  startBot,
+  stopBot,
+  getBotStatus
+} = require("./bot");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -559,18 +563,62 @@ app.get(
   "/api/whatsapp/status",
   (req, res) => {
 
+    res.json(
+      getBotStatus()
+    );
+
+  }
+);
+app.post(
+  "/api/whatsapp/start",
+  requireAdmin,
+  async (req, res) => {
+
+    const status =
+      await startBot();
+
     res.json({
-
-      state: "stopped",
-
-      message:
-        "WhatsApp engine is stopped"
-
+      ok: true,
+      ...status
     });
 
   }
 );
 
+
+app.post(
+  "/api/whatsapp/stop",
+  requireAdmin,
+  async (req, res) => {
+
+    const status =
+      await stopBot();
+
+    res.json({
+      ok: true,
+      ...status
+    });
+
+  }
+);
+
+app.post(
+  "/api/whatsapp/restart",
+  requireAdmin,
+  async (req, res) => {
+
+    await stopBot();
+
+    const status =
+      await startBot();
+
+    res.json({
+      ok: true,
+      ...status
+    });
+
+  }
+);
 
 /* =========================================================
    MAIN WEBSITE
