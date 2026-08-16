@@ -2,6 +2,12 @@ const express = require("express");
 const path = require("path");
 require("dotenv").config();
 
+const {
+    startBot,
+    stopBot,
+    getBotStatus
+} = require("./bot");
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -9,115 +15,113 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve the NICEGOLD website
+// Serve NICEGOLD website
 app.use(express.static(path.join(__dirname, "public")));
 
-// ======================================================
-// NICEGOLD BOT STATUS
-// ======================================================
+// NICEGOLD information
+const botName = "✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵";
 
-let botStatus = {
-    server: "online",
-    connected: false,
-    name: "✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵"
-};
-
-// ======================================================
-// WHATSAPP ENGINE STATUS
-// ======================================================
-
-let whatsappStatus = {
-    state: "stopped",
-    message: "WhatsApp engine is stopped"
-};
-
-// ======================================================
-// HEALTH API
-// ======================================================
+// =====================================================
+// HEALTH
+// =====================================================
 
 app.get("/api/health", (req, res) => {
     res.json({
         ok: true,
         server: "online",
-        name: botStatus.name
+        name: botName
     });
 });
 
-// ======================================================
-// BOT STATUS API
-// ======================================================
+// =====================================================
+// BOT STATUS
+// =====================================================
 
 app.get("/api/status", (req, res) => {
-    res.status(200).json({
-        server: botStatus.server,
-        connected: botStatus.connected,
-        name: botStatus.name
+    const status = getBotStatus();
+
+    res.json({
+        server: "online",
+        connected: status.state === "ready",
+        name: botName,
+        bot: status
     });
 });
 
-// ======================================================
-// WHATSAPP STATUS API
-// ======================================================
+// =====================================================
+// WHATSAPP STATUS
+// =====================================================
 
 app.get("/api/whatsapp/status", (req, res) => {
-    res.status(200).json({
-        state: whatsappStatus.state,
-        message: whatsappStatus.message
-    });
+    res.json(getBotStatus());
 });
 
-// ======================================================
-// BOT CONNECT API
-// ======================================================
+// =====================================================
+// START WHATSAPP BOT
+// =====================================================
 
-app.post("/api/bot/connect", (req, res) => {
-    botStatus.connected = true;
+app.post("/api/bot/connect", async (req, res) => {
+    try {
+        const status = await startBot();
 
-    whatsappStatus = {
-        state: "starting",
-        message: "WhatsApp engine is starting"
-    };
+        res.json({
+            success: true,
+            status
+        });
 
-    res.status(200).json({
-        success: true,
-        bot: botStatus,
-        whatsapp: whatsappStatus
-    });
+    } catch (error) {
+        console.error("NICEGOLD start error:", error);
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to start WhatsApp engine"
+        });
+    }
 });
 
-// ======================================================
-// BOT DISCONNECT API
-// ======================================================
+// =====================================================
+// STOP WHATSAPP BOT
+// =====================================================
 
-app.post("/api/bot/disconnect", (req, res) => {
-    botStatus.connected = false;
+app.post("/api/bot/disconnect", async (req, res) => {
+    try {
+        const status = await stopBot();
 
-    whatsappStatus = {
-        state: "stopped",
-        message: "WhatsApp engine is stopped"
-    };
+        res.json({
+            success: true,
+            status
+        });
 
-    res.status(200).json({
-        success: true,
-        bot: botStatus,
-        whatsapp: whatsappStatus
-    });
+    } catch (error) {
+        console.error("NICEGOLD stop error:", error);
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to stop WhatsApp engine"
+        });
+    }
 });
 
-// ======================================================
+// =====================================================
 // WEBSITE FALLBACK
-// Express 5 compatible
-// ======================================================
+// =====================================================
 
 app.use((req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+    res.sendFile(
+        path.join(__dirname, "public", "index.html")
+    );
 });
 
-// ======================================================
+// =====================================================
 // START SERVER
-// ======================================================
+// =====================================================
 
 app.listen(PORT, "0.0.0.0", () => {
-    console.log("✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵");
-    console.log(`Website running on port ${PORT}`);
+    console.log(
+        "✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵"
+    );
+
+    console.log(
+        `Website running on port ${PORT}`
+    );
 });
