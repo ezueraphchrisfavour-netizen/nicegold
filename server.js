@@ -76,7 +76,7 @@ app.post("/api/bot/disconnect", (req, res) => {
 });
 
 // Fallback to website
-app.get("*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
