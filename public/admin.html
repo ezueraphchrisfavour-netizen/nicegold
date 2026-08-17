@@ -1,33 +1,277 @@
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8"><meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
 
-«»
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
 
 <meta
-name="theme-color"
-content="#03172b"
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-«»
+<meta
+  name="theme-color"
+  content="#03172b"
+>
 
-  <title>NICEGOLD MON • Admin Control</title> 
-  <style>
+<title>NICEGOLD MON • Admin Control</title>
+
+<style>
+
 /* =====================================================
-   BIG WATER GLASS BUBBLES 💧
+   NICEGOLD ADMIN CONTROL
+   PART 1
+   ===================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+
+  --bg:
+    #020b16;
+
+  --bg2:
+    #031b31;
+
+  --blue:
+    #21a9ff;
+
+  --blue2:
+    #006dff;
+
+  --cyan:
+    #6eeaff;
+
+  --glass:
+    rgba(255,255,255,0.065);
+
+  --glass2:
+    rgba(255,255,255,0.095);
+
+  --border:
+    rgba(80,200,255,0.25);
+
+  --text:
+    #e9f8ff;
+
+  --muted:
+    rgba(210,235,250,0.58);
+
+  --green:
+    #53f5b0;
+
+  --red:
+    #ff6684;
+
+  --yellow:
+    #ffe477;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+
+  min-height: 100vh;
+
+  overflow-x: hidden;
+
+  color:
+    var(--text);
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  background:
+
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(0,150,255,0.22),
+      transparent 32%
+    ),
+
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(0,90,255,0.18),
+      transparent 34%
+    ),
+
+    linear-gradient(
+      135deg,
+      var(--bg),
+      var(--bg2),
+      #01060c
+    );
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =====================================================
+   WATER BACKGROUND
+   ===================================================== */
+
+.water {
+
+  position:
+    fixed;
+
+  inset:
+    0;
+
+  z-index:
+    -10;
+
+  overflow:
+    hidden;
+
+  pointer-events:
+    none;
+
+  background:
+
+    radial-gradient(
+      ellipse at 50% 120%,
+      rgba(0,170,255,0.20),
+      transparent 55%
+    );
+}
+
+.water::before,
+.water::after {
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  left:
+    -20%;
+
+  width:
+    140%;
+
+  height:
+    42%;
+
+  border-radius:
+    48%;
+
+  border-top:
+    1px solid
+    rgba(80,220,255,0.12);
+
+  background:
+
+    radial-gradient(
+      ellipse,
+      rgba(0,160,255,0.07),
+      transparent 68%
+    );
+
+  filter:
+    blur(1px);
+}
+
+.water::before {
+
+  bottom:
+    -22%;
+
+  animation:
+    waterWave
+    12s
+    ease-in-out
+    infinite;
+}
+
+.water::after {
+
+  bottom:
+    -29%;
+
+  opacity:
+    0.7;
+
+  animation:
+    waterWave
+    16s
+    ease-in-out
+    infinite
+    reverse;
+}
+
+@keyframes waterWave {
+
+  0% {
+
+    transform:
+      translateX(-4%)
+      rotate(-2deg)
+      scaleX(1);
+
+  }
+
+  50% {
+
+    transform:
+      translateX(4%)
+      rotate(2deg)
+      scaleX(1.06);
+
+  }
+
+  100% {
+
+    transform:
+      translateX(-4%)
+      rotate(-2deg)
+      scaleX(1);
+
+  }
+
+}
+
+/* =====================================================
+   LARGE WATER BUBBLES
    ===================================================== */
 
 .water-bubble {
-  position: absolute;
 
-  bottom: -180px;
+  position:
+    absolute;
 
-  border-radius: 50%;
+  bottom:
+    -180px;
 
-  pointer-events: none;
+  border-radius:
+    50%;
+
+  pointer-events:
+    none;
 
   background:
+
     radial-gradient(
       circle at 30% 25%,
       rgba(255,255,255,0.42),
@@ -42,6 +286,7 @@ content="#03172b"
     rgba(150,235,255,0.35);
 
   box-shadow:
+
     inset
     -12px -15px 30px
     rgba(0,70,150,0.18),
@@ -59,98 +304,120 @@ content="#03172b"
   -webkit-backdrop-filter:
     blur(2px);
 
-  opacity: 0;
+  opacity:
+    0;
 
   animation:
-    bubbleRise 18s linear infinite;
+    bubbleRise
+    18s
+    linear
+    infinite;
 }
-
-
-/* LARGE BUBBLE */
 
 .bubble-1 {
-  width: 150px;
-  height: 150px;
 
-  left: 4%;
+  width:
+    150px;
 
-  animation-delay: -2s;
+  height:
+    150px;
+
+  left:
+    4%;
+
+  animation-delay:
+    -2s;
 }
-
-
-/* EXTRA LARGE */
 
 .bubble-2 {
-  width: 230px;
-  height: 230px;
 
-  left: 24%;
+  width:
+    230px;
 
-  animation-delay: -10s;
+  height:
+    230px;
 
-  animation-duration: 25s;
+  left:
+    24%;
+
+  animation-delay:
+    -10s;
+
+  animation-duration:
+    25s;
 }
-
-
-/* MEDIUM */
 
 .bubble-3 {
-  width: 105px;
-  height: 105px;
 
-  left: 48%;
+  width:
+    105px;
 
-  animation-delay: -6s;
+  height:
+    105px;
 
-  animation-duration: 16s;
+  left:
+    48%;
+
+  animation-delay:
+    -6s;
+
+  animation-duration:
+    16s;
 }
-
-
-/* HUGE BUBBLE */
 
 .bubble-4 {
-  width: 190px;
-  height: 190px;
 
-  right: 10%;
+  width:
+    190px;
 
-  animation-delay: -14s;
+  height:
+    190px;
 
-  animation-duration: 23s;
+  right:
+    10%;
+
+  animation-delay:
+    -14s;
+
+  animation-duration:
+    23s;
 }
-
-
-/* SMALLER BUBBLE */
 
 .bubble-5 {
-  width: 75px;
-  height: 75px;
 
-  left: 70%;
+  width:
+    75px;
 
-  animation-delay: -4s;
+  height:
+    75px;
 
-  animation-duration: 14s;
+  left:
+    70%;
+
+  animation-delay:
+    -4s;
+
+  animation-duration:
+    14s;
 }
-
-
-/* BIG FLOATING BUBBLE */
 
 .bubble-6 {
-  width: 125px;
-  height: 125px;
 
-  left: 85%;
+  width:
+    125px;
 
-  animation-delay: -17s;
+  height:
+    125px;
 
-  animation-duration: 20s;
+  left:
+    85%;
+
+  animation-delay:
+    -17s;
+
+  animation-duration:
+    20s;
 }
-
-
-/* =====================================================
-   BUBBLE MOVEMENT
-   ===================================================== */
 
 @keyframes bubbleRise {
 
@@ -165,14 +432,14 @@ content="#03172b"
       scale(0.75)
       rotate(0deg);
 
-    opacity: 0;
-
+    opacity:
+      0;
   }
 
   10% {
 
-    opacity: 0.45;
-
+    opacity:
+      0.45;
   }
 
   30% {
@@ -185,7 +452,6 @@ content="#03172b"
       )
       scale(0.95)
       rotate(8deg);
-
   }
 
   55% {
@@ -198,12 +464,12 @@ content="#03172b"
       )
       scale(1.05)
       rotate(-8deg);
-
   }
 
   78% {
 
-    opacity: 0.32;
+    opacity:
+      0.32;
 
     transform:
       translate3d(
@@ -213,7 +479,6 @@ content="#03172b"
       )
       scale(1.12)
       rotate(12deg);
-
   }
 
   100% {
@@ -227,973 +492,1671 @@ content="#03172b"
       scale(1.2)
       rotate(-10deg);
 
-    opacity: 0;
+    opacity:
+      0;
+  }
+}
 
+/* =====================================================
+   SMALL BUBBLES
+   ===================================================== */
+
+.bubble {
+
+  position:
+    absolute;
+
+  bottom:
+    -100px;
+
+  border-radius:
+    50%;
+
+  border:
+    1px solid
+    rgba(130,235,255,0.45);
+
+  background:
+
+    radial-gradient(
+      circle at 30% 25%,
+      rgba(255,255,255,0.42),
+      rgba(70,205,255,0.12) 35%,
+      rgba(0,110,255,0.04) 70%,
+      transparent
+    );
+
+  box-shadow:
+
+    inset 0 0 18px
+    rgba(150,240,255,0.20),
+
+    0 0 25px
+    rgba(0,150,255,0.12);
+
+  backdrop-filter:
+    blur(3px);
+
+  -webkit-backdrop-filter:
+    blur(3px);
+
+  opacity:
+    0;
+
+  animation:
+    bubbleRise
+    linear
+    infinite;
+}
+
+.bubble::before {
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  width:
+    24%;
+
+  height:
+    24%;
+
+  left:
+    22%;
+
+  top:
+    17%;
+
+  border-radius:
+    50%;
+
+  background:
+    rgba(255,255,255,0.7);
+
+  filter:
+    blur(2px);
+}
+
+.bubble1 {
+
+  width:
+    32px;
+
+  height:
+    32px;
+
+  left:
+    8%;
+
+  animation-duration:
+    13s;
+
+  animation-delay:
+    -2s;
+}
+
+.bubble2 {
+
+  width:
+    18px;
+
+  height:
+    18px;
+
+  left:
+    21%;
+
+  animation-duration:
+    10s;
+
+  animation-delay:
+    -5s;
+}
+
+.bubble3 {
+
+  width:
+    48px;
+
+  height:
+    48px;
+
+  left:
+    38%;
+
+  animation-duration:
+    17s;
+
+  animation-delay:
+    -8s;
+}
+
+.bubble4 {
+
+  width:
+    23px;
+
+  height:
+    23px;
+
+  left:
+    57%;
+
+  animation-duration:
+    12s;
+
+  animation-delay:
+    -3s;
+}
+
+.bubble5 {
+
+  width:
+    55px;
+
+  height:
+    55px;
+
+  left:
+    74%;
+
+  animation-duration:
+    19s;
+
+  animation-delay:
+    -10s;
+}
+
+.bubble6 {
+
+  width:
+    27px;
+
+  height:
+    27px;
+
+  left:
+    91%;
+
+  animation-duration:
+    14s;
+
+  animation-delay:
+    -7s;
+}
+
+/* =====================================================
+   GLOWS
+   ===================================================== */
+
+.glow {
+
+  position:
+    absolute;
+
+  width:
+    350px;
+
+  height:
+    350px;
+
+  border-radius:
+    50%;
+
+  filter:
+    blur(90px);
+
+  opacity:
+    0.35;
+
+  background:
+
+    radial-gradient(
+      circle,
+      rgba(0,170,255,0.9),
+      transparent 70%
+    );
+
+  animation:
+    glowFloat
+    18s
+    ease-in-out
+    infinite
+    alternate;
+}
+
+.glow.one {
+
+  left:
+    -150px;
+
+  top:
+    5%;
+}
+
+.glow.two {
+
+  right:
+    -150px;
+
+  top:
+    45%;
+
+  animation-delay:
+    -7s;
+}
+
+.glow.three {
+
+  left:
+    35%;
+
+  bottom:
+    -180px;
+
+  animation-delay:
+    -12s;
+}
+
+@keyframes glowFloat {
+
+  0% {
+
+    transform:
+      translate(0,0)
+      scale(0.9);
   }
 
+  50% {
+
+    transform:
+      translate(80px,60px)
+      scale(1.15);
+  }
+
+  100% {
+
+    transform:
+      translate(-40px,120px)
+      scale(0.95);
+  }
 }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
 
-    :root {
-      --bg: #020b16;
-      --bg2: #031b31;
+/* =====================================================
+   LOGIN SCREEN
+   ===================================================== */
 
-      --blue: #21a9ff;
-      --blue2: #006dff;
-      --cyan: #6eeaff;
+#adminLogin {
 
-      --glass: rgba(255,255,255,0.065);
-      --glass2: rgba(255,255,255,0.095);
+  position:
+    fixed;
 
-      --border: rgba(80,200,255,0.25);
+  inset:
+    0;
 
-      --text: #e9f8ff;
-      --muted: rgba(210,235,250,0.58);
+  z-index:
+    9999;
 
-      --green: #53f5b0;
-      --red: #ff6684;
-      --yellow: #ffe477;
-    }
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  padding:
+    20px;
+
+  background:
+
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(0,160,255,0.18),
+      transparent 45%
+    ),
+
+    rgba(1,7,15,0.88);
+
+  backdrop-filter:
+    blur(18px);
+
+  -webkit-backdrop-filter:
+    blur(18px);
+}
+
+.login-panel {
+
+  width:
+    min(430px, 100%);
+
+  padding:
+    32px;
+
+  border:
+    1px solid
+    rgba(90,210,255,0.28);
+
+  border-radius:
+    28px;
+
+  background:
+
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.10),
+      rgba(255,255,255,0.025)
+    );
+
+  box-shadow:
+
+    0 30px 100px
+    rgba(0,0,0,0.65),
+
+    inset
+    0 1px 0
+    rgba(255,255,255,0.12),
+
+    0 0 55px
+    rgba(0,140,255,0.10);
+
+  backdrop-filter:
+    blur(30px);
+
+  -webkit-backdrop-filter:
+    blur(30px);
+}
+
+.login-logo {
+
+  text-align:
+    center;
+
+  font-size:
+    26px;
+
+  font-weight:
+    950;
+
+  letter-spacing:
+    1px;
+
+  background:
+
+    linear-gradient(
+      90deg,
+      #e9fcff,
+      #55ddff,
+      #168fff,
+      #dffaff
+    );
+
+  -webkit-background-clip:
+    text;
+
+  background-clip:
+    text;
+
+  color:
+    transparent;
+
+  margin-bottom:
+    7px;
+}
+
+.login-subtitle {
+
+  text-align:
+    center;
+
+  color:
+    var(--muted);
+
+  font-size:
+    11px;
+
+  letter-spacing:
+    2px;
+
+  text-transform:
+    uppercase;
+
+  margin-bottom:
+    28px;
+}
+
+.login-label {
+
+  display:
+    block;
+
+  margin:
+    0 0 8px;
+
+  color:
+    #bdeeff;
+
+  font-size:
+    11px;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    1px;
+
+  text-transform:
+    uppercase;
+}
+
+.login-input {
+
+  width:
+    100%;
+
+  padding:
+    14px 15px;
+
+  margin-bottom:
+    17px;
+
+  border:
+    1px solid
+    rgba(90,210,255,0.20);
+
+  border-radius:
+    14px;
+
+  outline:
+    none;
+
+  color:
+    #eaffff;
+
+  background:
+    rgba(0,20,40,0.45);
+
+  transition:
+    .25s ease;
+}
+
+.login-input:focus {
+
+  border-color:
+    rgba(80,220,255,0.60);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(0,150,255,0.08);
+}
+
+.login-button {
+
+  width:
+    100%;
+
+  padding:
+    14px;
+
+  border:
+    1px solid
+    rgba(90,220,255,0.35);
+
+  border-radius:
+    14px;
+
+  color:
+    white;
+
+  font-weight:
+    900;
+
+  cursor:
+    pointer;
+
+  background:
+
+    linear-gradient(
+      135deg,
+      #159bff,
+      #075bdf
+    );
+
+  box-shadow:
+    0 12px 35px
+    rgba(0,100,255,0.25);
+
+  transition:
+    .25s ease;
+}
+
+.login-button:hover {
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 16px 45px
+    rgba(0,130,255,0.35);
+}
+
+.login-button:disabled {
+
+  opacity:
+    .55;
+
+  cursor:
+    not-allowed;
+
+  transform:
+    none;
+}
+
+#loginMessage {
+
+  min-height:
+    20px;
+
+  margin-top:
+    14px;
+
+  text-align:
+    center;
+
+  font-size:
+    12px;
+}
+
+/* =====================================================
+   MAIN SHELL
+   ===================================================== */
+
+#adminApp {
+
+  display:
+    none;
+
+  width:
+    min(1180px, 94%);
+
+  margin:
+    24px auto 50px;
+
+  padding:
+    23px;
+
+  border-radius:
+    30px;
+
+  border:
+    1px solid
+    rgba(90,210,255,0.25);
+
+  background:
+
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.09),
+      rgba(255,255,255,0.025)
+    );
+
+  backdrop-filter:
+    blur(30px);
+
+  -webkit-backdrop-filter:
+    blur(30px);
+
+  box-shadow:
+
+    0 35px 100px
+    rgba(0,0,0,0.55),
+
+    inset
+    0 1px 0
+    rgba(255,255,255,0.12),
+
+    0 0 80px
+    rgba(0,140,255,0.08);
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+header {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    20px;
+
+  padding:
+    8px 8px 26px;
+}
+
+.brand {
+
+  font-size:
+    clamp(23px, 5vw, 35px);
+
+  font-weight:
+    950;
+
+  letter-spacing:
+    1px;
+
+  background:
+
+    linear-gradient(
+      90deg,
+      #dffbff,
+      #5bdcff,
+      #168fff,
+      #9defff,
+      #e8fbff
+    );
+
+  background-size:
+    300% auto;
+
+  -webkit-background-clip:
+    text;
+
+  background-clip:
+    text;
+
+  color:
+    transparent;
+
+  animation:
+    brandFlow
+    6s
+    linear
+    infinite;
+}
+
+@keyframes brandFlow {
+
+  from {
+    background-position:
+      0% center;
+  }
+
+  to {
+    background-position:
+      300% center;
+  }
+}
+
+.subtitle {
+
+  margin-top:
+    6px;
+
+  font-size:
+    11px;
+
+  letter-spacing:
+    2.2px;
+
+  text-transform:
+    uppercase;
+
+  color:
+    rgba(205,235,250,0.55);
+}
+
+.header-actions {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    9px;
+
+  flex-wrap:
+    wrap;
+
+  justify-content:
+    flex-end;
+}
+
+.online-badge {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    9px;
+
+  padding:
+    10px 15px;
+
+  border-radius:
+    999px;
+
+  border:
+    1px solid
+    rgba(80,210,255,0.25);
+
+  background:
+    rgba(0,120,220,0.08);
+
+  white-space:
+    nowrap;
+
+  color:
+    #b9f3ff;
+
+  font-size:
+    11px;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    1px;
+}
+
+.online-dot {
+
+  width:
+    9px;
+
+  height:
+    9px;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--green);
+
+  box-shadow:
+    0 0 18px
+    rgba(80,245,176,0.9);
+
+  animation:
+    pulse
+    1.7s
+    ease-in-out
+    infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform:
+      scale(1);
+  }
+
+  50% {
+    transform:
+      scale(1.55);
+  }
+}
+
+.header-btn {
+
+  padding:
+    9px 13px;
+
+  border-radius:
+    12px;
+
+  border:
+    1px solid
+    rgba(90,210,255,0.20);
+
+  color:
+    #cfefff;
+
+  background:
+    rgba(255,255,255,0.045);
+
+  cursor:
+    pointer;
+
+  font-size:
+    11px;
+
+  font-weight:
+    800;
+}
+
+.header-btn:hover {
+
+  border-color:
+    rgba(90,220,255,0.50);
+
+  background:
+    rgba(0,130,220,0.10);
+}
+
+/* =====================================================
+   STATISTICS
+   ===================================================== */
+
+.stats {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(200px, 1fr)
+    );
+
+  gap:
+    16px;
+
+  margin-bottom:
+    36px;
+}
+
+.card {
+
+  position:
+    relative;
+
+  overflow:
+    hidden;
+
+  min-height:
+    135px;
+
+  padding:
+    22px;
+
+  border-radius:
+    22px;
+
+  border:
+    1px solid
+    rgba(90,210,255,0.19);
+
+  background:
+
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.075),
+      rgba(20,130,220,0.025)
+    );
+
+  backdrop-filter:
+    blur(22px);
+
+  -webkit-backdrop-filter:
+    blur(22px);
+
+  box-shadow:
+
+    inset
+    0 1px 0
+    rgba(255,255,255,0.08),
+
+    0 18px 50px
+    rgba(0,0,0,0.30);
+}
+
+.card::before {
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  width:
+    130px;
+
+  height:
+    130px;
+
+  right:
+    -60px;
+
+  top:
+    -70px;
+
+  border-radius:
+    50%;
+
+  background:
+
+    radial-gradient(
+      circle,
+      rgba(50,210,255,0.23),
+      transparent 70%
+    );
+
+  filter:
+    blur(8px);
+}
+
+.label {
+
+  margin-bottom:
+    12px;
+
+  font-size:
+    10px;
+
+  letter-spacing:
+    2px;
+
+  text-transform:
+    uppercase;
+
+  color:
+    var(--muted);
+}
+
+.value {
+
+  font-size:
+    27px;
+
+  font-weight:
+    900;
+
+  color:
+    #dffaff;
+
+  text-shadow:
+    0 0 22px
+    rgba(50,210,255,0.18);
+}
+
+.online {
+  color:
+    var(--green);
+}
+
+#pendingCount {
+  color:
+    var(--yellow);
+}
+
+#approvedCount {
+  color:
+    var(--green);
+}
+
+#totalCount {
+  color:
+    var(--cyan);
+}
+
+</style>
+
+</head>
+    <!-- =====================================================
+         NICEGOLD ADMIN PANEL
+         PART 2
+         REQUEST CONTROL SECTION
+         ===================================================== -->
+
+    <section class="admin-section">
+
+      <div class="section-title">
+        <span>Access Requests</span>
+        <span class="section-line"></span>
+      </div>
+
+      <div class="request-toolbar">
+
+        <div class="toolbar-left">
+
+          <div class="request-filter active"
+               data-filter="all"
+               onclick="setRequestFilter('all')">
+            ALL
+          </div>
+
+          <div class="request-filter"
+               data-filter="pending"
+               onclick="setRequestFilter('pending')">
+            PENDING
+          </div>
+
+          <div class="request-filter"
+               data-filter="approved"
+               onclick="setRequestFilter('approved')">
+            APPROVED
+          </div>
+
+          <div class="request-filter"
+               data-filter="rejected"
+               onclick="setRequestFilter('rejected')">
+            REJECTED
+          </div>
+
+        </div>
+
+        <button
+          type="button"
+          class="refresh-btn"
+          onclick="loadRequests()"
+        >
+          ↻ REFRESH
+        </button>
+
+      </div>
 
 
-    /* =====================================================
-       BODY
-       ===================================================== */
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-
-      overflow-x: hidden;
-
-      color: var(--text);
-
-      font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
-      background:
-        radial-gradient(
-          circle at 15% 10%,
-          rgba(0,150,255,0.22),
-          transparent 32%
-        ),
-
-        radial-gradient(
-          circle at 85% 80%,
-          rgba(0,90,255,0.18),
-          transparent 34%
-        ),
-
-        linear-gradient(
-          135deg,
-          var(--bg),
-          var(--bg2),
-          #01060c
-        );
-    }
-
-    button {
-      font: inherit;
-    }
-
-    button {
-      -webkit-tap-highlight-color: transparent;
-    }
+      <div
+        id="requestMessage"
+        class="admin-message"
+      ></div>
 
 
-    /* =====================================================
-       WATER BACKGROUND
-       ===================================================== */
+      <div
+        id="requests"
+        class="requests-container"
+      >
 
-    .water {
-      position: fixed;
+        <div class="empty">
 
-      inset: 0;
+          <div class="empty-icon">
+            💧
+          </div>
 
-      z-index: -10;
+          <div class="empty-title">
+            Loading Access Requests
+          </div>
 
-      overflow: hidden;
+          <div class="empty-text">
+            Please wait while NICEGOLD loads
+            the latest visitor requests.
+          </div>
 
-      pointer-events: none;
+        </div>
 
-      background:
-        radial-gradient(
-          ellipse at 50% 120%,
-          rgba(0,170,255,0.20),
-          transparent 55%
-        );
-    }
+      </div>
+
+    </section>
 
 
-    /* moving liquid waves */
+    <!-- =====================================================
+         APPROVAL RESULT MODAL
+         ===================================================== -->
 
-    .water::before,
-    .water::after {
-      content: "";
+    <div
+      id="approvalModal"
+      class="modal-overlay"
+      style="display:none;"
+    >
 
-      position: absolute;
+      <div class="modal-box">
 
-      left: -20%;
+        <button
+          type="button"
+          class="modal-close"
+          onclick="closeApprovalModal()"
+        >
+          ×
+        </button>
 
-      width: 140%;
+        <div class="modal-icon">
+          ✓
+        </div>
 
-      height: 42%;
+        <h2>
+          Access Approved
+        </h2>
 
-      border-radius: 48%;
+        <p>
+          The visitor has been approved.
+          Their NICEGOLD access code is:
+        </p>
 
-      border-top:
-        1px solid
-        rgba(80,220,255,0.12);
+        <div
+          id="generatedAccessCode"
+          class="access-code-display"
+        >
+          ------
+        </div>
 
-      background:
-        radial-gradient(
-          ellipse,
-          rgba(0,160,255,0.07),
-          transparent 68%
-        );
+        <button
+          type="button"
+          class="copy-code-btn"
+          onclick="copyGeneratedCode()"
+        >
+          COPY ACCESS CODE
+        </button>
 
-      filter: blur(1px);
-    }
+        <div
+          id="copyCodeMessage"
+          class="copy-message"
+        ></div>
 
-    .water::before {
-      bottom: -22%;
+      </div>
 
-      animation:
-        waterWave 12s ease-in-out infinite;
-    }
+    </div>
 
-    .water::after {
-      bottom: -29%;
 
-      opacity: 0.7;
+    <!-- =====================================================
+         REJECTION CONFIRMATION MODAL
+         ===================================================== -->
 
-      animation:
-        waterWave 16s ease-in-out infinite reverse;
-    }
+    <div
+      id="rejectModal"
+      class="modal-overlay"
+      style="display:none;"
+    >
 
-    @keyframes waterWave {
+      <div class="modal-box">
 
-      0% {
+        <button
+          type="button"
+          class="modal-close"
+          onclick="closeRejectModal()"
+        >
+          ×
+        </button>
+
+        <div class="modal-icon reject-icon">
+          !
+        </div>
+
+        <h2>
+          Reject Request?
+        </h2>
+
+        <p>
+          Are you sure you want to reject this
+          NICEGOLD access request?
+        </p>
+
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="modal-cancel"
+            onclick="closeRejectModal()"
+          >
+            CANCEL
+          </button>
+
+          <button
+            type="button"
+            class="modal-reject"
+            onclick="confirmRejectRequest()"
+          >
+            REJECT REQUEST
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         REQUEST DETAILS MODAL
+         ===================================================== -->
+
+    <div
+      id="detailsModal"
+      class="modal-overlay"
+      style="display:none;"
+    >
+
+      <div class="modal-box details-box">
+
+        <button
+          type="button"
+          class="modal-close"
+          onclick="closeDetailsModal()"
+        >
+          ×
+        </button>
+
+        <div class="modal-icon">
+          ◉
+        </div>
+
+        <h2>
+          Request Details
+        </h2>
+
+        <div
+          id="requestDetails"
+          class="request-details"
+        ></div>
+
+        <button
+          type="button"
+          class="modal-cancel"
+          onclick="closeDetailsModal()"
+        >
+          CLOSE
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ADMIN NOTIFICATION TOAST
+         ===================================================== -->
+
+    <div
+      id="adminToast"
+      class="admin-toast"
+    >
+
+      <div
+        id="toastIcon"
+        class="toast-icon"
+      >
+        ✓
+      </div>
+
+      <div>
+
+        <div
+          id="toastTitle"
+          class="toast-title"
+        >
+          NICEGOLD
+        </div>
+
+        <div
+          id="toastText"
+          class="toast-text"
+        >
+          Action completed.
+        </div>
+
+      </div>
+
+    </div>
+        <!-- =====================================================
+         NICEGOLD ADMIN PANEL
+         PART 3
+         REQUEST CARD STYLES
+         ===================================================== -->
+
+    <style>
+
+      /* -----------------------------------------------------
+         REQUEST TOOLBAR
+         ----------------------------------------------------- */
+
+      .request-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+
+      .toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .request-filter {
+        padding: 9px 14px;
+        border-radius: 999px;
+
+        border: 1px solid
+          rgba(80,210,255,0.18);
+
+        background:
+          rgba(255,255,255,0.035);
+
+        color:
+          rgba(210,240,255,0.55);
+
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 1.2px;
+
+        cursor: pointer;
+
+        transition:
+          .25s ease;
+      }
+
+      .request-filter:hover {
+        color: #dffaff;
+
+        border-color:
+          rgba(80,220,255,0.40);
+
+        background:
+          rgba(30,160,255,0.08);
+      }
+
+      .request-filter.active {
+        color: #eaffff;
+
+        border-color:
+          rgba(80,220,255,0.45);
+
+        background:
+          linear-gradient(
+            135deg,
+            rgba(30,190,255,0.18),
+            rgba(0,90,255,0.10)
+          );
+
+        box-shadow:
+          0 0 20px
+          rgba(20,170,255,0.08);
+      }
+
+
+      /* -----------------------------------------------------
+         REFRESH BUTTON
+         ----------------------------------------------------- */
+
+      .refresh-btn {
+        padding:
+          10px 16px;
+
+        border-radius: 13px;
+
+        border:
+          1px solid
+          rgba(80,210,255,0.25);
+
+        background:
+          rgba(0,120,220,0.08);
+
+        color:
+          #bdefff;
+
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 1px;
+
+        cursor: pointer;
+
+        transition:
+          .25s ease;
+      }
+
+      .refresh-btn:hover {
         transform:
-          translateX(-4%)
-          rotate(-2deg)
-          scaleX(1);
+          translateY(-2px);
+
+        border-color:
+          rgba(80,225,255,0.55);
+
+        box-shadow:
+          0 10px 30px
+          rgba(0,120,255,0.15);
       }
 
-      50% {
+
+      /* -----------------------------------------------------
+         REQUEST CONTAINER
+         ----------------------------------------------------- */
+
+      .requests-container {
+        display: grid;
+        gap: 15px;
+      }
+
+
+      /* -----------------------------------------------------
+         REQUEST CARD
+         ----------------------------------------------------- */
+
+      .request-card {
+        position: relative;
+
+        overflow: hidden;
+
+        padding: 21px;
+
+        border-radius: 22px;
+
+        border:
+          1px solid
+          rgba(70,210,255,0.20);
+
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255,255,255,0.065),
+            rgba(0,90,170,0.035)
+          );
+
+        backdrop-filter:
+          blur(22px);
+
+        -webkit-backdrop-filter:
+          blur(22px);
+
+        box-shadow:
+          0 18px 55px
+          rgba(0,0,0,0.30),
+
+          inset 0 1px 0
+          rgba(255,255,255,0.07);
+
+        animation:
+          requestCardIn
+          .45s ease both;
+
+        transition:
+          transform .3s ease,
+          border-color .3s ease,
+          box-shadow .3s ease;
+      }
+
+      .request-card:hover {
         transform:
-          translateX(4%)
-          rotate(2deg)
-          scaleX(1.06);
+          translateY(-4px);
+
+        border-color:
+          rgba(80,220,255,0.42);
+
+        box-shadow:
+          0 25px 70px
+          rgba(0,0,0,0.42),
+
+          0 0 30px
+          rgba(20,180,255,0.08);
       }
 
-      100% {
-        transform:
-          translateX(-4%)
-          rotate(-2deg)
-          scaleX(1);
-      }
+      .request-card::after {
+        content: "";
 
-    }
+        position: absolute;
 
+        top: 0;
+        left: -40%;
 
-    /* =====================================================
-       BLUE GLASS BOBBLES
-       ===================================================== */
+        width: 35%;
+        height: 100%;
 
-    .bubble {
-      position: absolute;
-
-      bottom: -100px;
-
-      border-radius: 50%;
-
-      border:
-        1px solid
-        rgba(130,235,255,0.45);
-
-      background:
-        radial-gradient(
-          circle at 30% 25%,
-          rgba(255,255,255,0.42),
-          rgba(70,205,255,0.12) 35%,
-          rgba(0,110,255,0.04) 70%,
-          transparent
-        );
-
-      box-shadow:
-        inset 0 0 18px
-        rgba(150,240,255,0.20),
-
-        0 0 25px
-        rgba(0,150,255,0.12);
-
-      backdrop-filter:
-        blur(3px);
-
-      -webkit-backdrop-filter:
-        blur(3px);
-
-      opacity: 0;
-
-      animation:
-        bubbleRise linear infinite;
-    }
-
-    .bubble::before {
-      content: "";
-
-      position: absolute;
-
-      width: 24%;
-      height: 24%;
-
-      left: 22%;
-      top: 17%;
-
-      border-radius: 50%;
-
-      background:
-        rgba(255,255,255,0.7);
-
-      filter: blur(2px);
-    }
-
-    .bubble1 {
-      width: 32px;
-      height: 32px;
-      left: 8%;
-      animation-duration: 13s;
-      animation-delay: -2s;
-    }
-
-    .bubble2 {
-      width: 18px;
-      height: 18px;
-      left: 21%;
-      animation-duration: 10s;
-      animation-delay: -5s;
-    }
-
-    .bubble3 {
-      width: 48px;
-      height: 48px;
-      left: 38%;
-      animation-duration: 17s;
-      animation-delay: -8s;
-    }
-
-    .bubble4 {
-      width: 23px;
-      height: 23px;
-      left: 57%;
-      animation-duration: 12s;
-      animation-delay: -3s;
-    }
-
-    .bubble5 {
-      width: 55px;
-      height: 55px;
-      left: 74%;
-      animation-duration: 19s;
-      animation-delay: -10s;
-    }
-
-    .bubble6 {
-      width: 27px;
-      height: 27px;
-      left: 91%;
-      animation-duration: 14s;
-      animation-delay: -7s;
-    }
-
-    @keyframes bubbleRise {
-
-      0% {
-        transform:
-          translate3d(0, 0, 0)
-          scale(0.75);
-
-        opacity: 0;
-      }
-
-      10% {
-        opacity: 0.65;
-      }
-
-      45% {
-        transform:
-          translate3d(35px, -45vh, 0)
-          scale(1);
-      }
-
-      75% {
-        opacity: 0.35;
+        background:
+          linear-gradient(
+            90deg,
+            transparent,
+            rgba(120,235,255,0.07),
+            transparent
+          );
 
         transform:
-          translate3d(-35px, -80vh, 0)
-          scale(0.9);
+          skewX(-18deg);
+
+        pointer-events: none;
+
+        animation:
+          cardShine
+          7s ease-in-out infinite;
       }
 
-      100% {
-        transform:
-          translate3d(25px, -120vh, 0)
-          scale(1.15);
+      @keyframes requestCardIn {
 
-        opacity: 0;
+        from {
+          opacity: 0;
+
+          transform:
+            translateY(14px)
+            scale(.985);
+        }
+
+        to {
+          opacity: 1;
+
+          transform:
+            translateY(0)
+            scale(1);
+        }
+
       }
 
-    }
+      @keyframes cardShine {
 
+        0%,
+        55% {
+          left: -40%;
+        }
 
-    /* =====================================================
-       FLOATING BLUE GLOWS
-       ===================================================== */
+        100% {
+          left: 135%;
+        }
 
-    .glow {
-      position: absolute;
-
-      width: 350px;
-      height: 350px;
-
-      border-radius: 50%;
-
-      filter: blur(90px);
-
-      opacity: 0.35;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(0,170,255,0.9),
-          transparent 70%
-        );
-
-      animation:
-        glowFloat 18s ease-in-out infinite alternate;
-    }
-
-    .glow.one {
-      left: -150px;
-      top: 5%;
-    }
-
-    .glow.two {
-      right: -150px;
-      top: 45%;
-
-      animation-delay: -7s;
-    }
-
-    .glow.three {
-      left: 35%;
-      bottom: -180px;
-
-      animation-delay: -12s;
-    }
-
-    @keyframes glowFloat {
-
-      0% {
-        transform:
-          translate(0,0)
-          scale(0.9);
       }
 
-      50% {
-        transform:
-          translate(80px,60px)
-          scale(1.15);
+
+      /* -----------------------------------------------------
+         REQUEST TOP
+         ----------------------------------------------------- */
+
+      .request-top {
+        position: relative;
+
+        z-index: 2;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 14px;
+
+        margin-bottom: 17px;
       }
 
-      100% {
-        transform:
-          translate(-40px,120px)
-          scale(0.95);
+      .request-name {
+        font-size: 18px;
+
+        font-weight: 900;
+
+        color:
+          #e7fbff;
+
+        word-break:
+          break-word;
       }
 
-    }
+      .request-id-small {
+        margin-top: 5px;
 
+        color:
+          rgba(180,230,245,0.43);
 
-    /* =====================================================
-       MAIN GLASS
-       ===================================================== */
+        font-size: 9px;
 
-    .shell {
-      width:
-        min(1180px, 94%);
-
-      margin:
-        24px auto 50px;
-
-      padding: 23px;
-
-      border-radius: 30px;
-
-      border:
-        1px solid
-        rgba(90,210,255,0.25);
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255,255,255,0.09),
-          rgba(255,255,255,0.025)
-        );
-
-      backdrop-filter:
-        blur(30px);
-
-      -webkit-backdrop-filter:
-        blur(30px);
-
-      box-shadow:
-        0 35px 100px
-        rgba(0,0,0,0.55),
-
-        inset 0 1px 0
-        rgba(255,255,255,0.12),
-
-        0 0 80px
-        rgba(0,140,255,0.08);
-    }
-
-
-    /* =====================================================
-       HEADER
-       ===================================================== */
-
-    header {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 20px;
-
-      padding:
-        8px 8px 26px;
-    }
-
-    .brand {
-      font-size:
-        clamp(23px, 5vw, 35px);
-
-      font-weight: 950;
-
-      letter-spacing: 1px;
-
-      background:
-        linear-gradient(
-          90deg,
-          #dffbff,
-          #5bdcff,
-          #168fff,
-          #9defff,
-          #e8fbff
-        );
-
-      background-size:
-        300% auto;
-
-      -webkit-background-clip: text;
-
-      background-clip: text;
-
-      color: transparent;
-
-      animation:
-        brandFlow 6s linear infinite;
-    }
-
-    @keyframes brandFlow {
-
-      from {
-        background-position: 0% center;
+        letter-spacing: 1px;
       }
 
-      to {
-        background-position: 300% center;
+
+      /* -----------------------------------------------------
+         STATUS BADGES
+         ----------------------------------------------------- */
+
+      .request-status {
+        flex-shrink: 0;
+
+        padding:
+          7px 11px;
+
+        border-radius: 999px;
+
+        font-size: 9px;
+
+        font-weight: 900;
+
+        letter-spacing: 1px;
+
+        text-transform:
+          uppercase;
       }
 
-    }
+      .status-pending {
+        color:
+          #ffe98a;
 
-    .subtitle {
-      margin-top: 6px;
+        border:
+          1px solid
+          rgba(255,225,100,0.28);
 
-      font-size: 11px;
+        background:
+          rgba(255,210,50,0.08);
 
-      letter-spacing: 2.2px;
-
-      text-transform: uppercase;
-
-      color:
-        rgba(205,235,250,0.55);
-    }
-
-    .online-badge {
-      display: flex;
-
-      align-items: center;
-
-      gap: 9px;
-
-      padding:
-        10px 15px;
-
-      border-radius: 999px;
-
-      border:
-        1px solid
-        rgba(80,210,255,0.25);
-
-      background:
-        rgba(0,120,220,0.08);
-
-      backdrop-filter:
-        blur(15px);
-
-      -webkit-backdrop-filter:
-        blur(15px);
-
-      white-space: nowrap;
-
-      color:
-        #b9f3ff;
-
-      font-size: 11px;
-
-      font-weight: 800;
-
-      letter-spacing: 1px;
-    }
-
-    .online-dot {
-      width: 9px;
-      height: 9px;
-
-      border-radius: 50%;
-
-      background:
-        var(--green);
-
-      box-shadow:
-        0 0 18px
-        rgba(80,245,176,0.9);
-
-      animation:
-        pulse 1.7s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        transform: scale(1);
+        box-shadow:
+          0 0 18px
+          rgba(255,210,50,0.05);
       }
 
-      50% {
-        transform: scale(1.55);
+      .status-approved {
+        color:
+          #91ffd0;
+
+        border:
+          1px solid
+          rgba(80,245,176,0.28);
+
+        background:
+          rgba(80,245,176,0.07);
+
+        box-shadow:
+          0 0 18px
+          rgba(50,245,160,0.05);
       }
 
-    }
-
-
-    /* =====================================================
-       STATISTICS
-       ===================================================== */
-
-    .stats {
-      display: grid;
-
-      grid-template-columns:
-        repeat(
-          auto-fit,
-          minmax(200px, 1fr)
-        );
-
-      gap: 16px;
-
-      margin-bottom: 36px;
-    }
-
-    .card {
-      position: relative;
-
-      overflow: hidden;
-
-      min-height: 135px;
-
-      padding: 22px;
-
-      border-radius: 22px;
-
-      border:
-        1px solid
-        rgba(90,210,255,0.19);
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,0.075),
-          rgba(20,130,220,0.025)
-        );
-
-      backdrop-filter:
-        blur(22px);
-
-      -webkit-backdrop-filter:
-        blur(22px);
-
-      box-shadow:
-        inset 0 1px 0
-        rgba(255,255,255,0.08),
-
-        0 18px 50px
-        rgba(0,0,0,0.30);
-
-      transition:
-        transform .35s ease,
-        border-color .35s ease,
-        box-shadow .35s ease;
-    }
-
-    .card::before {
-      content: "";
-
-      position: absolute;
-
-      width: 130px;
-      height: 130px;
-
-      right: -60px;
-      top: -70px;
-
-      border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(50,210,255,0.23),
-          transparent 70%
-        );
-
-      filter: blur(8px);
-    }
-
-    .card:hover {
-      transform:
-        translateY(-6px);
-
-      border-color:
-        rgba(90,220,255,0.45);
-
-      box-shadow:
-        0 25px 65px
-        rgba(0,0,0,0.4),
-
-        0 0 30px
-        rgba(0,150,255,0.10);
-    }
-
-    .label {
-      margin-bottom: 12px;
-
-      font-size: 10px;
-
-      letter-spacing: 2px;
-
-      text-transform: uppercase;
-
-      color:
-        var(--muted);
-    }
-
-    .value {
-      font-size: 27px;
-
-      font-weight: 900;
-
-      color:
-        #dffaff;
-
-      text-shadow:
-        0 0 22px
-        rgba(50,210,255,0.18);
-    }
-
-    .online {
-      color:
-        var(--green);
-    }
-
-    #pendingCount {
-      color:
-        var(--yellow);
-    }
-
-    #whatsappStatus {
-      color:
-        var(--cyan);
-    }
-
-
-    /* =====================================================
-       SECTION
-       ===================================================== */
-
-    .section-title {
-      display: flex;
-
-      align-items: center;
-
-      gap: 12px;
-
-      margin-bottom: 18px;
-
-      color:
-        #dffaff;
-
-      font-size: 21px;
-    }
-
-    .section-title::before {
-      content: "";
-
-      width: 4px;
-      height: 25px;
-
-      border-radius: 10px;
-
-      background:
-        linear-gradient(
-          180deg,
-          #2edcff,
-          #006dff
-        );
-
-      box-shadow:
-        0 0 18px
-        rgba(30,190,255,0.65);
-    }
-
-
-    /* =====================================================
-       REQUEST AREA
-       ===================================================== */
-
-    #requests {
-      display: grid;
-
-      gap: 15px;
-    }
-
-    .empty {
-      padding: 38px 20px;
-
-      text-align: center;
-
-      border-radius: 20px;
-
-      border:
-        1px dashed
-        rgba(80,210,255,0.25);
-
-      color:
-        var(--muted);
-
-      background:
-        rgba(0,100,180,0.035);
-
-      backdrop-filter:
-        blur(15px);
-    }
-
-
-    /* =====================================================
-       REQUEST CARD
-       ===================================================== */
-
-    .request-card {
-      position: relative;
-
-      overflow: hidden;
-
-      padding: 21px;
-
-      border-radius: 22px;
-
-      border:
-        1px solid
-        rgba(80,210,255,0.18);
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255,255,255,0.075),
-          rgba(0,100,190,0.035)
-        );
-
-      backdrop-filter:
-        blur(20px);
-
-      -webkit-backdrop-filter:
-        blur(20px);
-
-      box-shadow:
-        0 16px 50px
-        rgba(0,0,0,0.28);
-
-      animation:
-        requestAppear .45s ease both;
-    }
-
-    .request-card::before {
-      content: "";
-
-      position: absolute;
-
-      left: -30%;
-
-      top: 0;
-
-      width: 30%;
-
-      height: 100%;
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(80,220,255,0.07),
-          transparent
-        );
-
-      transform:
-        skewX(-15deg);
-
-      animation:
-        glassSweep 6s ease-in-out infinite;
-    }
-
-    @keyframes glassSweep {
-
-      0%,
-      55% {
-        left: -35%;
-      }
-
-      100% {
-        left: 130%;
-      }
-
-    }
-
-    @keyframes requestAppear {
-
-      from {
-        opacity: 0;
-
-        transform:
-          translateY(14px)
-          scale(.98);
-      }
-
-      to {
-        opacity: 1;
-
-        transform:
-          translateY(0)
-          scale(1);
-      }
-
-    }
-
-    .request-top {
-      position: relative;
-      z-index: 1;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 15px;
-
-      margin-bottom: 16px;
-    }
-
-    .request-name {
-      font-size: 18px;
-
-      font-weight: 850;
-
-      color:
-        #dffaff;
-    }
-
-    .request-status {
-      padding:
-        6px 11px;
-
-      border-radius: 999px;
-
-      font-size: 9px;
-
-      font-weight: 850;
-
-      letter-spacing: 1px;
-
-      text-transform: uppercase;
-    }
-
-    .status-pending {
-      color:
-        var(--yellow);
-
-      border:
-        1px solid
-        rgba(255,225,100,0.25);
-
-      background:
-        rgba(255,210,50,0.08);
-    }
-
-    .status-approved {
-      color:
-        var(--green);
-
-      border:
-        1px solid
-        rgba(80,245,176,0.25);
-
-      background:
-        rgba(80,245,176,0.07);
-    }
-
-    .status-rejected,
-    .status-denied {
-      color:
-        var(--red);
-
-      border:
-        1px solid
-        rgba(255,90,120,0.23);
+      .status-rejected,
+      .status-denied {
+        color:
+          #ff9aae;
+
+        border:
+          1px solid
+          rgba(255,90,120,0.23);
 
       background:
         rgba(255,70,100,0.07);
@@ -1201,11 +2164,13 @@ content="#03172b"
 
 
     /* =====================================================
-       INFORMATION
+       REQUEST INFORMATION
        ===================================================== */
 
     .request-info {
+
       position: relative;
+
       z-index: 1;
 
       display: grid;
@@ -1221,7 +2186,9 @@ content="#03172b"
       margin-bottom: 18px;
     }
 
+
     .info-item {
+
       padding: 12px;
 
       border-radius: 14px;
@@ -1232,9 +2199,17 @@ content="#03172b"
       border:
         1px solid
         rgba(100,220,255,0.07);
+
+      backdrop-filter:
+        blur(12px);
+
+      -webkit-backdrop-filter:
+        blur(12px);
     }
 
+
     .info-label {
+
       margin-bottom: 5px;
 
       font-size: 9px;
@@ -1247,22 +2222,27 @@ content="#03172b"
         rgba(190,230,245,0.42);
     }
 
+
     .info-value {
+
       font-size: 13px;
 
       color:
-        rgba(235,250,255,0.9);
+        rgba(235,250,255,0.90);
 
-      word-break: break-word;
+      word-break:
+        break-word;
     }
 
 
     /* =====================================================
-       BUTTONS
+       REQUEST ACTIONS
        ===================================================== */
 
     .actions {
+
       position: relative;
+
       z-index: 2;
 
       display: flex;
@@ -1272,7 +2252,584 @@ content="#03172b"
       gap: 10px;
     }
 
+
     .btn {
+
+      position: relative;
+
+      overflow: hidden;
+
+      padding:
+        11px 18px;
+
+      border-radius: 13px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.22);
+
+      color:
+        #e9fbff;
+
+      background:
+        rgba(255,255,255,0.055);
+
+      backdrop-filter:
+        blur(14px);
+
+      -webkit-backdrop-filter:
+        blur(14px);
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease,
+        opacity .25s ease;
+    }
+
+
+    .btn:hover {
+
+      transform:
+        translateY(-3px);
+
+      border-color:
+        rgba(90,220,255,0.55);
+
+      box-shadow:
+        0 12px 35px
+        rgba(0,100,220,0.20);
+    }
+
+
+    .btn:active {
+
+      transform:
+        translateY(0)
+        scale(.97);
+    }
+
+
+    .btn:disabled {
+
+      opacity:
+        .45;
+
+      cursor:
+        not-allowed;
+
+      transform:
+        none;
+    }
+
+
+    .approve {
+
+      color:
+        #baffdf;
+
+      border-color:
+        rgba(80,245,176,0.25);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(50,230,160,0.13),
+          rgba(0,120,100,0.07)
+        );
+    }
+
+
+    .approve:hover {
+
+      border-color:
+        rgba(80,245,176,0.55);
+
+      box-shadow:
+        0 12px 35px
+        rgba(40,220,150,0.18);
+    }
+
+
+    .reject {
+
+      color:
+        #ffd0d9;
+
+      border-color:
+        rgba(255,90,120,0.25);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,70,100,0.12),
+          rgba(120,20,50,0.07)
+        );
+    }
+
+
+    .reject:hover {
+
+      border-color:
+        rgba(255,100,130,0.55);
+
+      box-shadow:
+        0 12px 35px
+        rgba(255,60,100,0.15);
+    }
+
+
+    /* =====================================================
+       ACCESS CODE DISPLAY
+       ===================================================== */
+
+    .access-code {
+
+      position: relative;
+
+      margin-top: 14px;
+
+      padding: 14px 16px;
+
+      border-radius: 15px;
+
+      border:
+        1px solid
+        rgba(80,245,176,0.20);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(50,245,170,0.08),
+          rgba(0,100,100,0.05)
+        );
+
+      color:
+        #aaffdc;
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size: 14px;
+
+      font-weight: 900;
+
+      letter-spacing: 1.5px;
+
+      word-break:
+        break-all;
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.05),
+
+        0 0 25px
+        rgba(50,230,170,0.05);
+    }
+
+
+    .access-code-label {
+
+      display: block;
+
+      margin-bottom: 6px;
+
+      color:
+        rgba(180,245,220,0.48);
+
+      font-family:
+        Inter,
+        system-ui,
+        sans-serif;
+
+      font-size: 9px;
+
+      font-weight: 800;
+
+      letter-spacing: 1.7px;
+
+      text-transform:
+        uppercase;
+    }
+
+
+    /* =====================================================
+       TOP CONTROLS
+       ===================================================== */
+
+    .controls {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content:
+        space-between;
+
+      gap: 15px;
+
+      margin-bottom: 22px;
+
+      padding: 14px;
+
+      border-radius: 18px;
+
+      border:
+        1px solid
+        rgba(80,210,255,0.14);
+
+      background:
+        rgba(255,255,255,0.035);
+
+      backdrop-filter:
+        blur(18px);
+
+      -webkit-backdrop-filter:
+        blur(18px);
+    }
+
+
+    .control-left {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+    }
+
+
+    .control-title {
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      color:
+        rgba(225,248,255,0.75);
+
+      letter-spacing:
+        .8px;
+    }
+
+
+    .refresh-btn {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 8px;
+
+      padding:
+        9px 14px;
+
+      border-radius: 12px;
+
+      border:
+        1px solid
+        rgba(80,210,255,0.20);
+
+      color:
+        #c9f5ff;
+
+      background:
+        rgba(0,120,220,0.07);
+
+      cursor: pointer;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      transition:
+        transform .25s ease,
+        background .25s ease,
+        border-color .25s ease;
+    }
+
+
+    .refresh-btn:hover {
+
+      transform:
+        translateY(-2px);
+
+      border-color:
+        rgba(80,220,255,0.48);
+
+      background:
+        rgba(0,140,240,0.13);
+    }
+
+
+    .refresh-btn:active {
+
+      transform:
+        scale(.96);
+    }
+
+
+    /* =====================================================
+       MOBILE REQUEST LAYOUT
+       ===================================================== */
+
+    @media (max-width: 700px) {
+
+      .shell {
+
+        width:
+          94%;
+
+        margin:
+          12px auto 30px;
+
+        padding:
+          15px;
+
+        border-radius:
+          23px;
+      }
+
+
+      header {
+
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
+
+        padding:
+          5px 5px 20px;
+      }
+
+
+      .online-badge {
+
+        align-self:
+          flex-start;
+      }
+
+
+      .stats {
+
+        grid-template-columns:
+          repeat(2, minmax(0,1fr));
+
+        gap:
+          10px;
+      }
+
+
+      .card {
+
+        min-height:
+          115px;
+
+        padding:
+          16px;
+      }
+
+
+      .value {
+
+        font-size:
+          22px;
+      }
+
+
+      .request-top {
+
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
+      }
+
+
+      .request-info {
+
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .actions {
+
+        flex-direction:
+          column;
+      }
+
+
+      .btn {
+
+        width:
+          100%;
+      }
+
+
+      .controls {
+
+        align-items:
+          stretch;
+
+        flex-direction:
+          column;
+      }
+
+
+      .refresh-btn {
+
+        width:
+          100%;
+      }
+
+    }
+
+
+    /* =====================================================
+       SMALL PHONE
+       ===================================================== */
+
+    @media (max-width: 430px) {
+
+      .stats {
+
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .brand {
+
+        font-size:
+          22px;
+      }
+
+
+      .section-title {
+
+        font-size:
+          18px;
+      }
+
+
+      .request-card {
+
+        padding:
+          16px;
+      }
+
+      }
+            border:
+        1px solid
+        rgba(255,90,120,0.23);
+
+      background:
+        rgba(255,70,100,0.07);
+    }
+
+
+    /* =====================================================
+       REQUEST INFORMATION
+       ===================================================== */
+
+    .request-info {
+
+      position: relative;
+
+      z-index: 1;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(180px, 1fr)
+        );
+
+      gap: 10px;
+
+      margin-bottom: 18px;
+    }
+
+
+    .info-item {
+
+      padding: 12px;
+
+      border-radius: 14px;
+
+      background:
+        rgba(0,20,40,0.30);
+
+      border:
+        1px solid
+        rgba(100,220,255,0.07);
+
+      backdrop-filter:
+        blur(10px);
+
+      -webkit-backdrop-filter:
+        blur(10px);
+    }
+
+
+    .info-label {
+
+      margin-bottom: 5px;
+
+      font-size: 9px;
+
+      letter-spacing: 1.5px;
+
+      text-transform: uppercase;
+
+      color:
+        rgba(190,230,245,0.42);
+    }
+
+
+    .info-value {
+
+      font-size: 13px;
+
+      color:
+        rgba(235,250,255,0.9);
+
+      word-break:
+        break-word;
+    }
+
+
+    /* =====================================================
+       REQUEST ACTION BUTTONS
+       ===================================================== */
+
+    .actions {
+
+      position: relative;
+
+      z-index: 2;
+
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 10px;
+    }
+
+
+    .btn {
+
       position: relative;
 
       overflow: hidden;
@@ -1308,7 +2865,9 @@ content="#03172b"
         box-shadow .25s ease;
     }
 
+
     .btn:hover {
+
       transform:
         translateY(-3px);
 
@@ -1320,7 +2879,17 @@ content="#03172b"
         rgba(0,100,220,0.20);
     }
 
+
+    .btn:active {
+
+      transform:
+        translateY(0)
+        scale(.97);
+    }
+
+
     .btn:disabled {
+
       opacity: .5;
 
       cursor:
@@ -1330,7 +2899,9 @@ content="#03172b"
         none;
     }
 
+
     .approve {
+
       color:
         #baffdf;
 
@@ -1345,9 +2916,22 @@ content="#03172b"
         );
     }
 
-    .deny {
+
+    .approve:hover {
+
+      border-color:
+        rgba(80,245,176,0.55);
+
+      box-shadow:
+        0 12px 35px
+        rgba(30,230,160,0.14);
+    }
+
+
+    .reject {
+
       color:
-        #ffb7c5;
+        #ffb4c4;
 
       border-color:
         rgba(255,90,120,0.25);
@@ -1355,491 +2939,95 @@ content="#03172b"
       background:
         linear-gradient(
           135deg,
-          rgba(255,60,100,0.12),
-          rgba(120,0,40,0.07)
+          rgba(255,70,100,0.12),
+          rgba(130,20,50,0.07)
         );
     }
 
-    .logout {
-      color:
-        #aeeaff;
-    }
 
-
-    /* =====================================================
-       ACCESS CODE MODAL
-       ===================================================== */
-
-    .modal {
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 100;
-
-      display: none;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 20px;
-
-      background:
-        rgba(0,8,18,0.72);
-
-      backdrop-filter:
-        blur(12px);
-
-      -webkit-backdrop-filter:
-        blur(12px);
-    }
-
-    .modal.show {
-      display: flex;
-
-      animation:
-        fadeIn .25s ease;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    .modal-card {
-      width:
-        min(470px, 100%);
-
-      padding: 27px;
-
-      border-radius: 25px;
-
-      border:
-        1px solid
-        rgba(80,220,255,0.35);
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(10,50,80,0.94),
-          rgba(2,18,35,0.96)
-        );
-
-      box-shadow:
-        0 35px 100px
-        rgba(0,0,0,0.65),
-
-        0 0 45px
-        rgba(0,150,255,0.15);
-
-      backdrop-filter:
-        blur(30px);
-
-      -webkit-backdrop-filter:
-        blur(30px);
-
-      text-align: center;
-
-      animation:
-        modalPop .35s ease;
-    }
-
-    @keyframes modalPop {
-
-      from {
-        transform:
-          translateY(20px)
-          scale(.95);
-
-        opacity: 0;
-      }
-
-      to {
-        transform:
-          translateY(0)
-          scale(1);
-
-        opacity: 1;
-      }
-
-    }
-
-    .modal-icon {
-      font-size: 42px;
-
-      margin-bottom: 12px;
-    }
-
-    .modal-title {
-      font-size: 21px;
-
-      font-weight: 900;
-
-      color:
-        #dffaff;
-
-      margin-bottom: 8px;
-    }
-
-    .modal-text {
-      color:
-        var(--muted);
-
-      font-size: 13px;
-
-      line-height: 1.6;
-
-      margin-bottom: 18px;
-    }
-
-    .code-box {
-      padding: 17px;
-
-      border-radius: 16px;
-
-      border:
-        1px solid
-        rgba(80,220,255,0.3);
-
-      background:
-        rgba(0,120,220,0.08);
-
-      color:
-        #7eeaff;
-
-      font-size: 25px;
-
-      font-weight: 950;
-
-      letter-spacing: 3px;
-
-      word-break: break-all;
-
-      text-shadow:
-        0 0 22px
-        rgba(60,210,255,0.35);
-
-      margin-bottom: id="a7k31"
-28px;
-
-    }
-
-    .section-title::before {
-      content: "";
-
-      width: 4px;
-      height: 24px;
-
-      border-radius: 10px;
-
-      background:
-        linear-gradient(
-          180deg,
-          #21c8ff,
-          #1976ff
-        );
-
-      box-shadow:
-        0 0 16px
-        rgba(30,190,255,0.45);
-    }
-
-
-    /* =====================================================
-       REQUEST AREA
-       ===================================================== */
-
-    #requests {
-      display: grid;
-      gap: 16px;
-    }
-
-
-    .empty {
-
-      padding: 38px 22px;
-
-      text-align: center;
-
-      border-radius: 22px;
-
-      border:
-        1px dashed
-        rgba(60,210,255,0.25);
-
-      color:
-        rgba(210,240,255,0.60);
-
-      background:
-        rgba(255,255,255,0.025);
-
-      backdrop-filter:
-        blur(18px);
-
-      -webkit-backdrop-filter:
-        blur(18px);
-
-      box-shadow:
-        inset 0 0 25px
-        rgba(40,180,255,0.025);
-    }
-
-
-    /* =====================================================
-       REQUEST CARDS
-       ===================================================== */
-
-    .request-card {
-
-      position: relative;
-
-      overflow: hidden;
-
-      padding: 21px;
-
-      border-radius: 22px;
-
-      border:
-        1px solid
-        rgba(60,210,255,0.20);
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(20,110,170,0.18),
-          rgba(3,18,35,0.72)
-        );
-
-      backdrop-filter:
-        blur(22px);
-
-      -webkit-backdrop-filter:
-        blur(22px);
-
-      box-shadow:
-        0 18px 55px
-        rgba(0,0,0,0.35),
-
-        inset 0 1px 0
-        rgba(255,255,255,0.08);
-
-      animation:
-        requestAppear
-        0.55s ease both;
-
-      transition:
-        transform 0.3s ease,
-        border-color 0.3s ease,
-        box-shadow 0.3s ease;
-    }
-
-
-    .request-card::before {
-
-      content: "";
-
-      position: absolute;
-
-      width: 180px;
-      height: 180px;
-
-      right: -90px;
-      top: -100px;
-
-      border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(40,200,255,0.20),
-          transparent 70%
-        );
-
-      filter: blur(12px);
-
-      pointer-events: none;
-    }
-
-
-    .request-card:hover {
-
-      transform:
-        translateY(-4px);
+    .reject:hover {
 
       border-color:
-        rgba(70,220,255,0.40);
+        rgba(255,90,120,0.55);
 
       box-shadow:
-        0 25px 70px
-        rgba(0,0,0,0.45),
-
-        0 0 28px
-        rgba(30,190,255,0.08);
+        0 12px 35px
+        rgba(255,60,100,0.14);
     }
 
 
-    @keyframes requestAppear {
-
-      from {
-
-        opacity: 0;
-
-        transform:
-          translateY(15px)
-          scale(0.98);
-
-      }
-
-      to {
-
-        opacity: 1;
-
-        transform:
-          translateY(0)
-          scale(1);
-
-      }
-
-    }
-
-
-    .request-top {
-
-      display: flex;
-
-      justify-content:
-        space-between;
-
-      align-items:
-        center;
-
-      gap: 15px;
-
-      margin-bottom: 16px;
-    }
-
-
-    .request-name {
-
-      font-size: 18px;
-
-      font-weight: 850;
+    .refresh {
 
       color:
-        #dff8ff;
+        #bcefff;
 
-      text-shadow:
-        0 0 18px
-        rgba(60,210,255,0.22);
+      border-color:
+        rgba(60,210,255,0.25);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(30,180,255,0.12),
+          rgba(0,80,160,0.07)
+        );
     }
 
 
-    .request-status {
+    .refresh:hover {
+
+      border-color:
+        rgba(60,220,255,0.60);
+    }
+
+
+    /* =====================================================
+       ACCESS CODE
+       ===================================================== */
+
+    .access-code {
+
+      margin-top: 14px;
 
       padding:
-        7px 11px;
+        13px 15px;
 
-      border-radius:
-        999px;
+      border-radius: 15px;
 
-      font-size: 10px;
+      border:
+        1px solid
+        rgba(80,245,176,0.20);
 
-      font-weight: 850;
-
-      letter-spacing: 1px;
-
-      text-transform:
-        uppercase;
-
-      white-space:
-        nowrap;
-    }
-
-
-    .status-pending {
+      background:
+        rgba(50,220,160,0.055);
 
       color:
-        #7ee7ff;
+        #aaffd9;
 
-      background:
-        rgba(30,190,255,0.09);
+      font-family:
+        "Courier New",
+        monospace;
 
-      border:
-        1px solid
-        rgba(30,190,255,0.24);
+      font-size: 14px;
 
-      box-shadow:
-        0 0 14px
-        rgba(30,190,255,0.06);
+      font-weight: 800;
+
+      letter-spacing: 1.5px;
+
+      word-break:
+        break-all;
     }
 
 
-    .status-approved {
+    .access-code-label {
 
-      color:
-        #8fffe0;
+      display: block;
 
-      background:
-        rgba(40,220,180,0.08);
+      margin-bottom: 6px;
 
-      border:
-        1px solid
-        rgba(40,220,180,0.23);
-    }
-
-
-    .status-denied {
-
-      color:
-        #ff91a8;
-
-      background:
-        rgba(255,50,90,0.08);
-
-      border:
-        1px solid
-        rgba(255,50,90,0.20);
-    }
-
-
-    .request-info {
-
-      display: grid;
-
-      grid-template-columns:
-        repeat(
-          auto-fit,
-          minmax(180px,1fr)
-        );
-
-      gap: 10px;
-
-      margin-bottom: 18px;
-    }
-
-
-    .info-item {
-
-      padding: 13px;
-
-      border-radius: 14px;
-
-      background:
-        rgba(0,20,40,0.35);
-
-      border:
-        1px solid
-        rgba(70,200,255,0.08);
-    }
-
-
-    .info-label {
+      font-family:
+        Inter,
+        system-ui,
+        sans-serif;
 
       font-size: 9px;
 
@@ -1849,199 +3037,239 @@ content="#03172b"
         uppercase;
 
       color:
-        rgba(170,225,245,0.48);
-
-      margin-bottom: 5px;
-    }
-
-
-    .info-value {
-
-      font-size: 13px;
-
-      word-break:
-        break-word;
-
-      color:
-        rgba(235,250,255,0.90);
+        rgba(190,240,220,0.45);
     }
 
 
     /* =====================================================
-       BUTTONS
+       TOAST NOTIFICATION
        ===================================================== */
 
-    .actions {
+    #toast {
 
-      display: flex;
+      position: fixed;
 
-      flex-wrap: wrap;
+      left: 50%;
 
-      gap: 10px;
-    }
+      bottom: 25px;
 
+      z-index: 99999;
 
-    .btn {
+      width:
+        min(440px, 90%);
 
-      position: relative;
+      padding:
+        14px 18px;
 
-      overflow: hidden;
+      border-radius: 16px;
 
       border:
         1px solid
-        rgba(70,210,255,0.20);
-
-      border-radius:
-        13px;
-
-      padding:
-        11px 18px;
-
-      color:
-        #eafaff;
-
-      font-weight:
-        800;
-
-      cursor:
-        pointer;
+        rgba(80,210,255,0.25);
 
       background:
-        linear-gradient(
-          135deg,
-          rgba(40,180,255,0.12),
-          rgba(255,255,255,0.035)
-        );
+        rgba(3,20,38,0.82);
 
       backdrop-filter:
-        blur(15px);
+        blur(25px);
 
       -webkit-backdrop-filter:
-        blur(15px);
+        blur(25px);
 
       box-shadow:
-        inset 0 1px 0
-        rgba(255,255,255,0.09),
+        0 20px 60px
+        rgba(0,0,0,0.45),
 
-        0 8px 25px
-        rgba(0,0,0,0.25);
-
-      transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        border-color 0.25s ease;
-    }
-
-
-    .btn::before {
-
-      content: "";
-
-      position: absolute;
-
-      top: 0;
-
-      left: -120%;
-
-      width: 75%;
-
-      height: 100%;
-
-      transform:
-        skewX(-20deg);
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255,255,255,0.30),
-          transparent
-        );
-
-      transition:
-        left 0.65s ease;
-    }
-
-
-    .btn:hover::before {
-
-      left: 140%;
-    }
-
-
-    .btn:hover {
-
-      transform:
-        translateY(-3px);
-
-      border-color:
-        rgba(70,220,255,0.45);
-
-      box-shadow:
-        0 14px 35px
-        rgba(0,0,0,0.35),
-
-        0 0 20px
-        rgba(30,190,255,0.08);
-    }
-
-
-    .approve {
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(40,220,180,0.18),
-          rgba(10,110,95,0.18)
-        );
+        0 0 35px
+        rgba(0,150,255,0.12);
 
       color:
-        #8fffe0;
+        #e8faff;
 
-      border-color:
-        rgba(60,230,190,0.25);
+      font-size: 13px;
+
+      font-weight: 700;
+
+      text-align: center;
+
+      opacity: 0;
+
+      transform:
+        translateX(-50%)
+        translateY(20px);
+
+      pointer-events:
+        none;
+
+      transition:
+        opacity .3s ease,
+        transform .3s ease;
     }
 
 
-    .deny {
+    #toast.show {
 
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255,40,80,0.18),
-          rgba(130,0,30,0.16)
-        );
+      opacity: 1;
+
+      transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+
+    #toast.success {
+
+      border-color:
+        rgba(80,245,176,0.35);
 
       color:
-        #ff9eb0;
-
-      border-color:
-        rgba(255,60,90,0.22);
+        #baffdf;
     }
 
 
-    .logout {
+    #toast.error {
 
       border-color:
-        rgba(70,210,255,0.18);
+        rgba(255,90,120,0.35);
+
+      color:
+        #ffb7c6;
+    }
+
+
+    #toast.info {
+
+      border-color:
+        rgba(80,210,255,0.35);
+
+      color:
+        #bdefff;
     }
 
 
     /* =====================================================
-       MOBILE
+       LOADING STATE
        ===================================================== */
 
-    @media (max-width: 650px) {
+    .loading {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 10px;
+
+      padding: 35px;
+
+      color:
+        rgba(210,240,255,0.55);
+
+      font-size: 12px;
+
+      letter-spacing: 1px;
+    }
+
+
+    .loading-dot {
+
+      width: 8px;
+
+      height: 8px;
+
+      border-radius: 50%;
+
+      background:
+        var(--cyan);
+
+      box-shadow:
+        0 0 14px
+        rgba(80,220,255,0.8);
+
+      animation:
+        loadingPulse 1s ease-in-out infinite;
+    }
+
+
+    .loading-dot:nth-child(2) {
+
+      animation-delay:
+        .15s;
+    }
+
+
+    .loading-dot:nth-child(3) {
+
+      animation-delay:
+        .30s;
+    }
+
+
+    @keyframes loadingPulse {
+
+      0%,
+      100% {
+        opacity: .25;
+        transform: scale(.75);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+      }
+          /* =====================================================
+       ADMIN FOOTER
+       ===================================================== */
+
+    .admin-footer {
+
+      margin-top: 35px;
+
+      padding:
+        18px 10px;
+
+      text-align: center;
+
+      color:
+        rgba(190,230,245,0.38);
+
+      font-size: 10px;
+
+      letter-spacing: 1.5px;
+
+      text-transform: uppercase;
+    }
+
+
+    .admin-footer strong {
+
+      color:
+        rgba(110,225,255,0.65);
+
+      font-weight: 900;
+    }
+
+
+    /* =====================================================
+       MOBILE RESPONSIVE DESIGN
+       ===================================================== */
+
+    @media (max-width: 760px) {
 
       .shell {
 
         width: 94%;
 
-        margin-top: 14px;
+        margin:
+          12px auto 30px;
 
-        padding: 17px;
+        padding:
+          16px;
 
-        border-radius: 24px;
+        border-radius:
+          24px;
       }
 
 
@@ -2052,13 +3280,78 @@ content="#03172b"
 
         flex-direction:
           column;
+
+        padding:
+          5px 4px 22px;
+      }
+
+
+      .online-badge {
+
+        align-self:
+          flex-start;
       }
 
 
       .stats {
 
         grid-template-columns:
-          1fr;
+          repeat(2, 1fr);
+
+        gap: 10px;
+
+        margin-bottom:
+          27px;
+      }
+
+
+      .card {
+
+        min-height:
+          112px;
+
+        padding:
+          16px;
+
+        border-radius:
+          18px;
+      }
+
+
+      .label {
+
+        font-size:
+          8px;
+
+        letter-spacing:
+          1.3px;
+      }
+
+
+      .value {
+
+        font-size:
+          21px;
+      }
+
+
+      .section-title {
+
+        font-size:
+          18px;
+
+        margin-bottom:
+          14px;
+      }
+
+
+      .request-card {
+
+        padding:
+          16px;
+
+        border-radius:
+          18px;
       }
 
 
@@ -2069,6 +3362,33 @@ content="#03172b"
 
         flex-direction:
           column;
+
+        gap:
+          10px;
+      }
+
+
+      .request-name {
+
+        font-size:
+          16px;
+      }
+
+
+      .request-status {
+
+        align-self:
+          flex-start;
+      }
+
+
+      .request-info {
+
+        grid-template-columns:
+          1fr;
+
+        gap:
+          8px;
       }
 
 
@@ -2081,7 +3401,143 @@ content="#03172b"
 
       .btn {
 
-        width: 100%;
+        width:
+          100%;
+
+        text-align:
+          center;
+
+        padding:
+          12px 15px;
+      }
+
+
+      .access-code {
+
+        font-size:
+          12px;
+
+        letter-spacing:
+          1px;
+      }
+
+
+      .bubble-2 {
+
+        width:
+          150px;
+
+        height:
+          150px;
+      }
+
+
+      .bubble-4 {
+
+        width:
+          130px;
+
+        height:
+          130px;
+      }
+
+
+      .bubble-6 {
+
+        width:
+          90px;
+
+        height:
+          90px;
+      }
+
+    }
+
+
+    /* =====================================================
+       VERY SMALL PHONES
+       ===================================================== */
+
+    @media (max-width: 430px) {
+
+      .shell {
+
+        width:
+          96%;
+
+        padding:
+          13px;
+
+        margin-top:
+          8px;
+      }
+
+
+      .brand {
+
+        font-size:
+          22px;
+
+        letter-spacing:
+          .5px;
+      }
+
+
+      .subtitle {
+
+        font-size:
+          9px;
+
+        letter-spacing:
+          1.6px;
+      }
+
+
+      .stats {
+
+        grid-template-columns:
+          1fr 1fr;
+
+        gap:
+          8px;
+      }
+
+
+      .card {
+
+        min-height:
+          100px;
+
+        padding:
+          13px;
+      }
+
+
+      .value {
+
+        font-size:
+          19px;
+      }
+
+
+      .request-info {
+
+        display:
+          block;
+      }
+
+
+      .info-item {
+
+        margin-bottom:
+          8px;
+      }
+
+
+      .toast {
+
+        width:
+          calc(100% - 24px);
       }
 
     }
@@ -2091,9 +3547,7 @@ content="#03172b"
        REDUCED MOTION
        ===================================================== */
 
-    @media (
-      prefers-reduced-motion: reduce
-    ) {
+    @media (prefers-reduced-motion: reduce) {
 
       *,
       *::before,
@@ -2105,1544 +3559,4681 @@ content="#03172b"
         animation-iteration-count:
           1 !important;
 
+        scroll-behavior:
+          auto !important;
+
         transition-duration:
           0.01ms !important;
       }
 
     }
 
-/* =====================================================
-   NICEGOLD VISIBLE WATER BUBBLE FIX 💧
-   ===================================================== */
-
-.background {
-  z-index: 0 !important;
-}
-
-.water-bubble {
-  z-index: 2 !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 0.45 !important;
-  pointer-events: none;
-}
-
-.shell {
-  position: relative;
-  z-index: 5;
-}
-    
-  </style>
-</head>
-
-
-<body>
-
-  <!-- ===================================================
-       ANIMATED BLUE GLASS BACKGROUND
-       =================================================== -->
-
-  <div class="background">
-
-<!-- BIG WATER BUBBLES -->
-
-<div class="water-bubble bubble-1"></div>
-<div class="water-bubble bubble-2"></div>
-<div class="water-bubble bubble-3"></div>
-<div class="water-bubble bubble-4"></div>
-<div class="water-bubble bubble-5"></div>
-<div class="water-bubble bubble-6"></div>
-    
-    <div class="orb orb-blue"></div>
-
-    <div class="orb orb-cyan"></div>
-
-    <div class="orb orb-deep"></div>
-
-    <div class="light"></div>
-
-    <div class="particle p1"></div>
-    <div class="particle p2"></div>
-    <div class="particle p3"></div>
-    <div class="particle p4"></div>
-    <div class="particle p5"></div>
-    <div class="particle p6"></div>
-
-  </div>
-
-
-  <!-- ===================================================
-       CONTROL PANEL
-       =================================================== -->
-
-  <main class="shell">
-
-    <header>
-
-      <div>
-
-        <div class="brand">
-          ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
-        </div>
-
-        <div class="subtitle">
-          Premium Administration Control
-        </div>
-
-      </div>
-
-
-      <div class="online-badge">
-
-        <span class="online-dot"></span>
-
-        SYSTEM ONLINE
-
-      </div>
-
-    </header>
-
-
-    <!-- =================================================
-         STATISTICS
-         ================================================= -->
-
-    <section class="stats">
-
-      <div class="card">
-
-        <div class="label">
-          SERVER
-        </div>
-
-        <div class="value online">
-          ● ONLINE
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="label">
-          PENDING REQUESTS
-        </div>
-
-        <div
-          class="value"
-          id="pendingCount"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="label">
-          WHATSAPP ENGINE
-        </div>
-
-        <div
-          class="value"
-          id="whatsappStatus"
-        >
-          STOPPED
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =================================================
-         ACCESS REQUESTS
-         ================================================= -->
-
-    <h2 class="section-title">
-      Access Requests
-    </h2>
-
-
-    <section id="requests">
-
-      <div class="empty">
-        Loading requests...
-      </div>
-
-    </section>
-
-
-    <!-- =================================================
-         LOGOUT
-         ================================================= -->
-
-    <div
-      style="
-        margin-top: 28px;
-        display: flex;
-        justify-content: flex-end;
-      "
-    >
-
-      <button
-        class="btn logout"
-        onclick="logout()"
-      >
-        LOGOUT
-      </button>
-
-    </div>
-
-  </main>
-
-
-  <script>
 
     /* =====================================================
-       ADMIN REQUESTS
+       SAFE AREA FOR PHONES
        ===================================================== */
 
-    const requestsBox =
-      document.getElementById(
-        "requests"
-      );
+    @supports (padding: env(safe-area-inset-bottom)) {
+
+      body {
+
+        padding-bottom:
+          env(safe-area-inset-bottom);
+      }
+
+    }
+          /* =====================================================
+       MAIN CONTENT
+       ===================================================== */
+
+    .main-content {
+      position: relative;
+      z-index: 1;
+    }
 
 
-    const pendingCount =
-      document.getElementById(
-        "pendingCount"
-      );
+    /* =====================================================
+       CONTROL BAR
+       ===================================================== */
+
+    .control-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+
+      margin-bottom: 22px;
+      padding: 15px 17px;
+
+      border-radius: 18px;
+
+      border:
+        1px solid
+        rgba(80,210,255,0.16);
+
+      background:
+        rgba(255,255,255,0.035);
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
 
 
-    async function loadRequests() {
-
-      try {
-
-        const response =
-          await fetch(
-            "/api/admin/requests",
-            {
-              credentials:
-                "include"
-            }
-          );
+    .control-info {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
 
 
-        const data =
-          await response.json();
+    .control-icon {
+      width: 38px;
+      height: 38px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 12px;
+
+      background:
+        rgba(30,180,255,0.09);
+
+      border:
+        1px solid
+        rgba(70,210,255,0.18);
+
+      font-size: 17px;
+    }
 
 
-        if (!response.ok) {
+    .control-title {
+      font-size: 12px;
+      font-weight: 850;
 
-          throw new Error(
-            data.message ||
-            "Could not load requests."
-          );
-
-        }
-
-
-        const requests =
-          Array.isArray(
-            data.requests
-          )
-            ? data.requests
-            : [];
+      color:
+        #dffaff;
+    }
 
 
-        pendingCount.textContent =
-          data.pending ??
-          requests.filter(
-            item =>
-              item.status ===
-              "pending"
-          ).length;
+    .control-description {
+      margin-top: 3px;
+
+      font-size: 9px;
+
+      color:
+        rgba(190,230,245,0.42);
+    }
 
 
-        if (!requests.length) {
+    /* =====================================================
+       REFRESH BUTTON
+       ===================================================== */
 
-          requestsBox.innerHTML = `
-            <div class="empty">
+    .refresh-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
 
-              <div
-                style="
-                  font-size:34px;
-                  margin-bottom:10px;
-                "
-              >
-                💧
-              </div>
+      min-width: 105px;
 
-              <div
-                style="
-                  font-weight:800;
-                  color:#a8efff;
-                "
-              >
-                No Access Requests
-              </div>
+      padding:
+        10px 15px;
 
-              <div
-                style="
-                  margin-top:8px;
-                "
-              >
-                New NICEGOLD access requests
-                will appear here.
-              </div>
+      border-radius: 12px;
 
-            </div>
-          `;
+      border:
+        1px solid
+        rgba(80,210,255,0.22);
 
-          return;
+      background:
+        rgba(20,150,230,0.08);
 
-        }
+      color:
+        #bdefff;
 
+      font-size: 10px;
 
-        requestsBox.innerHTML =
-          requests
-            .map(
-              renderRequest
-            )
-            .join("");
+      font-weight: 850;
+
+      letter-spacing: .6px;
+
+      cursor: pointer;
+
+      transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+    }
 
 
-      } catch (error) {
+    .refresh-button:hover {
+      transform:
+        translateY(-2px);
 
-        console.error(
-          "Request loading error:",
-          error
+      border-color:
+        rgba(90,225,255,0.5);
+
+      background:
+        rgba(20,170,255,0.13);
+    }
+
+
+    .refresh-button:active {
+      transform:
+        scale(.96);
+    }
+
+
+    .refresh-button.loading {
+      pointer-events:
+        none;
+
+      opacity:
+        .65;
+    }
+
+
+    .refresh-icon {
+      display:
+        inline-block;
+
+      transition:
+        transform .4s ease;
+    }
+
+
+    .refresh-button.loading
+    .refresh-icon {
+      animation:
+        refreshSpin .8s linear infinite;
+    }
+
+
+    @keyframes refreshSpin {
+      from {
+        transform:
+          rotate(0deg);
+      }
+
+      to {
+        transform:
+          rotate(360deg);
+      }
+    }
+
+
+    /* =====================================================
+       REQUEST FILTERS
+       ===================================================== */
+
+    .request-filters {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      flex-wrap: wrap;
+
+      margin-bottom: 18px;
+    }
+
+
+    .filter-button {
+      padding:
+        8px 13px;
+
+      border-radius:
+        999px;
+
+      border:
+        1px solid
+        rgba(80,210,255,0.14);
+
+      background:
+        rgba(255,255,255,0.035);
+
+      color:
+        rgba(210,240,250,0.55);
+
+      font-size:
+        9px;
+
+      font-weight:
+        800;
+
+      letter-spacing:
+        .8px;
+
+      text-transform:
+        uppercase;
+
+      cursor:
+        pointer;
+
+      transition:
+        all .25s ease;
+    }
+
+
+    .filter-button:hover {
+      color:
+        #c9f5ff;
+
+      border-color:
+        rgba(80,215,255,0.35);
+    }
+
+
+    .filter-button.active {
+      color:
+        #dffaff;
+
+      border-color:
+        rgba(70,215,255,0.45);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(30,180,255,0.14),
+          rgba(0,100,220,0.08)
         );
 
-
-        requestsBox.innerHTML = `
-          <div class="empty">
-
-            <div
-              style="
-                color:#ff91a8;
-                font-weight:800;
-              "
-            >
-              Unable to load requests
-            </div>
-
-            <div
-              style="
-                margin-top:8px;
-              "
-            >
-              ${escapeHTML(
-                error.message
-              )}
-            </div>
-
-          </div>
-        `;
-
-      }
-
-    }
-
-
-    /* =====================================================
-       RENDER REQUEST
-       ===================================================== */
-
-    function renderRequest(
-      request
-    ) {
-
-      const status =
-        String(
-          request.status ||
-          "pending"
-        ).toLowerCase();
-
-
-      const statusClass =
-        status ===
-          "approved"
-
-          ? "status-approved"
-
-          : status ===
-              "rejected" ||
-            status ===
-              "denied"
-
-            ? "status-denied"
-
-            : "status-pending";
-
-
-      const created =
-        request.createdAt
-          ? formatDate(
-              request.createdAt
-            )
-          : "Unknown";
-
-
-      let buttons = "";
-
-
-      if (
-        status === "pending"
-      ) {
-
-        buttons = `
-
-          <button
-            class="btn approve"
-            onclick="
-              approveRequest(
-                '${escapeAttr(
-                  request.requestId
-                )}'
-              )
-            "
-          >
-            ✓ APPROVE
-          </button>
-
-
-          <button
-            class="btn deny"
-            onclick="
-              rejectRequest(
-                '${escapeAttr(
-                  request.requestId
-                )}'
-              )
-            "
-          >
-            ✕ REJECT
-          </button>
-
-        `;
-
-      }
-
-
-      if (
-        status === "approved"
-      ) {
-
-        buttons = `
-
-          <div
-            style="
-              padding:11px 15px;
-              border-radius:13px;
-              color:#8fffe0;
-              background:rgba(40,220,180,.07);
-              border:1px solid rgba(40,220,180,.16);
-            "
-          >
-            ✓ ACCESS APPROVED
-          </div>
-
-        `;
-
-      }
-
-
-      if (
-        status === "rejected" ||
-        status === "denied"
-      ) {
-
-        buttons = `
-
-          <div
-            style="
-              padding:11px 15px;
-              border-radius:13px;
-              color:#ff9eb0;
-              background:rgba(255,40,80,.07);
-              border:1px solid rgba(255,40,80,.15);
-            "
-          >
-            REQUEST REJECTED
-          </div>
-
-        `;
-
-      }
-
-
-      return `
-
-        <article
-          class="request-card"
-        >
-
-          <div
-            class="request-top"
-          >
-
-            <div>
-
-              <div
-                class="request-name"
-              >
-                ${escapeHTML(
-                  request.name ||
-                  "Unknown User"
-                )}
-              </div>
-
-              <div
-                style="
-                  margin-top:5px;
-                  font-size:10px;
-                  color:rgba(170,225,245,.38);
-                  letter-spacing:1px;
-                "
-              >
-                NICEGOLD ACCESS REQUEST
-              </div>
-
-            </div>
-
-
-            <div
-              class="
-                request-status
-                ${statusClass}
-              "
-            >
-              ${escapeHTML(
-                status
-              )}
-            </div>
-
-          </div>
-
-
-          <div
-            class="request-info"
-          >
-
-            <div
-              class="info-item"
-            >
-
-              <div
-                class="info-label"
-              >
-                Request ID
-              </div>
-
-              <div
-                class="info-value"
-              >
-                ${escapeHTML(
-                  request.requestId ||
-                  "N/A"
-                )}
-              </div>
-
-            </div>
-
-
-            <div
-              class="info-item"
-            >
-
-              <div
-                class="info-label"
-              >
-                Contact
-              </div>
-
-              <div
-                class="info-value"
-              >
-                ${escapeHTML(
-                  request.contact ||
-                  "N/A"
-                )}
-              </div>
-
-            </div>
-
-
-            <div
-              class="info-item"
-            >
-
-              <div
-                class="info-label"
-              >
-                Submitted
-              </div>
-
-              <div
-                class="info-value"
-              >
-                ${escapeHTML(
-                  created
-                )}
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div
-            class="actions"
-          >
-
-            ${buttons}
-
-          </div>
-
-        </article>
-
-      `;
-
-    }
-
-
-    /* =====================================================
-       APPROVE
-       ===================================================== */
-
-    async function approveRequest(
-      requestId
-    ) {
-
-      if (
-        !confirm(
-          "Approve this NICEGOLD access request?"
-        )
-      ) {
-
-        return;
-
-      }
-
-
-      try {
-
-        const response =
-          await fetch(
-            `/api/admin/requests/${encodeURIComponent(
-              requestId
-            )}/approve`,
-            {
-              method:
-                "POST",
-
-              credentials:
-                "include"
-            }
-          );
-
-
-        const data =
-          await response.json();
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            data.message ||
-            "Could not approve request."
-          );
-
-        }
-
-
-        if (
-          data.request &&
-          data.request.accessCode
-        ) {
-
-          alert(
-            "ACCESS APPROVED\n\n" +
-            "Request ID: " +
-            data.request.requestId +
-            "\n\nAccess Code: " +
-            data.request.accessCode +
-            "\n\nSave this code securely."
-          );
-
-        } else {
-
-          alert(
-            data.message ||
-            "Access request approved."
-          );
-
-        }
-
-
-        await loadRequests();
-
-
-      } catch (error) {
-
-        alert(
-          error.message ||
-          "Approval failed."
-        );
-
-      }
-
-    }
-
-
-    /* =====================================================
-       REJECT
-       ===================================================== */
-
-    async function rejectRequest(
-      requestId
-    ) {
-
-      if (
-        !confirm(
-          "Reject this NICEGOLD access request?"
-        )
-      ) {
-
-        return;
-
-      }
-
-
-      try {
-
-        const response =
-          await fetch(
-            `/api/admin/requests/${encodeURIComponent(
-              requestId
-            )}/reject`,
-            {
-              method:
-                "POST",
-
-              credentials:
-                "include"
-            }
-          );
-
-
-        const data =
-          await response.json();
-
-
-        if (!response.ok) {
-
-  throw new Error(
-    data.message ||
-    "Request failed."
-  );
-
-}
-
-
-const request =
-  data.request;
-
-
-if (!request) {
-
-  throw new Error(
-    "No request data returned."
-  );
-
-}
-
-
-/* =====================================================
-   SUCCESS MESSAGE
-   ===================================================== */
-
-showToast(
-  "SUCCESS",
-  "Access request updated successfully."
-);
-
-
-/* =====================================================
-   REFRESH ADMIN PANEL
-   ===================================================== */
-
-await loadRequests();
-
-await loadStats();
-
-
-} catch (error) {
-
-  console.error(
-    "Admin action error:",
-    error
-  );
-
-  showToast(
-    "ERROR",
-    error.message ||
-    "Something went wrong."
-  );
-
-} finally {
-
-  button.disabled = false;
-
-  button.classList.remove(
-    "loading"
-  );
-
-}
-
-}
-
-
-/* =====================================================
-   APPROVE REQUEST
-   ===================================================== */
-
-async function approveRequest(
-  requestId,
-  button
-) {
-
-  if (!requestId) {
-    return;
-  }
-
-  const confirmed =
-    confirm(
-      "Approve this NICEGOLD access request?"
-    );
-
-  if (!confirmed) {
-    return;
-  }
-
-
-  await processRequestAction(
-    `/api/admin/requests/${encodeURIComponent(requestId)}/approve`,
-    button
-  );
-
-}
-
-
-/* =====================================================
-   REJECT REQUEST
-   ===================================================== */
-
-async function rejectRequest(
-  requestId,
-  button
-) {
-
-  if (!requestId) {
-    return;
-  }
-
-  const confirmed =
-    confirm(
-      "Reject this NICEGOLD access request?"
-    );
-
-  if (!confirmed) {
-    return;
-  }
-
-
-  await processRequestAction(
-    `/api/admin/requests/${encodeURIComponent(requestId)}/reject`,
-    button
-  );
-
-}
-
-
-/* =====================================================
-   LOAD REQUESTS
-   ===================================================== */
-
-async function loadRequests() {
-
-  const container =
-    document.getElementById(
-      "requests"
-    );
-
-  if (!container) {
-    return;
-  }
-
-
-  try {
-
-    const response =
-      await fetch(
-        "/api/admin/requests",
-        {
-          credentials: "same-origin"
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        data.message ||
-        "Could not load requests."
-      );
-
-    }
-
-
-    const requests =
-      Array.isArray(data.requests)
-        ? data.requests
-        : [];
-
-
-    const pending =
-      requests.filter(
-        item =>
-          item.status ===
-          "pending"
-      );
-
-
-    const pendingCount =
-      document.getElementById(
-        "pendingCount"
-      );
-
-
-    if (pendingCount) {
-
-      pendingCount.textContent =
-        pending.length;
-
-    }
-
-
-    if (!requests.length) {
-
-      container.innerHTML = `
-        <div class="empty">
-          <div style="font-size:32px;margin-bottom:10px;">
-            ◇
-          </div>
-
-          <div>
-            No access requests yet.
-          </div>
-
-          <small style="
-            display:block;
-            margin-top:8px;
-            opacity:.55;
-          ">
-            New requests will appear here automatically.
-          </small>
-        </div>
-      `;
-
-      return;
-    }
-
-
-    container.innerHTML =
-      requests
-        .map(
-          (request, index) =>
-            createRequestCard(
-              request,
-              index
-            )
-        )
-        .join("");
-
-
-  } catch (error) {
-
-    console.error(
-      "Load requests error:",
-      error
-    );
-
-
-    container.innerHTML = `
-      <div class="empty">
-        <div style="font-size:28px;margin-bottom:10px;">
-          ⚠
-        </div>
-
-        <div>
-          Could not load access requests.
-        </div>
-
-        <button
-          class="btn"
-          style="margin-top:15px;"
-          onclick="loadRequests()"
-        >
-          TRY AGAIN
-        </button>
-      </div>
-    `;
-
-  }
-
-}
-
-
-/* =====================================================
-   CREATE REQUEST CARD
-   ===================================================== */
-
-function createRequestCard(
-  request,
-  index
-) {
-
-  const status =
-    String(
-      request.status ||
-      "pending"
-    ).toLowerCase();
-
-
-  let statusClass =
-    "status-pending";
-
-
-  if (status === "approved") {
-
-    statusClass =
-      "status-approved";
-
-  }
-
-  else if (
-    status === "rejected" ||
-    status === "denied"
-  ) {
-
-    statusClass =
-      "status-denied";
-
-  }
-
-
-  const name =
-    escapeHTML(
-      request.name ||
-      "Unknown User"
-    );
-
-
-  const contact =
-    escapeHTML(
-      request.contact ||
-      "Not provided"
-    );
-
-
-  const requestId =
-    escapeHTML(
-      request.requestId ||
-      "N/A"
-    );
-
-
-  const createdAt =
-    formatDate(
-      request.createdAt
-    );
-
-
-  const approvedAt =
-    formatDate(
-      request.approvedAt
-    );
-
-
-  let actions = "";
-
-
-  if (status === "pending") {
-
-    actions = `
-      <div class="actions">
-
-        <button
-          class="btn approve"
-          onclick="
-            approveRequest(
-              '${escapeJS(request.requestId)}',
-              this
-            )
-          "
-        >
-          ✓ APPROVE
-        </button>
-
-        <button
-          class="btn deny"
-          onclick="
-            rejectRequest(
-              '${escapeJS(request.requestId)}',
-              this
-            )
-          "
-        >
-          ✕ REJECT
-        </button>
-
-      </div>
-    `;
-
-  }
-
-  else if (status === "approved") {
-
-    actions = `
-      <div class="actions">
-
-        <div class="info-item" style="flex:1;">
-          <div class="info-label">
-            ACCESS CODE
-          </div>
-
-          <div
-            class="info-value"
-            style="
-              color:#9eeaff;
-              font-weight:800;
-              letter-spacing:1px;
-            "
-          >
-            ${escapeHTML(
-              request.accessCode ||
-              "Generated"
-            )}
-          </div>
-        </div>
-
-      </div>
-    `;
-
-  }
-
-
-  return `
-    <article
-      class="request-card"
-      style="
-        animation-delay:${index * 60}ms;
-      "
-    >
-
-      <div class="request-top">
-
-        <div>
-
-          <div class="request-name">
-            ${name}
-          </div>
-
-          <div style="
-            margin-top:5px;
-            font-size:11px;
-            opacity:.45;
-          ">
-            ${requestId}
-          </div>
-
-        </div>
-
-        <div
-          class="request-status ${statusClass}"
-        >
-          ${escapeHTML(status)}
-        </div>
-
-      </div>
-
-
-      <div class="request-info">
-
-        <div class="info-item">
-
-          <div class="info-label">
-            CONTACT
-          </div>
-
-          <div class="info-value">
-            ${contact}
-          </div>
-
-        </div>
-
-
-        <div class="info-item">
-
-          <div class="info-label">
-            REQUESTED
-          </div>
-
-          <div class="info-value">
-            ${createdAt}
-          </div>
-
-        </div>
-
-
-        ${
-          approvedAt !== "—"
-            ? `
-              <div class="info-item">
-
-                <div class="info-label">
-                  APPROVED
-                </div>
-
-                <div class="info-value">
-                  ${approvedAt}
-                </div>
-
-              </div>
-            `
-            : ""
-        }
-
-      </div>
-
-
-      ${actions}
-
-    </article>
-  `;
-
-}
-
-
-/* =====================================================
-   LOAD STATISTICS
-   ===================================================== */
-
-async function loadStats() {
-
-  try {
-
-    const response =
-      await fetch(
-        "/api/admin/requests/stats",
-        {
-          credentials: "same-origin"
-        }
-      );
-
-
-    if (!response.ok) {
-      return;
-    }
-
-
-    const data =
-      await response.json();
-
-
-    const pending =
-      document.getElementById(
-        "pendingCount"
-      );
-
-
-    if (pending) {
-
-      pending.textContent =
-        Number(
-          data.pending || 0
-        );
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Stats error:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   DATE FORMATTER
-   ===================================================== */
-
-function formatDate(
-  value
-) {
-
-  if (!value) {
-    return "—";
-  }
-
-
-  const date =
-    new Date(value);
-
-
-  if (
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-
-    return escapeHTML(
-      String(value)
-    );
-
-  }
-
-
-  return date.toLocaleString(
-    [],
-    {
-      dateStyle: "medium",
-      timeStyle: "short"
-    }
-  );
-
-}
-
-
-/* =====================================================
-   HTML SAFETY
-   ===================================================== */
-
-function escapeHTML(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* =====================================================
-   JAVASCRIPT STRING SAFETY
-   ===================================================== */
-
-function escapeJS(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-    .replace(
-      /\\/g,
-      "\\\\"
-    )
-    .replace(
-      /'/g,
-      "\\'"
-    )
-    .replace(
-      /"/g,
-      '\\"'
-    )
-    .replace(
-      /\r/g,
-      "\\r"
-    )
-    .replace(
-      /\n/g,
-      "\\n"
-    );
-
-}
-
-
-/* =====================================================
-   TOAST NOTIFICATION
-   ===================================================== */
-
-function showToast(
-  type,
-  text
-) {
-
-  let toast =
-    document.getElementById(
-      "ngToast"
-    );
-
-
-  if (!toast) {
-
-    toast =
-      document.createElement(
-        "div"
-      );
-
-    toast.id =
-      "ngToast";
-
-    toast.style.cssText = `
-      position:fixed;
-      left:50%;
-      bottom:25px;
-      transform:translateX(-50%) translateY(20px);
-      z-index:9999;
-      min-width:260px;
-      max-width:90%;
-      padding:15px 20px;
-      border-radius:16px;
-      border:1px solid rgba(90,210,255,.35);
-      background:rgba(4,18,35,.88);
-      backdrop-filter:blur(20px);
-      -webkit-backdrop-filter:blur(20px);
       box-shadow:
-        0 15px 50px rgba(0,0,0,.45),
-        0 0 30px rgba(30,180,255,.12);
-      color:#e9fbff;
-      text-align:center;
-      font-size:13px;
-      font-weight:700;
-      opacity:0;
+        0 0 20px
+        rgba(30,170,255,0.08);
+    }
+
+
+    /* =====================================================
+       REQUEST COUNT
+       ===================================================== */
+
+    .request-count {
+      margin-left:
+        auto;
+
+      padding:
+        5px 9px;
+
+      min-width:
+        25px;
+
+      text-align:
+        center;
+
+      border-radius:
+        999px;
+
+      background:
+        rgba(80,210,255,0.09);
+
+      border:
+        1px solid
+        rgba(80,210,255,0.15);
+
+      color:
+        #aeefff;
+
+      font-size:
+        9px;
+
+      font-weight:
+        900;
+    }
+
+
+    /* =====================================================
+       EMPTY REQUEST STATE
+       ===================================================== */
+
+    .empty-icon {
+      width:
+        64px;
+
+      height:
+        64px;
+
+      margin:
+        0 auto 14px;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      border-radius:
+        20px;
+
+      background:
+        rgba(30,180,255,0.07);
+
+      border:
+        1px solid
+        rgba(70,210,255,0.13);
+
+      font-size:
+        28px;
+
+      box-shadow:
+        inset 0 0 25px
+        rgba(30,180,255,0.04);
+    }
+
+
+    .empty-title {
+      font-size:
+        14px;
+
+      font-weight:
+        850;
+
+      color:
+        #bff3ff;
+    }
+
+
+    .empty-description {
+      max-width:
+        400px;
+
+      margin:
+        8px auto 0;
+
+      line-height:
+        1.6;
+
+      font-size:
+        11px;
+
+      color:
+        rgba(190,225,240,0.48);
+    }
+
+
+    /* =====================================================
+       STATUS DOTS
+       ===================================================== */
+
+    .status-dot {
+      display:
+        inline-block;
+
+      width:
+        7px;
+
+      height:
+        7px;
+
+      margin-right:
+        5px;
+
+      border-radius:
+        50%;
+
+      vertical-align:
+        middle;
+    }
+
+
+    .status-dot.pending {
+      background:
+        var(--yellow);
+
+      box-shadow:
+        0 0 10px
+        rgba(255,228,119,0.7);
+    }
+
+
+    .status-dot.approved {
+      background:
+        var(--green);
+
+      box-shadow:
+        0 0 10px
+        rgba(83,245,176,0.7);
+    }
+
+
+    .status-dot.rejected {
+      background:
+        var(--red);
+
+      box-shadow:
+        0 0 10px
+        rgba(255,102,132,0.7);
+    }
+
+
+    /* =====================================================
+       RESPONSIVE CONTROL BAR
+       ===================================================== */
+
+    @media (max-width: 600px) {
+
+      .control-bar {
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
+      }
+
+
+      .refresh-button {
+        width:
+          100%;
+      }
+
+
+      .request-count {
+        margin-left:
+          0;
+      }
+
+      }
+          /* =====================================================
+       DASHBOARD DIVIDERS
+       ===================================================== */
+
+    .dashboard-divider {
+
+      width: 100%;
+
+      height: 1px;
+
+      margin:
+        28px 0;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(70,210,255,0.18),
+          transparent
+        );
+    }
+
+
+    /* =====================================================
+       REQUEST CARD FOOTER
+       ===================================================== */
+
+    .request-footer {
+
+      position: relative;
+
+      z-index: 2;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 12px;
+
+      margin-top: 14px;
+
+      padding-top: 14px;
+
+      border-top:
+        1px solid
+        rgba(90,210,255,0.08);
+    }
+
+
+    .request-time {
+
+      color:
+        rgba(190,230,245,0.38);
+
+      font-size:
+        9px;
+
+      letter-spacing:
+        .6px;
+    }
+
+
+    .request-id-small {
+
+      color:
+        rgba(110,225,255,0.55);
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size:
+        9px;
+
+      letter-spacing:
+        .7px;
+
+      word-break:
+        break-all;
+    }
+
+
+    /* =====================================================
+       COPY BUTTON
+       ===================================================== */
+
+    .copy-button {
+
+      display:
+        inline-flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      gap: 6px;
+
+      padding:
+        7px 11px;
+
+      border-radius:
+        10px;
+
+      border:
+        1px solid
+        rgba(80,210,255,0.17);
+
+      background:
+        rgba(255,255,255,0.035);
+
+      color:
+        rgba(205,240,250,0.68);
+
+      font-size:
+        9px;
+
+      font-weight:
+        800;
+
+      cursor:
+        pointer;
+
+      transition:
+        all .22s ease;
+    }
+
+
+    .copy-button:hover {
+
+      color:
+        #dffaff;
+
+      border-color:
+        rgba(80,220,255,0.42);
+
+      background:
+        rgba(30,170,255,0.08);
+    }
+
+
+    .copy-button:active {
+
+      transform:
+        scale(.95);
+    }
+
+
+    /* =====================================================
+       APPROVED CODE PANEL
+       ===================================================== */
+
+    .approved-panel {
+
+      position:
+        relative;
+
+      overflow:
+        hidden;
+
+      margin-top:
+        16px;
+
+      padding:
+        16px;
+
+      border-radius:
+        17px;
+
+      border:
+        1px solid
+        rgba(83,245,176,0.20);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(50,230,160,0.075),
+          rgba(0,80,100,0.035)
+        );
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.05),
+
+        0 10px 35px
+        rgba(0,0,0,0.15);
+    }
+
+
+    .approved-panel::after {
+
+      content: "";
+
+      position:
+        absolute;
+
+      top:
+        0;
+
+      left:
+        -100%;
+
+      width:
+        70%;
+
+      height:
+        100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(150,255,220,0.08),
+          transparent
+        );
+
+      transform:
+        skewX(-18deg);
+
+      animation:
+        approvedSweep 7s ease-in-out infinite;
+    }
+
+
+    @keyframes approvedSweep {
+
+      0%,
+      65% {
+        left:
+          -100%;
+      }
+
+      100% {
+        left:
+          150%;
+      }
+    }
+
+
+    .approved-title {
+
+      position:
+        relative;
+
+      z-index:
+        1;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        7px;
+
+      margin-bottom:
+        8px;
+
+      color:
+        #baffdf;
+
+      font-size:
+        10px;
+
+      font-weight:
+        900;
+
+      letter-spacing:
+        1.2px;
+
+      text-transform:
+        uppercase;
+    }
+
+
+    .approved-code {
+
+      position:
+        relative;
+
+      z-index:
+        1;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        space-between;
+
+      gap:
+        10px;
+
+      padding:
+        10px 12px;
+
+      border-radius:
+        11px;
+
+      background:
+        rgba(0,20,35,0.30);
+
+      border:
+        1px solid
+        rgba(83,245,176,0.12);
+
+      color:
+        #d1ffe9;
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size:
+        13px;
+
+      font-weight:
+        900;
+
+      letter-spacing:
+        1px;
+
+      word-break:
+        break-all;
+    }
+
+
+    /* =====================================================
+       REQUEST ACTION MESSAGE
+       ===================================================== */
+
+    .action-message {
+
+      min-height:
+        18px;
+
+      margin-top:
+        9px;
+
+      font-size:
+        10px;
+
+      line-height:
+        1.5;
+
+      color:
+        rgba(190,230,245,0.50);
+    }
+
+
+    .action-message.success {
+
+      color:
+        #8fffc8;
+    }
+
+
+    .action-message.error {
+
+      color:
+        #ff9db1;
+    }
+
+
+    /* =====================================================
+       GLOBAL SCROLLBAR
+       ===================================================== */
+
+    ::-webkit-scrollbar {
+
+      width:
+        7px;
+
+      height:
+        7px;
+    }
+
+
+    ::-webkit-scrollbar-track {
+
+      background:
+        rgba(0,10,20,0.35);
+    }
+
+
+    ::-webkit-scrollbar-thumb {
+
+      border-radius:
+        999px;
+
+      background:
+        rgba(60,190,245,0.20);
+
+      border:
+        1px solid
+        rgba(100,220,255,0.08);
+    }
+
+
+    ::-webkit-scrollbar-thumb:hover {
+
+      background:
+        rgba(70,210,255,0.35);
+    }
+
+
+    /* =====================================================
+       SELECTION
+       ===================================================== */
+
+    ::selection {
+
+      background:
+        rgba(40,190,255,0.25);
+
+      color:
+        #effcff;
+    }
+
+
+    /* =====================================================
+       FOCUS ACCESSIBILITY
+       ===================================================== */
+
+    button:focus-visible {
+
+      outline:
+        2px solid
+        rgba(100,225,255,0.70);
+
+      outline-offset:
+        3px;
+    }
+
+
+    /* =====================================================
+       PAGE ENTRY ANIMATION
+       ===================================================== */
+
+    .shell {
+
+      animation:
+        shellEntry .7s ease both;
+    }
+
+
+    @keyframes shellEntry {
+
+      from {
+
+        opacity:
+          0;
+
+        transform:
+          translateY(18px)
+          scale(.985);
+      }
+
+      to {
+
+        opacity:
+          1;
+
+        transform:
+          translateY(0)
+          scale(1);
+      }
+      }
+          /* =====================================================
+       EXTRA MOBILE POLISH
+       ===================================================== */
+
+    @media (max-width: 520px) {
+
+      .request-footer {
+
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
+      }
+
+
+      .request-id-small {
+
+        max-width:
+          100%;
+      }
+
+
+      .approved-code {
+
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
+      }
+
+
+      .copy-button {
+
+        width:
+          100%;
+      }
+
+
+      .control-info {
+
+        width:
+          100%;
+      }
+
+    }
+
+
+    /* =====================================================
+       TABLET LAYOUT
+       ===================================================== */
+
+    @media (
+      min-width: 761px
+    ) and (
+      max-width: 980px
+    ) {
+
+      .shell {
+
+        width:
+          95%;
+
+        padding:
+          20px;
+      }
+
+
+      .stats {
+
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+
+    }
+
+
+    /* =====================================================
+       WATER BUBBLE CONTAINMENT
+       ===================================================== */
+
+    .water-bubble,
+    .bubble {
+
+      will-change:
+        transform,
+        opacity;
+    }
+
+
+    /* =====================================================
+       GLASS HIGHLIGHT
+       ===================================================== */
+
+    .shell::before {
+
+      content:
+        "";
+
+      position:
+        absolute;
+
+      top:
+        0;
+
+      left:
+        8%;
+
+      width:
+        84%;
+
+      height:
+        1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(180,245,255,0.20),
+          transparent
+        );
+
+      pointer-events:
+        none;
+    }
+
+
+    /* =====================================================
+       REQUEST CARD LIGHT EFFECT
+       ===================================================== */
+
+    .request-card::after {
+
+      content:
+        "";
+
+      position:
+        absolute;
+
+      left:
+        0;
+
+      right:
+        0;
+
+      top:
+        0;
+
+      height:
+        1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(130,235,255,0.16),
+          transparent
+        );
+
+      pointer-events:
+        none;
+    }
+
+
+    /* =====================================================
+       STAT CARD LIGHT EFFECT
+       ===================================================== */
+
+    .card::after {
+
+      content:
+        "";
+
+      position:
+        absolute;
+
+      left:
+        10%;
+
+      right:
+        10%;
+
+      top:
+        0;
+
+      height:
+        1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(150,240,255,0.14),
+          transparent
+        );
+
+      pointer-events:
+        none;
+    }
+
+
+    /* =====================================================
+       STATUS ANIMATION
+       ===================================================== */
+
+    .online-dot {
+
+      will-change:
+        transform;
+    }
+
+
+    /* =====================================================
+       BUTTON SHINE
+       ===================================================== */
+
+    .btn::after {
+
+      content:
+        "";
+
+      position:
+        absolute;
+
+      top:
+        0;
+
+      left:
+        -120%;
+
+      width:
+        80%;
+
+      height:
+        100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,0.10),
+          transparent
+        );
+
+      transform:
+        skewX(-18deg);
+
+      transition:
+        left .6s ease;
+
+      pointer-events:
+        none;
+    }
+
+
+    .btn:hover::after {
+
+      left:
+        140%;
+    }
+
+
+    /* =====================================================
+       REQUEST STATUS GLOW
+       ===================================================== */
+
+    .status-approved {
+
+      box-shadow:
+        0 0 15px
+        rgba(83,245,176,0.04);
+    }
+
+
+    .status-pending {
+
+      box-shadow:
+        0 0 15px
+        rgba(255,228,119,0.035);
+    }
+
+
+    .status-rejected,
+    .status-denied {
+
+      box-shadow:
+        0 0 15px
+        rgba(255,102,132,0.035);
+    }
+
+
+    /* =====================================================
+       CONTENT VISIBILITY
+       ===================================================== */
+
+    .hidden {
+
+      display:
+        none !important;
+    }
+
+
+    .visible {
+
+      display:
+        block !important;
+    }
+
+
+    /* =====================================================
+       DISABLED REQUEST CARD
+       ===================================================== */
+
+    .request-card.disabled {
+
+      opacity:
+        .65;
+
+      filter:
+        saturate(.65);
+    }
+
+
+    .request-card.disabled
+    .actions {
+
+      pointer-events:
+        none;
+    }
+
+
+    /* =====================================================
+       ADMIN PAGE PRINT SAFETY
+       ===================================================== */
+
+    @media print {
+
+      body {
+
+        background:
+          white;
+
+        color:
+          black;
+      }
+
+
+      .water,
+      .glow,
+      .actions,
+      .control-bar,
+      #toast {
+
+        display:
+          none !important;
+      }
+
+
+      .shell {
+
+        width:
+          100%;
+
+        margin:
+          0;
+
+        padding:
+          0;
+
+        border:
+          none;
+
+        background:
+          white;
+
+        box-shadow:
+          none;
+      }
+
+
+      .request-card,
+      .card {
+
+        color:
+          black;
+
+        background:
+          white;
+
+        border:
+          1px solid
+          #ccc;
+
+        box-shadow:
+          none;
+      }
+
+      }
+          /* =====================================================
+       ADMIN ACTION BUTTONS
+       ===================================================== */
+
+    .actions {
+      position: relative;
+      z-index: 3;
+
+      display: flex;
+      flex-wrap: wrap;
+
+      gap: 10px;
+
+      margin-top: 4px;
+    }
+
+    .btn {
+      appearance: none;
+
+      border: 1px solid
+        rgba(90,210,255,0.22);
+
+      border-radius: 13px;
+
+      padding: 11px 18px;
+
+      color: #e9fbff;
+
+      background:
+        rgba(255,255,255,0.055);
+
+      backdrop-filter:
+        blur(14px);
+
+      -webkit-backdrop-filter:
+        blur(14px);
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      letter-spacing: .3px;
+
+      cursor: pointer;
+
+      transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+    }
+
+    .btn:hover {
+      transform:
+        translateY(-3px);
+
+      border-color:
+        rgba(90,220,255,0.55);
+
+      box-shadow:
+        0 12px 35px
+        rgba(0,100,220,0.20);
+    }
+
+    .btn:active {
+      transform:
+        translateY(0)
+        scale(.97);
+    }
+
+    .btn:disabled {
+      opacity: .5;
+
+      cursor:
+        not-allowed;
+
+      transform:
+        none;
+
+      box-shadow:
+        none;
+    }
+
+    .approve {
+      color:
+        #baffdf;
+
+      border-color:
+        rgba(80,245,176,0.28);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(50,230,160,0.14),
+          rgba(0,120,100,0.07)
+        );
+    }
+
+    .approve:hover {
+      border-color:
+        rgba(80,245,176,0.65);
+
+      box-shadow:
+        0 12px 35px
+        rgba(40,230,160,0.15);
+    }
+
+    .reject {
+      color:
+        #ffd1da;
+
+      border-color:
+        rgba(255,90,120,0.25);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,70,100,0.12),
+          rgba(130,20,50,0.06)
+        );
+    }
+
+    .reject:hover {
+      border-color:
+        rgba(255,90,120,0.60);
+
+      box-shadow:
+        0 12px 35px
+        rgba(255,60,100,0.14);
+    }
+
+    .secondary {
+      color:
+        #bfeeff;
+
+      background:
+        rgba(20,130,220,0.06);
+    }
+
+
+    /* =====================================================
+       ACCESS CODE DISPLAY
+       ===================================================== */
+
+    .access-code {
+      position: relative;
+      z-index: 2;
+
+      margin-top: 15px;
+
+      padding: 14px 16px;
+
+      border-radius: 16px;
+
+      border:
+        1px solid
+        rgba(80,245,176,0.22);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(50,230,160,0.08),
+          rgba(0,100,100,0.04)
+        );
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.06);
+
+      animation:
+        codeAppear .35s ease both;
+    }
+
+    @keyframes codeAppear {
+
+      from {
+        opacity: 0;
+        transform:
+          translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform:
+          translateY(0);
+      }
+
+    }
+
+    .access-code-label {
+      margin-bottom: 7px;
+
+      font-size: 9px;
+
+      font-weight: 800;
+
+      letter-spacing: 1.7px;
+
+      text-transform: uppercase;
+
+      color:
+        rgba(180,245,220,0.55);
+    }
+
+    .access-code-value {
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+      font-size: 18px;
+
+      font-weight: 900;
+
+      letter-spacing: 2px;
+
+      color:
+        #8fffc8;
+
+      word-break:
+        break-all;
+
+      text-shadow:
+        0 0 18px
+        rgba(80,245,176,0.18);
+    }
+
+
+    /* =====================================================
+       TOAST NOTIFICATION
+       ===================================================== */
+
+    #toast {
+      position: fixed;
+
+      left: 50%;
+
+      bottom: 24px;
+
+      z-index: 9999;
+
+      min-width:
+        min(320px, 88vw);
+
+      max-width:
+        90vw;
+
+      padding:
+        14px 18px;
+
+      border-radius: 16px;
+
+      border:
+        1px solid
+        rgba(90,220,255,0.25);
+
+      background:
+        rgba(2,18,35,0.86);
+
+      backdrop-filter:
+        blur(24px);
+
+      -webkit-backdrop-filter:
+        blur(24px);
+
+      box-shadow:
+        0 20px 60px
+        rgba(0,0,0,0.45),
+
+        0 0 35px
+        rgba(0,150,255,0.10);
+
+      color:
+        #e9fbff;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      text-align: center;
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      transform:
+        translateX(-50%)
+        translateY(20px);
+
       transition:
         opacity .3s ease,
         transform .3s ease;
-    `;
+    }
 
-    document.body.appendChild(
-      toast
-    );
+    #toast.show {
+      opacity: 1;
 
-  }
+      transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+    #toast.success {
+      border-color:
+        rgba(80,245,176,0.30);
+    }
+
+    #toast.error {
+      border-color:
+        rgba(255,90,120,0.30);
+    }
 
 
-  toast.textContent =
-    text;
+    /* =====================================================
+       RESPONSIVE ADMIN LAYOUT
+       ===================================================== */
 
+    @media (max-width: 720px) {
 
-  toast.style.borderColor =
-    type === "ERROR"
-      ? "rgba(255,70,100,.45)"
-      : "rgba(90,210,255,.45)";
+      .shell {
+        width:
+          calc(100% - 20px);
 
+        margin:
+          10px auto 30px;
 
-  requestAnimationFrame(
-    () => {
+        padding:
+          16px;
 
-      toast.style.opacity =
-        "1";
+        border-radius:
+          24px;
+      }
 
-      toast.style.transform =
-        "translateX(-50%) translateY(0)";
+      header {
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
+
+        padding:
+          5px 4px 22px;
+      }
+
+      .online-badge {
+        align-self:
+          flex-start;
+      }
+
+      .stats {
+        grid-template-columns:
+          1fr;
+
+        gap: 12px;
+      }
+
+      .card {
+        min-height:
+          115px;
+
+        padding:
+          18px;
+      }
+
+      .request-card {
+        padding:
+          17px;
+      }
+
+      .request-top {
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
+      }
+
+      .request-status {
+        align-self:
+          flex-start;
+      }
+
+      .request-info {
+        grid-template-columns:
+          1fr;
+      }
+
+      .actions {
+        flex-direction:
+          column;
+      }
+
+      .btn {
+        width:
+          100%;
+
+        text-align:
+          center;
+      }
+
+      .access-code-value {
+        font-size:
+          15px;
+      }
 
     }
-  );
 
 
-  clearTimeout(
-    window.ngToastTimer
-  );
+    @media (max-width: 380px) {
+
+      .brand {
+        font-size:
+          21px;
+      }
+
+      .subtitle {
+        font-size:
+          9px;
+      }
+
+      .value {
+        font-size:
+          24px;
+      }
+
+      .section-title {
+        font-size:
+          18px;
+      }
+
+      }
+          /* =====================================================
+       ADMIN FOOTER
+       ===================================================== */
+
+    .admin-footer {
+      position: relative;
+
+      z-index: 2;
+
+      margin-top: 28px;
+
+      padding:
+        18px 6px 6px;
+
+      text-align: center;
+
+      border-top:
+        1px solid
+        rgba(90,210,255,0.10);
+    }
+
+    .admin-footer-main {
+      font-size: 10px;
+
+      font-weight: 800;
+
+      letter-spacing: 1.2px;
+
+      color:
+        rgba(220,248,255,0.58);
+
+      text-transform:
+        uppercase;
+    }
+
+    .admin-footer-main span {
+      color:
+        #7deaff;
+
+      text-shadow:
+        0 0 15px
+        rgba(90,220,255,0.18);
+    }
+
+    .admin-footer-sub {
+      margin-top: 6px;
+
+      font-size: 9px;
+
+      font-weight: 600;
+
+      letter-spacing: .4px;
+
+      color:
+        rgba(180,220,235,0.32);
+    }
 
 
-  window.ngToastTimer =
-    setTimeout(
-      () => {
+    /* =====================================================
+       EMPTY REQUEST STATE
+       ===================================================== */
 
-        toast.style.opacity =
-          "0";
+    .empty-state {
+      position: relative;
 
-        toast.style.transform =
-          "translateX(-50%) translateY(20px)";
+      z-index: 2;
 
-      },
-      3000
-    );
+      display: flex;
 
-}
+      align-items: center;
+
+      justify-content: center;
+
+      flex-direction: column;
+
+      min-height:
+        180px;
+
+      padding:
+        30px 20px;
+
+      border-radius:
+        20px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.12);
+
+      background:
+        rgba(255,255,255,0.025);
+
+      text-align: center;
+
+      overflow: hidden;
+    }
+
+    .empty-state::before {
+      content: "";
+
+      position: absolute;
+
+      width:
+        120px;
+
+      height:
+        120px;
+
+      top:
+        50%;
+
+      left:
+        50%;
+
+      transform:
+        translate(-50%, -50%);
+
+      border-radius:
+        50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(70,200,255,0.08),
+          transparent 70%
+        );
+
+      pointer-events:
+        none;
+    }
+
+    .empty-icon {
+      position: relative;
+
+      z-index: 2;
+
+      width:
+        48px;
+
+      height:
+        48px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius:
+        15px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.18);
+
+      background:
+        rgba(50,180,240,0.06);
+
+      color:
+        #83eaff;
+
+      font-size:
+        20px;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0,100,220,0.10);
+    }
+
+    .empty-title {
+      position: relative;
+
+      z-index: 2;
+
+      margin-top:
+        14px;
+
+      font-size:
+        13px;
+
+      font-weight:
+        900;
+
+      color:
+        rgba(225,248,255,0.78);
+    }
+
+    .empty-text {
+      position: relative;
+
+      z-index: 2;
+
+      max-width:
+        360px;
+
+      margin-top:
+        7px;
+
+      font-size:
+        10px;
+
+      line-height:
+        1.7;
+
+      color:
+        rgba(180,220,235,0.38);
+    }
 
 
-/* =====================================================
-   LOGOUT
-   ===================================================== */
+    /* =====================================================
+       REQUEST CARD ANIMATION
+       ===================================================== */
 
-function logout() {
+    .request-card {
+      animation:
+        requestSlide .45s ease both;
+    }
 
-  window.location.href =
-    "/login.html";
+    .request-card:nth-child(2) {
+      animation-delay:
+        .05s;
+    }
 
-}
+    .request-card:nth-child(3) {
+      animation-delay:
+        .10s;
+    }
+
+    .request-card:nth-child(4) {
+      animation-delay:
+        .15s;
+    }
+
+    .request-card:nth-child(5) {
+      animation-delay:
+        .20s;
+    }
+
+    @keyframes requestSlide {
+
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+
+    }
 
 
-/* =====================================================
-   INITIALIZE ADMIN PANEL
-   ===================================================== */
+    /* =====================================================
+       ADMIN LOADING STATE
+       ===================================================== */
 
-loadRequests();
+    .loading {
+      position: relative;
 
-loadStats();
+      min-height:
+        120px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      color:
+        rgba(190,235,250,0.45);
+
+      font-size:
+        11px;
+
+      font-weight:
+        700;
+
+      letter-spacing:
+        .6px;
+    }
+
+    .loading::before {
+      content: "";
+
+      width:
+        16px;
+
+      height:
+        16px;
+
+      margin-right:
+        10px;
+
+      border-radius:
+        50%;
+
+      border:
+        2px solid
+        rgba(90,210,255,0.18);
+
+      border-top-color:
+        #69ddff;
+
+      animation:
+        loadingSpin .75s linear infinite;
+    }
+
+    @keyframes loadingSpin {
+
+      to {
+        transform:
+          rotate(360deg);
+      }
+
+    }
 
 
-/* =====================================================
-   AUTOMATIC REFRESH
-   ===================================================== */
+    /* =====================================================
+       ADMIN STATUS PULSE
+       ===================================================== */
 
-setInterval(
-  () => {
+    .status-pulse {
+      position: relative;
 
-    loadRequests();
-    loadStats();
+      display: inline-flex;
 
-  },
-  5000
-);
+      align-items: center;
 
-</script>
+      gap: 7px;
+    }
 
-</body>
+    .status-pulse::before {
+      content: "";
+
+      width:
+        7px;
+
+      height:
+        7px;
+
+      border-radius:
+        50%;
+
+      background:
+        #55f0a7;
+
+      box-shadow:
+        0 0 0 0
+        rgba(85,240,167,0.45);
+
+      animation:
+        statusPulse 2s infinite;
+    }
+
+    @keyframes statusPulse {
+
+      0% {
+        box-shadow:
+          0 0 0 0
+          rgba(85,240,167,0.45);
+      }
+
+      70% {
+        box-shadow:
+          0 0 0 8px
+          rgba(85,240,167,0);
+      }
+
+      100% {
+        box-shadow:
+          0 0 0 0
+          rgba(85,240,167,0);
+      }
+
+    }
+
+
+    /* =====================================================
+       ACCESS CODE COPY BUTTON
+       ===================================================== */
+
+    .copy-code {
+      margin-top:
+        10px;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 7px;
+
+      padding:
+        8px 13px;
+
+      border-radius:
+        10px;
+
+      border:
+        1px solid
+        rgba(80,245,176,0.20);
+
+      background:
+        rgba(50,230,160,0.06);
+
+      color:
+        #9fffd0;
+
+      font-size:
+        10px;
+
+      font-weight:
+        800;
+
+      cursor:
+        pointer;
+
+      transition:
+                transform .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+    }
+
+    .copy-code:hover {
+      transform:
+        translateY(-2px);
+
+      border-color:
+        rgba(80,245,176,0.48);
+
+      background:
+        rgba(50,230,160,0.11);
+    }
+
+    .copy-code:active {
+      transform:
+        scale(.96);
+    }
+
+
+    /* =====================================================
+       ADMIN SCROLLBAR
+       ===================================================== */
+
+    ::-webkit-scrollbar {
+      width:
+        7px;
+
+      height:
+        7px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background:
+        rgba(0,0,0,0.16);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius:
+        20px;
+
+      background:
+        rgba(90,210,255,0.18);
+
+      border:
+        1px solid
+        rgba(90,210,255,0.08);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background:
+        rgba(90,210,255,0.30);
+    }
+
+
+    /* =====================================================
+       FINAL MOBILE POLISH
+       ===================================================== */
+
+    @media (max-width: 520px) {
+
+      body {
+        overflow-x:
+          hidden;
+      }
+
+      .section {
+        margin-top:
+          20px;
+      }
+
+      .section-header {
+        gap:
+          8px;
+      }
+
+      .request-list {
+        gap:
+          10px;
+      }
+
+      .request-card {
+        border-radius:
+          18px;
+      }
+
+      .access-code {
+        padding:
+          13px;
+      }
+
+      #toast {
+        bottom:
+          16px;
+
+        padding:
+          12px 14px;
+
+        font-size:
+          11px;
+      }
+
+    }
+          /* =====================================================
+       FINAL ADMIN VISUAL ENHANCEMENTS
+       ===================================================== */
+
+    .section {
+      position: relative;
+    }
+
+    .section::before {
+      content: "";
+
+      position: absolute;
+
+      top: -12px;
+
+      left: 0;
+
+      width: 70px;
+
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(90,220,255,0.45),
+          transparent
+        );
+
+      opacity: .7;
+    }
+
+
+    /* =====================================================
+       CARD GLOW EFFECT
+       ===================================================== */
+
+    .card::after {
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      border-radius:
+        inherit;
+
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          circle at 15% 10%,
+          rgba(90,220,255,0.07),
+          transparent 42%
+        );
+
+      opacity: .8;
+    }
+
+    .card > * {
+      position: relative;
+
+      z-index: 2;
+    }
+
+
+    /* =====================================================
+       REQUEST CARD GLOW
+       ===================================================== */
+
+    .request-card::after {
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      border-radius:
+        inherit;
+
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          circle at 85% 15%,
+          rgba(90,220,255,0.055),
+          transparent 45%
+        );
+
+      opacity: .8;
+    }
+
+    .request-card > * {
+      position: relative;
+
+      z-index: 2;
+    }
+
+
+    /* =====================================================
+       ADMIN BUTTON ICON
+       ===================================================== */
+
+    .btn-icon {
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      margin-right:
+        5px;
+
+      font-size:
+        12px;
+
+      line-height:
+        1;
+    }
+
+
+    /* =====================================================
+       STATUS BADGE VARIANTS
+       ===================================================== */
+
+    .request-status.pending {
+      color:
+        #ffe59a;
+
+      border-color:
+        rgba(255,210,90,0.25);
+
+      background:
+        rgba(255,190,60,0.07);
+    }
+
+    .request-status.approved {
+      color:
+        #9fffc9;
+
+      border-color:
+        rgba(80,245,176,0.25);
+
+      background:
+        rgba(50,230,160,0.07);
+    }
+
+    .request-status.rejected {
+      color:
+        #ffc0cc;
+
+      border-color:
+        rgba(255,90,120,0.25);
+
+      background:
+        rgba(255,70,100,0.07);
+    }
+
+
+    /* =====================================================
+       DISABLED REQUEST CARD
+       ===================================================== */
+
+    .request-card.disabled {
+      opacity:
+        .58;
+
+      filter:
+        saturate(.7);
+    }
+
+    .request-card.disabled .actions {
+      pointer-events:
+        none;
+    }
+
+
+    /* =====================================================
+       SUCCESS HIGHLIGHT
+       ===================================================== */
+
+    .request-card.success-flash {
+      animation:
+        successFlash .65s ease;
+    }
+
+    @keyframes successFlash {
+
+      0% {
+        box-shadow:
+          0 0 0
+          rgba(80,245,176,0);
+      }
+
+      45% {
+        box-shadow:
+          0 0 35px
+          rgba(80,245,176,0.25);
+      }
+
+      100% {
+        box-shadow:
+          0 0 0
+          rgba(80,245,176,0);
+      }
+
+    }
+
+
+    /* =====================================================
+       REJECT HIGHLIGHT
+       ===================================================== */
+
+    .request-card.reject-flash {
+      animation:
+        rejectFlash .65s ease;
+    }
+
+    @keyframes rejectFlash {
+
+      0% {
+        box-shadow:
+          0 0 0
+          rgba(255,90,120,0);
+      }
+
+      45% {
+        box-shadow:
+          0 0 35px
+          rgba(255,90,120,0.22);
+      }
+
+      100% {
+        box-shadow:
+          0 0 0
+          rgba(255,90,120,0);
+      }
+
+    }
+
+
+    /* =====================================================
+       ADMIN INPUT FOCUS
+       ===================================================== */
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline:
+        none;
+
+      border-color:
+        rgba(90,220,255,0.55);
+
+      box-shadow:
+        0 0 0 3px
+        rgba(90,220,255,0.08),
+
+        0 0 25px
+        rgba(0,150,255,0.10);
+    }
+
+
+    /* =====================================================
+       FINAL SECTION SPACING
+       ===================================================== */
+
+    .section + .section {
+      margin-top:
+        28px;
+             }
+          /* =====================================================
+       ADMIN PANEL DIVIDERS
+       ===================================================== */
+
+    .divider {
+      position: relative;
+
+      width:
+        100%;
+
+      height:
+        1px;
+
+      margin:
+        22px 0;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(90,210,255,0.16),
+          transparent
+        );
+    }
+
+
+    /* =====================================================
+       REQUEST INFO LABELS
+       ===================================================== */
+
+    .info-label {
+      display:
+        block;
+
+      margin-bottom:
+        5px;
+
+      font-size:
+        8px;
+
+      font-weight:
+        800;
+
+      letter-spacing:
+        1.2px;
+
+      text-transform:
+        uppercase;
+
+      color:
+        rgba(170,225,240,0.38);
+    }
+
+    .info-value {
+      display:
+        block;
+
+      font-size:
+        11px;
+
+      font-weight:
+        700;
+
+      line-height:
+        1.5;
+
+      color:
+        rgba(225,248,255,0.72);
+
+      word-break:
+        break-word;
+    }
+
+
+    /* =====================================================
+       REQUEST USERNAME
+       ===================================================== */
+
+    .username {
+      color:
+        #8fe8ff;
+
+      font-weight:
+        800;
+
+      text-shadow:
+        0 0 14px
+        rgba(90,220,255,0.12);
+    }
+
+
+    /* =====================================================
+       REQUEST TIME
+       ===================================================== */
+
+    .request-time {
+      color:
+        rgba(190,225,238,0.42);
+
+      font-size:
+        9px;
+
+      font-weight:
+        600;
+    }
+
+
+    /* =====================================================
+       ADMIN SEARCH FIELD
+       ===================================================== */
+
+    .admin-search {
+      position:
+        relative;
+
+      width:
+        100%;
+
+      margin-bottom:
+        14px;
+    }
+
+    .admin-search input {
+      width:
+        100%;
+
+      box-sizing:
+        border-box;
+
+      padding:
+        12px 15px 12px 38px;
+
+      border-radius:
+        13px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.14);
+
+      background:
+        rgba(255,255,255,0.035);
+
+      color:
+        #e9fbff;
+
+      font-size:
+        11px;
+
+      font-weight:
+        600;
+
+      transition:
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+    }
+
+    .admin-search input::placeholder {
+      color:
+        rgba(190,225,238,0.30);
+    }
+
+    .admin-search input:hover {
+      background:
+        rgba(255,255,255,0.045);
+
+      border-color:
+        rgba(90,210,255,0.22);
+    }
+
+    .admin-search-icon {
+      position:
+        absolute;
+
+      top:
+        50%;
+
+      left:
+        14px;
+
+      transform:
+        translateY(-50%);
+
+      color:
+        rgba(120,225,255,0.48);
+
+      font-size:
+        13px;
+
+      pointer-events:
+        none;
+    }
+
+
+    /* =====================================================
+       ADMIN FILTER ROW
+       ===================================================== */
+
+    .filter-row {
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        space-between;
+
+      gap:
+        10px;
+
+      margin-bottom:
+        16px;
+
+      flex-wrap:
+        wrap;
+    }
+
+    .filter-group {
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        7px;
+
+      flex-wrap:
+        wrap;
+    }
+
+    .filter-label {
+      font-size:
+        9px;
+
+      font-weight:
+        800;
+
+      letter-spacing:
+        .8px;
+
+      color:
+        rgba(190,225,238,0.38);
+
+      text-transform:
+        uppercase;
+    }
+
+    .filter-btn {
+      appearance:
+        none;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.12);
+
+      border-radius:
+        9px;
+
+      padding:
+        7px 11px;
+
+      background:
+        rgba(255,255,255,0.025);
+
+      color:
+        rgba(205,240,250,0.52);
+
+      font-size:
+        9px;
+
+      font-weight:
+        800;
+
+      cursor:
+        pointer;
+
+      transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease;
+    }
+
+    .filter-btn:hover {
+      color:
+        #bff3ff;
+
+      border-color:
+        rgba(90,220,255,0.30);
+
+      background:
+        rgba(60,190,240,0.06);
+    }
+
+    .filter-btn.active {
+      color:
+        #8feaff;
+
+      border-color:
+        rgba(90,220,255,0.38);
+
+      background:
+        rgba(50,180,240,0.09);
+
+      box-shadow:
+        0 0 18px
+        rgba(0,150,255,0.08);
+    }
+
+
+    /* =====================================================
+       ADMIN REFRESH BUTTON
+       ===================================================== */
+
+    .refresh-btn {
+      display:
+        inline-flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      gap:
+        7px;
+
+      padding:
+        8px 12px;
+
+      border-radius:
+        10px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.16);
+
+      background:
+        rgba(50,180,240,0.045);
+
+      color:
+        #aeeeff;
+
+      font-size:
+        9px;
+
+      font-weight:
+        800;
+
+      cursor:
+        pointer;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
+    }
+
+    .refresh-btn:hover {
+      transform:
+        translateY(-2px);
+
+      border-color:
+        rgba(90,220,255,0.40);
+
+      background:
+        rgba(50,180,240,0.08);
+    }
+
+    .refresh-btn:active {
+      transform:
+        scale(.96);
+             }
+          /* =====================================================
+       REFRESH BUTTON SPINNER
+       ===================================================== */
+
+    .refresh-btn.loading {
+      pointer-events:
+        none;
+
+      opacity:
+        .65;
+    }
+
+    .refresh-btn.loading .refresh-icon {
+      animation:
+        refreshSpin .7s linear infinite;
+    }
+
+    @keyframes refreshSpin {
+
+      to {
+        transform:
+          rotate(360deg);
+      }
+
+    }
+
+
+    /* =====================================================
+       ADMIN NOTIFICATION DOT
+       ===================================================== */
+
+    .notification-dot {
+      position:
+        absolute;
+
+      top:
+        -3px;
+
+      right:
+        -3px;
+
+      width:
+        8px;
+
+      height:
+        8px;
+
+      border-radius:
+        50%;
+
+      background:
+        #ff6b8a;
+
+      border:
+        2px solid
+        rgba(2,18,35,0.95);
+
+      box-shadow:
+        0 0 14px
+        rgba(255,90,120,0.45);
+
+      animation:
+        notificationPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes notificationPulse {
+
+      0%,
+      100% {
+        transform:
+          scale(1);
+
+        opacity:
+          1;
+      }
+
+      50% {
+        transform:
+          scale(1.25);
+
+        opacity:
+          .65;
+      }
+
+    }
+
+
+    /* =====================================================
+       ADMIN HEADER ACTIONS
+       ===================================================== */
+
+    .header-actions {
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        8px;
+
+      flex-wrap:
+        wrap;
+    }
+
+    .header-action {
+      position:
+        relative;
+
+      display:
+        inline-flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      width:
+        36px;
+
+      height:
+        36px;
+
+      border-radius:
+        11px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.14);
+
+      background:
+        rgba(255,255,255,0.035);
+
+      color:
+        rgba(205,240,250,0.68);
+
+      cursor:
+        pointer;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease,
+        color .2s ease;
+    }
+
+    .header-action:hover {
+      transform:
+        translateY(-2px);
+
+      color:
+        #9feeff;
+
+      border-color:
+        rgba(90,220,255,0.35);
+
+      background:
+        rgba(60,190,240,0.07);
+    }
+
+    .header-action:active {
+      transform:
+        scale(.95);
+    }
+
+
+    /* =====================================================
+       ADMIN CONFIRMATION MODAL
+       ===================================================== */
+
+    .admin-modal {
+      position:
+        fixed;
+
+      inset:
+        0;
+
+      z-index:
+        10000;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      padding:
+        20px;
+
+      background:
+        rgba(0,8,18,0.66);
+
+      backdrop-filter:
+        blur(10px);
+
+      -webkit-backdrop-filter:
+        blur(10px);
+
+      opacity:
+        0;
+
+      visibility:
+        hidden;
+
+      pointer-events:
+        none;
+
+      transition:
+        opacity .25s ease,
+        visibility .25s ease;
+    }
+
+    .admin-modal.show {
+      opacity:
+        1;
+
+      visibility:
+        visible;
+
+      pointer-events:
+        auto;
+    }
+
+    .modal-box {
+      position:
+        relative;
+
+      width:
+                min(430px, 100%);
+      
+      padding:
+        24px;
+
+      border-radius:
+        22px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.18);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(7,28,48,0.96),
+          rgba(3,17,31,0.96)
+        );
+
+      box-shadow:
+        0 30px 90px
+        rgba(0,0,0,0.55),
+
+        0 0 45px
+        rgba(0,140,255,0.08);
+
+      transform:
+        translateY(15px)
+        scale(.98);
+
+      transition:
+        transform .28s ease;
+    }
+
+    .admin-modal.show .modal-box {
+      transform:
+        translateY(0)
+        scale(1);
+    }
+
+
+    /* =====================================================
+       MODAL CLOSE BUTTON
+       ===================================================== */
+
+    .modal-close {
+      position:
+        absolute;
+
+      top:
+        12px;
+
+      right:
+        12px;
+
+      width:
+        32px;
+
+      height:
+        32px;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      border-radius:
+        9px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.10);
+
+      background:
+        rgba(255,255,255,0.025);
+
+      color:
+        rgba(200,235,245,0.55);
+
+      cursor:
+        pointer;
+
+      transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+    }
+
+    .modal-close:hover {
+      color:
+        #e9fbff;
+
+      background:
+        rgba(255,255,255,0.07);
+
+      transform:
+        rotate(4deg);
+    }
+
+
+    /* =====================================================
+       MODAL TITLE
+       ===================================================== */
+
+    .modal-title {
+      margin:
+        0 35px 8px 0;
+
+      font-size:
+        18px;
+
+      font-weight:
+        900;
+
+      color:
+        #e8fbff;
+
+      letter-spacing:
+        .2px;
+    }
+
+    .modal-text {
+      margin:
+        0;
+
+      font-size:
+        11px;
+
+      line-height:
+        1.7;
+
+      color:
+        rgba(190,225,238,0.50);
+    }
+          /* =====================================================
+       MODAL ACTIONS
+       ===================================================== */
+
+    .modal-actions {
+      display:
+        flex;
+
+      justify-content:
+        flex-end;
+
+      align-items:
+        center;
+
+      gap:
+        9px;
+
+      margin-top:
+        22px;
+
+      flex-wrap:
+        wrap;
+    }
+
+    .modal-actions .btn {
+      min-width:
+        100px;
+    }
+
+
+    /* =====================================================
+       MODAL WARNING
+       ===================================================== */
+
+    .modal-warning {
+      display:
+        flex;
+
+      align-items:
+        flex-start;
+
+      gap:
+        10px;
+
+      margin-top:
+        18px;
+
+      padding:
+        12px 13px;
+
+      border-radius:
+        13px;
+
+      border:
+        1px solid
+        rgba(255,210,90,0.16);
+
+      background:
+        rgba(255,190,60,0.045);
+
+      color:
+        rgba(255,229,160,0.62);
+
+      font-size:
+        10px;
+
+      line-height:
+        1.6;
+    }
+
+    .modal-warning-icon {
+      flex:
+        0 0 auto;
+
+      font-size:
+        13px;
+
+      color:
+        #ffd978;
+    }
+
+
+    /* =====================================================
+       MODAL SUCCESS STATE
+       ===================================================== */
+
+    .modal-success {
+      text-align:
+        center;
+
+      padding:
+        10px 0 4px;
+    }
+
+    .modal-success-icon {
+      width:
+        54px;
+
+      height:
+        54px;
+
+      margin:
+        0 auto 13px;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      border-radius:
+        17px;
+
+      border:
+        1px solid
+        rgba(80,245,176,0.25);
+
+      background:
+        rgba(50,230,160,0.07);
+
+      color:
+        #8fffc8;
+
+      font-size:
+        22px;
+
+      box-shadow:
+        0 0 30px
+        rgba(40,230,160,0.10);
+    }
+
+    .modal-success-title {
+      font-size:
+        16px;
+
+      font-weight:
+        900;
+
+      color:
+        #dfffee;
+    }
+
+    .modal-success-text {
+      margin-top:
+        7px;
+
+      font-size:
+        10px;
+
+      line-height:
+        1.6;
+
+      color:
+        rgba(190,235,215,0.45);
+    }
+
+
+    /* =====================================================
+       MODAL ERROR STATE
+       ===================================================== */
+
+    .modal-error {
+      text-align:
+        center;
+
+      padding:
+        10px 0 4px;
+    }
+
+    .modal-error-icon {
+      width:
+        54px;
+
+      height:
+        54px;
+
+      margin:
+        0 auto 13px;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      border-radius:
+        17px;
+
+      border:
+        1px solid
+        rgba(255,90,120,0.25);
+
+      background:
+        rgba(255,70,100,0.06);
+
+      color:
+        #ffc0cc;
+
+      font-size:
+        22px;
+
+      box-shadow:
+        0 0 30px
+        rgba(255,60,100,0.09);
+    }
+
+    .modal-error-title {
+      font-size:
+        16px;
+
+      font-weight:
+        900;
+
+      color:
+        #ffe1e7;
+    }
+
+    .modal-error-text {
+      margin-top:
+        7px;
+
+      font-size:
+        10px;
+
+      line-height:
+        1.6;
+
+      color:
+        rgba(245,205,215,0.45);
+    }
+
+
+    /* =====================================================
+       MODAL MOBILE RESPONSIVE
+       ===================================================== */
+
+    @media (max-width: 520px) {
+
+      .admin-modal {
+        padding:
+          12px;
+      }
+
+      .modal-box {
+        padding:
+          20px;
+
+        border-radius:
+          19px;
+      }
+
+      .modal-title {
+        font-size:
+          16px;
+      }
+
+      .modal-actions {
+        flex-direction:
+          column-reverse;
+
+        align-items:
+          stretch;
+      }
+
+      .modal-actions .btn {
+        width:
+          100%;
+      }
+
+    }
+          /* =====================================================
+       ADMIN MODAL BACKDROP EFFECT
+       ===================================================== */
+
+    .admin-modal::before {
+      content: "";
+
+      position:
+        absolute;
+
+      inset:
+        0;
+
+      pointer-events:
+        none;
+
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(50,190,255,0.06),
+          transparent 45%
+        );
+    }
+
+
+    /* =====================================================
+       MODAL BOX GLOW
+       ===================================================== */
+
+    .modal-box::before {
+      content: "";
+
+      position:
+        absolute;
+
+      top:
+        0;
+
+      left:
+        12%;
+
+      width:
+        76%;
+
+      height:
+        1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(100,225,255,0.35),
+          transparent
+        );
+
+      opacity:
+        .8;
+    }
+
+
+    /* =====================================================
+       MODAL BUTTON GROUP
+       ===================================================== */
+
+    .modal-actions .approve {
+      box-shadow:
+        0 8px 25px
+        rgba(40,230,160,0.05);
+    }
+
+    .modal-actions .reject {
+      box-shadow:
+        0 8px 25px
+        rgba(255,60,100,0.05);
+    }
+
+
+    /* =====================================================
+       ADMIN TOOLTIP
+       ===================================================== */
+
+    [data-tooltip] {
+      position:
+        relative;
+    }
+
+    [data-tooltip]::after {
+      content:
+        attr(data-tooltip);
+
+      position:
+        absolute;
+
+      left:
+        50%;
+
+      bottom:
+        calc(100% + 8px);
+
+      transform:
+        translateX(-50%)
+        translateY(4px);
+
+      padding:
+        6px 9px;
+
+      border-radius:
+        8px;
+
+      border:
+        1px solid
+        rgba(90,210,255,0.16);
+
+      background:
+        rgba(2,18,35,0.94);
+
+      color:
+        rgba(220,248,255,0.75);
+
+      font-size:
+        9px;
+
+      font-weight:
+        700;
+
+      white-space:
+        nowrap;
+
+      opacity:
+        0;
+
+      pointer-events:
+        none;
+
+      transition:
+        opacity .2s ease,
+        transform .2s ease;
+
+      z-index:
+        10001;
+    }
+
+    [data-tooltip]:hover::after {
+      opacity:
+        1;
+
+      transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+
+    /* =====================================================
+       ADMIN LOCKED STATE
+       ===================================================== */
+
+    .locked {
+      position:
+        relative;
+
+      overflow:
+        hidden;
+    }
+
+    .locked::after {
+      content:
+        "ACCESS RESTRICTED";
+
+      position:
+        absolute;
+
+      inset:
+        0;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      background:
+        rgba(2,12,24,0.72);
+
+      backdrop-filter:
+        blur(5px);
+
+      -webkit-backdrop-filter:
+        blur(5px);
+
+      color:
+        rgba(190,235,250,0.55);
+
+      font-size:
+        10px;
+
+      font-weight:
+        900;
+
+      letter-spacing:
+        1.4px;
+
+      z-index:
+        20;
+    }
+
+
+    /* =====================================================
+       ADMIN SESSION INDICATOR
+       ===================================================== */
+
+    .session-indicator {
+      display:
+        inline-flex;
+
+      align-items:
+        center;
+
+      gap:
+        7px;
+
+      padding:
+        6px 10px;
+
+      border-radius:
+        9px;
+
+      border:
+        1px solid
+        rgba(80,245,176,0.15);
+
+      background:
+        rgba(50,230,160,0.045);
+
+      color:
+        rgba(170,245,210,0.58);
+
+      font-size:
+        9px;
+
+      font-weight:
+        800;
+    }
+
+    .session-indicator::before {
+      content:
+        "";
+
+      width:
+        6px;
+
+      height:
+        6px;
+
+      border-radius:
+        50%;
+
+      background:
+        #63f0ad;
+
+      box-shadow:
+        0 0 12px
+        rgba(80,245,176,0.38);
+    }
+
+
+    /* =====================================================
+       ADMIN PANEL FINAL WIDTH CONTROL
+       ===================================================== */
+
+    .admin-content {
+      width:
+        100%;
+
+      max-width:
+        1180px;
+
+      margin:
+        0 auto;
+    }
+
+
+    /* =====================================================
+       FINAL SAFETY RESET
+       ===================================================== */
+
+    *,
+    *::before,
+    *::after {
+      box-sizing:
+        border-box;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font-family:
+        inherit;
+      }
+          /* =====================================================
+       FINAL TEXT SELECTION
+       ===================================================== */
+
+    ::selection {
+      background:
+        rgba(80,200,255,0.22);
+
+      color:
+        #f0fcff;
+    }
+
+
+    /* =====================================================
+       ADMIN FOCUS VISIBILITY
+       ===================================================== */
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline:
+        2px solid
+        rgba(90,220,255,0.45);
+
+      outline-offset:
+        2px;
+    }
+
+
+    /* =====================================================
+       REQUEST CARD HOVER
+       ===================================================== */
+
+    .request-card:hover {
+      border-color:
+        rgba(90,210,255,0.24);
+
+      box-shadow:
+        0 18px 45px
+        rgba(0,80,180,0.10);
+
+      transform:
+        translateY(-2px);
+    }
+
+
+    /* =====================================================
+       CARD TRANSITION
+       ===================================================== */
+
+    .card,
+    .request-card {
+      transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+    }
+
+
+    /* =====================================================
+       ADMIN VALUE HIGHLIGHT
+       ===================================================== */
+
+    .value.highlight {
+      color:
+        #91ecff;
+
+      text-shadow:
+        0 0 20px
+        rgba(90,220,255,0.18);
+    }
+
+
+    /* =====================================================
+       ONLINE STATE
+       ===================================================== */
+
+    .online {
+      color:
+        #9fffc9;
+    }
+
+    .offline {
+      color:
+        #ffc0cc;
+    }
+
+    .starting {
+      color:
+        #ffe29a;
+    }
+
+
+    /* =====================================================
+       ADMIN STATUS ICON
+       ===================================================== */
+
+    .status-icon {
+      display:
+        inline-flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      width:
+        20px;
+
+      height:
+        20px;
+
+      margin-right:
+        5px;
+
+      border-radius:
+        7px;
+
+      font-size:
+        10px;
+
+      background:
+        rgba(255,255,255,0.04);
+    }
+
+
+    /* =====================================================
+       EMPTY STATE MOBILE
+       ===================================================== */
+
+    @media (max-width: 420px) {
+
+      .empty-state {
+        min-height:
+          155px;
+
+        padding:
+          24px 15px;
+      }
+
+      .empty-icon {
+        width:
+          43px;
+
+        height:
+          43px;
+
+        font-size:
+          18px;
+      }
+
+      .empty-title {
+        font-size:
+          12px;
+      }
+
+      .empty-text {
+        font-size:
+          9px;
+      }
+
+    }
+
+
+    /* =====================================================
+       REDUCED MOTION SUPPORT
+       ===================================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior:
+          auto !important;
+
+        animation-duration:
+          .01ms !important;
+
+        animation-iteration-count:
+          1 !important;
+
+        transition-duration:
+          .01ms !important;
+      }
+
+    }
+
+
+    /* =====================================================
+       FINAL ADMIN CSS MARKER
+       ===================================================== */
+
+    /* NICEGOLD ADMIN CSS EXTENSION END */
+          
+    /* =====================================================
+       NICEGOLD ADMIN FINAL SPACING
+       ===================================================== */
+
+    .admin-content > :last-child {
+      margin-bottom:
+        0;
+    }
+
+
+    /* =====================================================
+       FINAL CARD ALIGNMENT
+       ===================================================== */
+
+    .stats,
+    .request-list {
+      width:
+        100%;
+    }
+
+
+    /* =====================================================
+       FINAL OVERFLOW PROTECTION
+       ===================================================== */
+
+    .shell,
+    .card,
+    .request-card,
+    .modal-box {
+      overflow:
+        hidden;
+    }
+
+
+    /* =====================================================
+       FINAL BUTTON TEXT PROTECTION
+       ===================================================== */
+
+    .btn,
+    .filter-btn,
+    .refresh-btn,
+    .header-action {
+      user-select:
+        none;
+
+      -webkit-user-select:
+        none;
+    }
+
+
+    /* =====================================================
+       NICEGOLD ADMIN END POLISH
+       ===================================================== */
+
+    .brand,
+    .subtitle,
+    .section-title,
+    .card-title,
+    .request-title {
+      text-rendering:
+        optimizeLegibility;
+    }
+
+
+    /* =====================================================
+       FINAL RESPONSIVE WIDTH
+       ===================================================== */
+
+    @media (max-width: 720px) {
+
+      .admin-content {
+        width:
+          100%;
+      }
+
+      .header-actions {
+        width:
+          100%;
+      }
+
+    }
+
+
+    /* =====================================================
+       NICEGOLD ADMIN STYLE COMPLETE
+       ===================================================== */
+
+    /* =====================================================
+       END OF ADMIN STYLE EXTENSION
+       ===================================================== */
+          </style>
+
+
+    <!-- =====================================================
+         NICEGOLD ADMIN PAGE BODY
+         ===================================================== -->
+
+    <div class="admin-content">
+
+      <!-- ADMIN CONTENT CONTINUES HERE -->
+
+    </div>
+        <!-- =====================================================
+         ADMIN FOOTER
+         ===================================================== -->
+
+    <footer class="admin-footer">
+
+      <div class="admin-footer-main">
+        ✞𓉳 <span>NICEGOLD</span> MON 𓉳
+      </div>
+
+      <div class="admin-footer-sub">
+        Secure administration panel • System protected
+      </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         TOAST NOTIFICATION
+         ===================================================== -->
+
+    <div
+      id="toast"
+      role="status"
+      aria-live="polite">
+    </div>
+
+
+    <!-- =====================================================
+         CONFIRMATION MODAL
+         ===================================================== -->
+
+    <div
+      class="admin-modal"
+      id="adminModal"
+      aria-hidden="true">
+
+      <div class="modal-box">
+
+        <button
+          class="modal-close"
+          id="modalClose"
+          type="button"
+          aria-label="Close">
+          ✕
+        </button>
+
+        <h3 class="modal-title">
+          Confirm Action
+        </h3>
+
+        <p class="modal-text">
+          Are you sure you want to continue with this action?
+        </p>
+
+        <div class="modal-warning">
+
+          <span class="modal-warning-icon">
+            ⚠
+          </span>
+
+          <span>
+            Please review the request before confirming.
+          </span>
+
+        </div>
+
+        <div class="modal-actions">
+
+          <button
+            class="btn secondary"
+            id="modalCancel"
+            type="button">
+            Cancel
+          </button>
+
+          <button
+            class="btn approve"
+            id="modalConfirm"
+            type="button">
+            Confirm
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+        <!-- =====================================================
+         NICEGOLD ADMIN JAVASCRIPT
+         ===================================================== -->
+
+    <script>
+
+      /* =====================================================
+         BASIC ELEMENT REFERENCES
+         ===================================================== */
+
+      const toast =
+        document.getElementById("toast");
+
+      const adminModal =
+        document.getElementById("adminModal");
+
+      const modalClose =
+        document.getElementById("modalClose");
+
+      const modalCancel =
+        document.getElementById("modalCancel");
+
+      const modalConfirm =
+        document.getElementById("modalConfirm");
+
+
+      /* =====================================================
+         TOAST NOTIFICATION
+         ===================================================== */
+
+      let toastTimer = null;
+
+      function showToast(message, type = "success") {
+
+        if (!toast) {
+          return;
+        }
+
+        clearTimeout(toastTimer);
+
+        toast.textContent =
+          message;
+
+        toast.className =
+          "";
+
+        toast.classList.add("show");
+
+        if (type) {
+          toast.classList.add(type);
+        }
+
+        toastTimer =
+          setTimeout(() => {
+
+            toast.classList.remove("show");
+
+          }, 3000);
+      }
+
+
+      /* =====================================================
+         ADMIN MODAL CONTROL
+         ===================================================== */
+
+      function openAdminModal() {
+
+        if (!adminModal) {
+          return;
+        }
+
+        adminModal.classList.add("show");
+
+        adminModal.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+      }
+
+
+      function closeAdminModal() {
+
+        if (!adminModal) {
+          return;
+        }
+
+        adminModal.classList.remove("show");
+
+        adminModal.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+      }
+
+
+      /* =====================================================
+         MODAL BUTTON EVENTS
+         ===================================================== */
+
+      if (modalClose) {
+
+        modalClose.addEventListener(
+          "click",
+          closeAdminModal
+        );
+
+      }
+
+
+      if (modalCancel) {
+
+        modalCancel.addEventListener(
+          "click",
+          closeAdminModal
+        );
+
+      }
+
+
+      if (adminModal) {
+
+        adminModal.addEventListener(
+          "click",
+          (event) => {
+
+            if (
+              event.target ===
+              adminModal
+            ) {
+
+              closeAdminModal();
+
+            }
+
+          }
+        );
+
+      }
+
+
+      /* =====================================================
+         ESCAPE KEY
+         ===================================================== */
+
+      document.addEventListener(
+        "keydown",
+        (event) => {
+
+          if (
+            event.key === "Escape"
+          ) {
+
+            closeAdminModal();
+
+          }
+
+        }
+      );
+
+
+      /* =====================================================
+         COPY ACCESS CODE
+         ===================================================== */
+
+      async function copyAccessCode(code) {
+
+        if (!code) {
+
+          showToast(
+            "No access code available.",
+            "error"
+          );
+
+          return;
+        }
+
+        try {
+
+          await navigator.clipboard.writeText(
+            code
+          );
+
+          showToast(
+            "Access code copied.",
+            "success"
+          );
+
+        } catch (error) {
+
+          showToast(
+            "Unable to copy access code.",
+            "error"
+          );
+
+        }
+
+      }
+
+
+      /* =====================================================
+         GLOBAL ADMIN HELPERS
+         ===================================================== */
+
+      window.showToast =
+        showToast;
+
+      window.openAdminModal =
+        openAdminModal;
+
+      window.closeAdminModal =
+        closeAdminModal;
+
+      window.copyAccessCode =
+        copyAccessCode;
+
+    </script>
+        <!-- =====================================================
+         NICEGOLD ADMIN PAGE FINALIZATION
+         ===================================================== -->
+
+    <script>
+
+      /* =====================================================
+         PAGE READY
+         ===================================================== */
+
+      document.addEventListener(
+        "DOMContentLoaded",
+        () => {
+
+          document.body.classList.add(
+            "admin-ready"
+          );
+
+        }
+      );
+
+
+      /* =====================================================
+         FILTER BUTTONS
+         ===================================================== */
+
+      const filterButtons =
+        document.querySelectorAll(
+          ".filter-btn"
+        );
+
+      filterButtons.forEach(
+        (button) => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              filterButtons.forEach(
+                (item) => {
+
+                  item.classList.remove(
+                    "active"
+                  );
+
+                }
+              );
+
+              button.classList.add(
+                "active"
+              );
+
+            }
+          );
+
+        }
+      );
+
+
+      /* =====================================================
+         REFRESH BUTTON
+         ===================================================== */
+
+      const refreshButton =
+        document.querySelector(
+          ".refresh-btn"
+        );
+
+      if (refreshButton) {
+
+        refreshButton.addEventListener(
+          "click",
+          () => {
+
+            refreshButton.classList.add(
+              "loading"
+            );
+
+            setTimeout(
+              () => {
+
+                refreshButton.classList.remove(
+                  "loading"
+                );
+
+                showToast(
+                  "Admin panel refreshed.",
+                  "success"
+                );
+
+              },
+              700
+            );
+
+          }
+        );
+
+      }
+
+
+      /* =====================================================
+         ACCESS CODE COPY BUTTONS
+         ===================================================== */
+
+      document.querySelectorAll(
+        ".copy-code"
+      ).forEach(
+        (button) => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              const code =
+                button.dataset.code ||
+                button.textContent.trim();
+
+              copyAccessCode(code);
+
+            }
+          );
+
+        }
+      );
+
+
+      /* =====================================================
+         ADMIN BUTTON SAFETY
+         ===================================================== */
+
+      document.querySelectorAll(
+        "button"
+      ).forEach(
+        (button) => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              if (
+                button.disabled
+              ) {
+                return;
+              }
+
+            }
+          );
+
+        }
+      );
+
+
+      /* =====================================================
+         FINAL CONSOLE MARKER
+         ===================================================== */
+
+      console.log(
+        "NICEGOLD ADMIN PANEL READY"
+      );
+
+    </script>
+
+
+    <!-- =====================================================
+         END OF NICEGOLD ADMIN PAGE
+         ===================================================== -->
+
+  </body>
 </html>

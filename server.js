@@ -524,6 +524,7 @@ app.post(
         .randomBytes(32)
         .toString("hex");
 
+    adminSessions.add(token);
 
     res.json({
 
@@ -548,6 +549,10 @@ app.post(
    ADMIN TOKEN CHECK
    ===================================================== */
 
+const adminSessions =
+  new Set();
+
+
 function requireAdmin(
   req,
   res,
@@ -560,21 +565,14 @@ function requireAdmin(
 
   const token =
     auth.startsWith("Bearer ")
-      ? auth.slice(7)
+      ? auth.slice(7).trim()
       : "";
 
 
-  /*
-   * The browser receives the token
-   * after successful login.
-   *
-   * For this lightweight control panel,
-   * a valid-looking session token is
-   * accepted during the current server
-   * process.
-   */
-
-  if (!token) {
+  if (
+    !token ||
+    !adminSessions.has(token)
+  ) {
 
     return res.status(401).json({
 

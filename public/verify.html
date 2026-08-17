@@ -947,34 +947,96 @@
 
           if (data.redirect) {
 
-            setTimeout(
-              function () {
-                window.location.href =
-                  data.redirect;
-              },
-              800
-            );
-          }
+  /*
+   * Remember that this visitor has
+   * successfully passed NICEGOLD access
+   * verification on this browser.
+   */
 
-        } catch (error) {
+  localStorage.setItem(
+    "nicegold_access_verified",
+    "true"
+  );
 
-          message.className =
-            "error";
 
-          message.textContent =
-            error.message;
+  /*
+   * Keep the approved request ID if
+   * the server provides one.
+   */
 
-        } finally {
+  if (
+    data.request &&
+    data.request.requestId
+  ) {
 
-          button.disabled = false;
-
-          button.textContent =
-            "VERIFY ACCESS";
-        }
-
-      }
+    localStorage.setItem(
+      "nicegold_request_id",
+      data.request.requestId
     );
+
+  }
+
+
+  /*
+   * Continue to the protected
+   * NICEGOLD website.
+   */
+
+  setTimeout(
+    function () {
+
+      window.location.href =
+        data.redirect;
+
+    },
+    800
+  );
+     arguments
+          }
+        );
   </script>
 
+<!-- =====================================================
+     PART 8: NICEGOLD VISITOR ACCESS GATE
+     ===================================================== -->
+
+<script>
+(function () {
+
+  /*
+   * Check whether this browser has already
+   * completed NICEGOLD access verification.
+   */
+
+  const verified =
+    localStorage.getItem(
+      "nicegold_access_verified"
+    );
+
+
+  /*
+   * If the visitor has not been approved,
+   * send them to the Request Access page.
+   */
+
+  if (verified !== "true") {
+
+    window.location.replace(
+      "/request.html"
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Visitor has verified access.
+   * The NICEGOLD website can continue loading.
+   */
+
+})();
+</script>
+  
 </body>
 </html>
