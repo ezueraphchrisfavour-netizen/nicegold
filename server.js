@@ -1502,10 +1502,7 @@ app.use((req, res) => {
    START SERVER
    ===================================================== */
 
-app.listen(
-  PORT,
-  "0.0.0.0",
-  () => {
+app.listen(PORT, '0.0.0.0', () => {
 
     console.log(
       `Website running on port ${PORT}`
