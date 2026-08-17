@@ -7761,6 +7761,430 @@ header {
 
     <div class="admin-content">
 
+<!-- =====================================================
+     NICEGOLD ADMIN LOGIN
+     ===================================================== -->
+
+<div id="adminLogin">
+
+  <div class="login-panel">
+
+    <div class="login-logo">
+      ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+    </div>
+
+    <div class="login-subtitle">
+      Secure Administrator Access
+    </div>
+
+
+    <form id="adminLoginForm">
+
+      <label
+        class="login-label"
+        for="adminUsername"
+      >
+        Administrator Username
+      </label>
+
+      <input
+        id="adminUsername"
+        class="login-input"
+        type="text"
+        autocomplete="username"
+        placeholder="Enter admin username"
+        required
+      >
+
+
+      <label
+        class="login-label"
+        for="adminPassword"
+      >
+        Administrator Password
+      </label>
+
+      <input
+        id="adminPassword"
+        class="login-input"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Enter admin password"
+        required
+      >
+
+
+      <button
+        id="adminLoginButton"
+        class="login-button"
+        type="submit"
+      >
+        🔐 SIGN IN
+      </button>
+
+
+      <div
+        id="loginMessage"
+        role="alert"
+      ></div>
+
+    </form>
+
+  </div>
+
+</div>
+      
+  <!-- =====================================================
+       NICEGOLD ADMIN HEADER
+       ===================================================== -->
+
+  <section class="admin-header">
+
+    <div>
+      <div class="brand">
+        ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+      </div>
+
+      <div class="subtitle">
+        Administrator Control Panel
+      </div>
+    </div>
+
+    <div class="header-actions">
+
+      <div class="session-indicator">
+        ADMIN SESSION ACTIVE
+      </div>
+
+      <button
+        type="button"
+        class="header-action"
+        onclick="logoutAdmin()"
+      >
+        🚪 LOG OUT
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       SYSTEM STATUS
+       ===================================================== -->
+
+  <section class="admin-section">
+
+    <div class="section-title">
+      <span>System Overview</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="stats">
+
+      <div class="card">
+
+        <div class="label">
+          SERVER
+        </div>
+
+        <div
+          id="serverStatus"
+          class="value online"
+        >
+          ONLINE
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="label">
+          PENDING
+        </div>
+
+        <div
+          id="pendingCount"
+          class="value"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="label">
+          APPROVED
+        </div>
+
+        <div
+          id="approvedCount"
+          class="value"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="label">
+          TOTAL REQUESTS
+        </div>
+
+        <div
+          id="totalCount"
+          class="value"
+        >
+          0
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       ACCESS REQUESTS
+       ===================================================== -->
+
+  <section class="admin-section">
+
+    <div class="section-title">
+      <span>Access Requests</span>
+      <span class="section-line"></span>
+    </div>
+
+
+    <div class="request-toolbar">
+
+      <div class="toolbar-left">
+
+        <button
+          type="button"
+          class="request-filter active"
+          data-filter="all"
+          onclick="setRequestFilter('all')"
+        >
+          ALL
+        </button>
+
+
+        <button
+          type="button"
+          class="request-filter"
+          data-filter="pending"
+          onclick="setRequestFilter('pending')"
+        >
+          PENDING
+        </button>
+
+
+        <button
+          type="button"
+          class="request-filter"
+          data-filter="approved"
+          onclick="setRequestFilter('approved')"
+        >
+          APPROVED
+        </button>
+
+
+        <button
+          type="button"
+          class="request-filter"
+          data-filter="rejected"
+          onclick="setRequestFilter('rejected')"
+        >
+          REJECTED
+        </button>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="refresh-btn"
+        onclick="loadRequests()"
+      >
+        ↻ REFRESH
+      </button>
+
+    </div>
+
+
+    <div
+      id="requestMessage"
+      class="admin-message"
+    ></div>
+
+
+    <div
+      id="requests"
+      class="requests-container"
+    >
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          💧
+        </div>
+
+        <div class="empty-title">
+          Loading Access Requests
+        </div>
+
+        <div class="empty-text">
+          Please wait while NICEGOLD loads
+          the latest visitor requests.
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       APPROVAL RESULT MODAL
+       ===================================================== -->
+
+  <div
+    id="approvalModal"
+    class="modal-overlay"
+    style="display:none;"
+  >
+
+    <div class="modal-box">
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeApprovalModal()"
+      >
+        ×
+      </button>
+
+      <div class="modal-icon">
+        ✓
+      </div>
+
+      <h2>
+        Access Approved
+      </h2>
+
+      <p>
+        The visitor has been approved.
+        Their NICEGOLD access code is:
+      </p>
+
+      <div
+        id="generatedAccessCode"
+        class="access-code-display"
+      >
+        ------
+      </div>
+
+      <button
+        type="button"
+        class="copy-code-btn"
+        onclick="copyGeneratedCode()"
+      >
+        COPY ACCESS CODE
+      </button>
+
+      <div
+        id="copyCodeMessage"
+        class="copy-message"
+      ></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       REJECTION MODAL
+       ===================================================== -->
+
+  <div
+    id="rejectModal"
+    class="modal-overlay"
+    style="display:none;"
+  >
+
+    <div class="modal-box">
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeRejectModal()"
+      >
+        ×
+      </button>
+
+      <div class="modal-icon reject-icon">
+        !
+      </div>
+
+      <h2>
+        Reject Request?
+      </h2>
+
+      <p>
+        This visitor will not receive
+        an access code.
+      </p>
+
+      <div
+        id="rejectRequestName"
+        class="reject-name"
+      >
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn secondary"
+          onclick="closeRejectModal()"
+        >
+          CANCEL
+        </button>
+
+        <button
+          type="button"
+          class="btn reject"
+          onclick="confirmRejectRequest()"
+        >
+          REJECT REQUEST
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ADMIN MESSAGE
+       ===================================================== -->
+
+  <div
+    id="adminPanelMessage"
+    class="admin-panel-message"
+  ></div>
+
+    </div>
+
       <!-- ADMIN CONTENT CONTINUES HERE -->
 
     </div>
@@ -8234,6 +8658,1243 @@ header {
     <!-- =====================================================
          END OF NICEGOLD ADMIN PAGE
          ===================================================== -->
+<script>
+/* =====================================================
+   NICEGOLD ADMIN LOGIN ENGINE
+   ===================================================== */
 
+const adminLogin =
+  document.getElementById("adminLogin");
+
+const adminLoginForm =
+  document.getElementById("adminLoginForm");
+
+const adminLoginButton =
+  document.getElementById("adminLoginButton");
+
+const loginMessage =
+  document.getElementById("loginMessage");
+
+
+function showLoginMessage(
+  message,
+  type = "error"
+) {
+
+  if (!loginMessage) {
+    return;
+  }
+
+  loginMessage.textContent =
+    message;
+
+  loginMessage.style.color =
+    type === "success"
+      ? "#53f5b0"
+      : "#ff6684";
+
+}
+
+
+/* =====================================================
+   LOGIN FORM
+   ===================================================== */
+
+if (adminLoginForm) {
+
+  adminLoginForm.addEventListener(
+    "submit",
+    async (event) => {
+
+      event.preventDefault();
+
+
+      const username =
+        document
+          .getElementById(
+            "adminUsername"
+          )
+          ?.value
+          .trim();
+
+
+      const password =
+        document
+          .getElementById(
+            "adminPassword"
+          )
+          ?.value;
+
+
+      if (!username || !password) {
+
+        showLoginMessage(
+          "Username and password are required."
+        );
+
+        return;
+
+      }
+
+
+      if (adminLoginButton) {
+
+        adminLoginButton.disabled =
+          true;
+
+        adminLoginButton.textContent =
+          "VERIFYING...";
+
+      }
+
+
+      showLoginMessage(
+        "Checking administrator credentials...",
+        "success"
+      );
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/admin/login",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body:
+                JSON.stringify({
+                  username,
+                  password
+                })
+
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.message ||
+            "Invalid administrator credentials."
+          );
+
+        }
+
+
+        if (!data.token) {
+
+          throw new Error(
+            "Server did not provide an administrator session."
+          );
+
+        }
+
+
+        localStorage.setItem(
+          "nicegold_admin_token",
+          data.token
+        );
+
+
+        adminToken =
+          data.token;
+
+
+        showLoginMessage(
+          "✓ Administrator login successful.",
+          "success"
+        );
+
+
+        setTimeout(
+          () => {
+
+            if (adminLogin) {
+
+              adminLogin.style.display =
+                "none";
+
+            }
+
+            loadRequests();
+
+          },
+          350
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "ADMIN LOGIN ERROR:",
+          error
+        );
+
+
+        showLoginMessage(
+          error.message ||
+          "Login failed."
+        );
+
+
+        if (adminLoginButton) {
+
+          adminLoginButton.disabled =
+            false;
+
+          adminLoginButton.textContent =
+            "🔐 SIGN IN";
+
+        }
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   EXISTING SESSION
+   ===================================================== */
+
+if (
+  adminToken &&
+  adminLogin
+) {
+
+  adminLogin.style.display =
+    "none";
+
+}
+</script>
+
+  <script>
+/* =====================================================
+   NICEGOLD ACCESS REQUEST CONTROL ENGINE
+   ===================================================== */
+
+let adminToken =
+  localStorage.getItem("nicegold_admin_token") || "";
+
+let currentRequestFilter = "all";
+let selectedRejectRequestId = null;
+
+
+/* =====================================================
+   AUTHORIZATION HEADER
+   ===================================================== */
+
+function adminHeaders() {
+
+  return {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + adminToken
+  };
+
+}
+
+
+/* =====================================================
+   ADMIN LOGIN CHECK
+   ===================================================== */
+
+function checkAdminSession() {
+
+  if (!adminToken) {
+
+    window.location.href =
+      "/admin.html";
+
+    return false;
+
+  }
+
+  return true;
+
+}
+
+
+/* =====================================================
+   LOG OUT
+   ===================================================== */
+
+function logoutAdmin() {
+
+  localStorage.removeItem(
+    "nicegold_admin_token"
+  );
+
+  adminToken = "";
+
+  window.location.href =
+    "/admin.html";
+
+}
+
+
+/* =====================================================
+   REQUEST FILTER
+   ===================================================== */
+
+function setRequestFilter(filter) {
+
+  currentRequestFilter =
+    filter;
+
+  document
+    .querySelectorAll(".request-filter")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.filter === filter
+      );
+
+    });
+
+  renderRequests();
+
+}
+
+
+/* =====================================================
+   REQUEST STORAGE
+   ===================================================== */
+
+let allRequests = [];
+
+
+/* =====================================================
+   LOAD ACCESS REQUESTS
+   ===================================================== */
+
+async function loadRequests() {
+
+  if (!checkAdminSession()) {
+    return;
+  }
+
+  const container =
+    document.getElementById("requests");
+
+  const message =
+    document.getElementById("requestMessage");
+
+
+  if (container) {
+
+    container.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">💧</div>
+
+        <div class="empty-title">
+          Loading Access Requests
+        </div>
+
+        <div class="empty-text">
+          Contacting NICEGOLD server...
+        </div>
+      </div>
+    `;
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/admin/requests",
+        {
+          method: "GET",
+          headers: adminHeaders()
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      response.status === 401
+    ) {
+
+      localStorage.removeItem(
+        "nicegold_admin_token"
+      );
+
+      adminToken = "";
+
+      window.location.href =
+        "/admin.html";
+
+      return;
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Unable to load requests."
+      );
+
+    }
+
+
+    allRequests =
+      Array.isArray(data.requests)
+        ? data.requests
+        : [];
+
+
+    updateStatistics();
+
+    renderRequests();
+
+
+    if (message) {
+
+      message.textContent =
+        allRequests.length
+          ? ""
+          : "No access requests have been submitted yet.";
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "LOAD REQUESTS ERROR:",
+      error
+    );
+
+
+    if (container) {
+
+      container.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">⚠️</div>
+
+          <div class="empty-title">
+            Unable to Load Requests
+          </div>
+
+          <div class="empty-text">
+            ${escapeHtml(error.message)}
+          </div>
+        </div>
+      `;
+
+    }
+
+  }
+
+}
+
+
+/* =====================================================
+   UPDATE STATISTICS
+   ===================================================== */
+
+function updateStatistics() {
+
+  const total =
+    allRequests.length;
+
+  const pending =
+    allRequests.filter(
+      request =>
+        request.status === "pending"
+    ).length;
+
+  const approved =
+    allRequests.filter(
+      request =>
+        request.status === "approved"
+    ).length;
+
+
+  const totalElement =
+    document.getElementById(
+      "totalCount"
+    );
+
+  const pendingElement =
+    document.getElementById(
+      "pendingCount"
+    );
+
+  const approvedElement =
+    document.getElementById(
+      "approvedCount"
+    );
+
+
+  if (totalElement) {
+
+    totalElement.textContent =
+      total;
+
+  }
+
+
+  if (pendingElement) {
+
+    pendingElement.textContent =
+      pending;
+
+  }
+
+
+  if (approvedElement) {
+
+    approvedElement.textContent =
+      approved;
+
+  }
+
+}
+
+
+/* =====================================================
+   RENDER REQUESTS
+   ===================================================== */
+
+function renderRequests() {
+
+  const container =
+    document.getElementById(
+      "requests"
+    );
+
+  if (!container) {
+    return;
+  }
+
+
+  let requests =
+    allRequests;
+
+
+  if (
+    currentRequestFilter !==
+    "all"
+  ) {
+
+    requests =
+      allRequests.filter(
+        request =>
+          request.status ===
+          currentRequestFilter
+      );
+
+  }
+
+
+  if (!requests.length) {
+
+    container.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">💧</div>
+
+        <div class="empty-title">
+          No ${escapeHtml(currentRequestFilter)}
+          requests
+        </div>
+
+        <div class="empty-text">
+          There are currently no requests
+          in this category.
+        </div>
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    requests
+      .map(
+        request =>
+          createRequestCard(request)
+      )
+      .join("");
+
+}
+
+
+/* =====================================================
+   CREATE REQUEST CARD
+   ===================================================== */
+
+function createRequestCard(request) {
+
+  const status =
+    String(
+      request.status || "pending"
+    ).toLowerCase();
+
+
+  const created =
+    request.createdAt
+      ? new Date(
+          request.createdAt
+        ).toLocaleString()
+      : "Unknown";
+
+
+  const safeName =
+    escapeHtml(
+      request.name || "Unknown visitor"
+    );
+
+
+  const safeContact =
+    escapeHtml(
+      request.contact || "No contact"
+    );
+
+
+  const safeId =
+    escapeHtml(
+      request.requestId || ""
+    );
+
+
+  let actionButtons = "";
+
+
+  if (
+    status === "pending"
+  ) {
+
+    actionButtons = `
+      <div class="request-actions">
+
+        <button
+          type="button"
+          class="btn approve"
+          onclick="approveRequest('${safeId}')"
+        >
+          ✓ APPROVE
+        </button>
+
+        <button
+          type="button"
+          class="btn reject"
+          onclick="openRejectModal('${safeId}', '${escapeAttribute(request.name || "")}')"
+        >
+          × REJECT
+        </button>
+
+      </div>
+    `;
+
+  }
+
+
+  let codeHtml = "";
+
+
+  if (
+    status === "approved" &&
+    request.accessCode
+  ) {
+
+    codeHtml = `
+      <div class="approved-panel">
+
+        <div class="approved-title">
+          ACCESS CODE
+        </div>
+
+        <div class="approved-code">
+          ${escapeHtml(
+            request.accessCode
+          )}
+        </div>
+
+        <button
+          type="button"
+          class="btn"
+          onclick="copyAccessCode('${escapeAttribute(request.accessCode)}')"
+        >
+          COPY CODE
+        </button>
+
+      </div>
+    `;
+
+  }
+
+
+  return `
+    <article
+      class="request-card"
+      data-request-id="${safeId}"
+    >
+
+      <div class="request-card-header">
+
+        <div>
+
+          <div class="request-title">
+            ${safeName}
+          </div>
+
+          <div class="username">
+            ${safeContact}
+          </div>
+
+        </div>
+
+        <div
+          class="request-status ${escapeHtml(status)}"
+        >
+          ${escapeHtml(
+            status.toUpperCase()
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="request-details">
+
+        <div class="request-detail">
+          <span>REQUEST ID</span>
+          <strong>
+            ${safeId}
+          </strong>
+        </div>
+
+        <div class="request-detail">
+          <span>SUBMITTED</span>
+          <strong>
+            ${escapeHtml(created)}
+          </strong>
+        </div>
+
+      </div>
+
+
+      ${codeHtml}
+
+      ${actionButtons}
+
+    </article>
+  `;
+
+}
+
+
+/* =====================================================
+   APPROVE REQUEST
+   ===================================================== */
+
+async function approveRequest(
+  requestId
+) {
+
+  if (!checkAdminSession()) {
+    return;
+  }
+
+
+  if (!requestId) {
+    return;
+  }
+
+
+  try {
+
+    showToast(
+      "Approving access request...",
+      "success"
+    );
+
+
+    const response =
+      await fetch(
+        "/api/admin/requests/" +
+        encodeURIComponent(
+          requestId
+        ) +
+        "/approve",
+        {
+          method: "POST",
+          headers: adminHeaders()
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      response.status === 401
+    ) {
+
+      logoutAdmin();
+
+      return;
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Could not approve request."
+      );
+
+    }
+
+
+    const request =
+      allRequests.find(
+        item =>
+          item.requestId ===
+          requestId
+      );
+
+
+    if (request) {
+
+      request.status =
+        "approved";
+
+      request.accessCode =
+        data.accessCode ||
+        data.code ||
+        request.accessCode;
+
+      request.approvedAt =
+        new Date().toISOString();
+
+    }
+
+
+    updateStatistics();
+
+    renderRequests();
+
+
+    const code =
+      data.accessCode ||
+      data.code ||
+      (
+        request &&
+        request.accessCode
+      );
+
+
+    if (code) {
+
+      showApprovalModal(code);
+
+    } else {
+
+      showToast(
+        "Request approved.",
+        "success"
+      );
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "APPROVE ERROR:",
+      error
+    );
+
+    showToast(
+      error.message ||
+      "Approval failed.",
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   REJECT MODAL
+   ===================================================== */
+
+function openRejectModal(
+  requestId,
+  name
+) {
+
+  selectedRejectRequestId =
+    requestId;
+
+
+  const modal =
+    document.getElementById(
+      "rejectModal"
+    );
+
+  const nameElement =
+    document.getElementById(
+      "rejectRequestName"
+    );
+
+
+  if (nameElement) {
+
+    nameElement.textContent =
+      name ||
+      "This visitor";
+
+  }
+
+
+  if (modal) {
+
+    modal.style.display =
+      "flex";
+
+  }
+
+}
+
+
+function closeRejectModal() {
+
+  selectedRejectRequestId =
+    null;
+
+
+  const modal =
+    document.getElementById(
+      "rejectModal"
+    );
+
+
+  if (modal) {
+
+    modal.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* =====================================================
+   CONFIRM REJECTION
+   ===================================================== */
+
+async function confirmRejectRequest() {
+
+  const requestId =
+    selectedRejectRequestId;
+
+
+  if (!requestId) {
+    return;
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/admin/requests/" +
+        encodeURIComponent(
+          requestId
+        ) +
+        "/reject",
+        {
+          method: "POST",
+          headers: adminHeaders()
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      response.status === 401
+    ) {
+
+      logoutAdmin();
+
+      return;
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Could not reject request."
+      );
+
+    }
+
+
+    const request =
+      allRequests.find(
+        item =>
+          item.requestId ===
+          requestId
+      );
+
+
+    if (request) {
+
+      request.status =
+        "rejected";
+
+      request.accessCode =
+        null;
+
+    }
+
+
+    closeRejectModal();
+
+    updateStatistics();
+
+    renderRequests();
+
+
+    showToast(
+      "Access request rejected.",
+      "success"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "REJECT ERROR:",
+      error
+    );
+
+
+    showToast(
+      error.message ||
+      "Rejection failed.",
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   APPROVAL CODE MODAL
+   ===================================================== */
+
+function showApprovalModal(
+  code
+) {
+
+  const modal =
+    document.getElementById(
+      "approvalModal"
+    );
+
+  const codeElement =
+    document.getElementById(
+      "generatedAccessCode"
+    );
+
+
+  if (codeElement) {
+
+    codeElement.textContent =
+      code;
+
+  }
+
+
+  if (modal) {
+
+    modal.style.display =
+      "flex";
+
+  }
+
+}
+
+
+function closeApprovalModal() {
+
+  const modal =
+    document.getElementById(
+      "approvalModal"
+    );
+
+
+  if (modal) {
+
+    modal.style.display =
+      "none";
+
+  }
+
+}
+
+
+async function copyGeneratedCode() {
+
+  const element =
+    document.getElementById(
+      "generatedAccessCode"
+    );
+
+
+  if (!element) {
+    return;
+  }
+
+
+  const code =
+    element.textContent.trim();
+
+
+  try {
+
+    await navigator.clipboard.writeText(
+      code
+    );
+
+
+    const message =
+      document.getElementById(
+        "copyCodeMessage"
+      );
+
+
+    if (message) {
+
+      message.textContent =
+        "✓ Access code copied.";
+
+    }
+
+
+  } catch (error) {
+
+    showToast(
+      "Unable to copy access code.",
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SAFE TEXT HELPERS
+   ===================================================== */
+
+function escapeHtml(value) {
+
+  return String(
+    value || ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function escapeAttribute(value) {
+
+  return String(
+    value || ""
+  )
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    );
+
+}
+
+
+/* =====================================================
+   INITIALIZE ADMIN PANEL
+   ===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    if (!checkAdminSession()) {
+      return;
+    }
+
+    loadRequests();
+
+    setInterval(
+      loadRequests,
+      15000
+    );
+
+  }
+);
+
+    </script>
+  
   </body>
 </html>
