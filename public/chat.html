@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>NICEGOLD CHAT</title>
+  <link rel="stylesheet" href="/chat.css">
+
+  <style>
+    /*
+      STARTUP SAFETY
+    */
+
+    #chatLoader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(0, 0, 0, 0.88);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+
+      opacity: 1;
+      visibility: visible;
+
+      transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+    }
+
+    #chatLoader.hidden {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    #chatLoader .loader-spinner {
+      width: 48px;
+      height: 48px;
+
+      border: 4px solid rgba(255,255,255,0.15);
+      border-top-color: white;
+
+      border-radius: 50%;
+
+      animation: nicegoldSpin 0.8s linear infinite;
+    }
+
+    @keyframes nicegoldSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /*
+      NEW CONVERSATION MODAL
+    */
+
+    #newChatModal[hidden] {
+      display: none !important;
+    }
+
+    #newChatModal {
+      display: flex;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- =========================================
+       MOVING CHAT BACKGROUND
+  ========================================== -->
+
+  <div class="chat-bg-icons">
+
+    <span class="chat-icon icon-1">💬</span>
+    <span class="chat-icon icon-2">✉️</span>
+    <span class="chat-icon icon-3">💭</span>
+    <span class="chat-icon icon-4">🗨️</span>
+    <span class="chat-icon icon-5">💬</span>
+    <span class="chat-icon icon-6">✉️</span>
+    <span class="chat-icon icon-7">💭</span>
+    <span class="chat-icon icon-8">🗨️</span>
+
+  </div>
+
+
+  <!-- =========================================
+       LOADER
+  ========================================== -->
+
+  <div id="chatLoader" class="page-loader">
+    <div class="loader-spinner"></div>
+  </div>
+
+
+  <!-- =========================================
+       MAIN APPLICATION
+  ========================================== -->
+
+  <main class="chat-app">
+
+    <!-- =======================================
+         SIDEBAR
+    ======================================== -->
+
+    <aside class="sidebar">
+
+      <!-- PROFILE -->
+
+      <div class="sidebar-profile">
+
+        <div class="avatar online-avatar">
+
+          <img
+            id="profileAvatar"
+            src="/uploads/avatars/avatar-1789553794637-ez9aacc9.jpg"
+            alt="Profile"
+          >
+
+          <span
+            id="profileOnline"
+            class="profile-online-dot"
+          ></span>
+
+        </div>
+
+        <div class="profile-info">
+
+          <strong id="profileName">
+            NICEGOLD USER
+          </strong>
+
+          <span id="profileUsername">
+            @username
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- BRAND -->
+
+      <div class="mini-brand">
+
+        <div class="mini-brand-name">
+          NICEGOLD
+        </div>
+
+        <div class="mini-brand-chat">
+          CHAT
+        </div>
+
+      </div>
+
+
+      <!-- CONVERSATION SEARCH -->
+
+      <div class="conversation-search">
+
+        <span>⌕</span>
+
+        <input
+          id="conversationSearch"
+          type="text"
+          placeholder="Search conversations..."
+        >
+
+      </div>
+
+
+      <!-- CONVERSATION HEADER -->
+
+      <div class="conversation-heading">
+
+        <span>
+          Conversations
+        </span>
+
+        <span
+          id="conversationCount"
+          class="conversation-count"
+        >
+          0
+        </span>
+
+        <button
+          id="newChatButton"
+          class="new-chat-btn"
+          type="button"
+        >
+          +
+        </button>
+
+      </div>
+
+
+      <!-- CONVERSATIONS -->
+
+      <div
+        id="conversationList"
+        class="conversation-list"
+      >
+
+        <div
+          id="conversationEmpty"
+          class="empty-conversations"
+        >
+
+          <strong>
+            No conversations
+          </strong>
+
+          <span>
+            Start a new conversation.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- SIDEBAR FOOTER -->
+
+      <div class="sidebar-footer">
+
+        <button
+          id="logoutButton"
+          type="button"
+        >
+          Logout
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <!-- =======================================
+         CHAT AREA
+    ======================================== -->
+
+    <section class="chat-area">
+
+      <!-- CHAT HEADER -->
+
+      <header class="chat-header">
+
+        <button
+          id="mobileBackButton"
+          class="mobile-back-btn"
+          type="button"
+        >
+          ‹
+        </button>
+
+
+        <div class="active-person">
+
+          <!-- AVATAR -->
+
+          <div class="chat-avatar">
+
+            <img
+              id="activeAvatar"
+              src="/uploads/avatars/avatar-1789553794637-ez9aacc9.jpg"
+              alt="Profile"
+            >
+
+            <span
+              id="activeOnline"
+              class="active-online-dot"
+            ></span>
+
+          </div>
+
+
+          <!-- PERSON INFORMATION -->
+
+          <div class="active-person-info">
+
+            <div
+              id="activeName"
+              class="active-display-name"
+            >
+              NICEGOLD CHAT
+            </div>
+
+            <div
+              id="activeUsername"
+              class="active-username"
+            >
+              @username
+            </div>
+
+            <div
+              id="activeStatus"
+              class="active-status"
+            >
+              Select a conversation
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- HEADER BUTTONS -->
+
+        <div class="chat-header-actions">
+
+          <button
+            id="chatSearchBtn"
+            type="button"
+          >
+            ⌕
+          </button>
+
+          <button
+            id="chatOptionsBtn"
+            type="button"
+          >
+            ⋮
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- =====================================
+           MESSAGES
+      ====================================== -->
+
+      <div
+        id="messagesArea"
+        class="messages-area"
+      >
+
+        <!-- WELCOME SCREEN -->
+
+        <div
+          id="welcomeChat"
+          class="welcome-chat"
+        >
+
+          <div class="welcome-glass">
+
+            <div class="welcome-chat-icon">
+              💬
+            </div>
+
+            <h2>
+              NICEGOLD CHAT
+            </h2>
+
+            <p>
+              Select a conversation to start chatting
+            </p>
+
+            <button
+              id="welcomeNewChat"
+              class="welcome-chat-button"
+              type="button"
+            >
+              Start New Conversation
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =====================================
+           MESSAGE COMPOSER
+      ====================================== -->
+
+      <div class="composer">
+
+        <button
+          id="attachmentButton"
+          type="button"
+        >
+          ＋
+        </button>
+
+        <textarea
+          id="messageInput"
+          rows="1"
+          placeholder="Type a message..."
+        ></textarea>
+
+        <button
+          id="sendButton"
+          type="button"
+        >
+          ➤
+        </button>
+
+        <button
+          id="voiceButton"
+          type="button"
+        >
+          🎙
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================================
+       NEW CONVERSATION MODAL
+  ========================================== -->
+
+  <div
+    id="newChatModal"
+    class="modal-overlay"
+    hidden
+  >
+
+    <div class="new-chat-modal">
+
+      <div class="modal-header">
+
+        <strong>
+          New Conversation
+        </strong>
+
+        <button
+          id="closeNewChat"
+          type="button"
+        >
+          ×
+        </button>
+
+      </div>
+
+      <div class="user-search-box">
+
+        <input
+          id="userSearchInput"
+          type="text"
+          placeholder="Search username or name..."
+        >
+
+      </div>
+
+      <div
+        id="userSearchResults"
+        class="user-search-results"
+      ></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       CHAT JAVASCRIPT
+  ========================================== -->
+
+  <script src="/socket.io/socket.io.js"></script>
+<script src="/chat.js"></script>
+
+
+  <!-- =========================================
+       LOADER SAFETY
+  ========================================== -->
+
+  <script>
+
+    window.addEventListener("load", function () {
+
+      const loader =
+        document.getElementById("chatLoader");
+
+      if (loader) {
+
+        setTimeout(function () {
+
+          loader.classList.add("hidden");
+
+        }, 250);
+
+      }
+
+    });
+
+
+    /*
+      Absolute fallback.
+      Keeps the dashboard visible even if
+      chat.js encounters an error.
+    */
+
+    setTimeout(function () {
+
+      const loader =
+        document.getElementById("chatLoader");
+
+      if (loader) {
+        loader.classList.add("hidden");
+      }
+
+    }, 3000);
+
+
+    /*
+      Make absolutely sure the
+      New Conversation modal starts closed.
+    */
+
+    window.addEventListener(
+      "DOMContentLoaded",
+      function () {
+
+        const modal =
+          document.getElementById("newChatModal");
+
+        if (modal) {
+          modal.hidden = true;
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+
+</html>

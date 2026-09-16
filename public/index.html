@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+  >
+
+  <title>NICEGOLD CHAT</title>
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+  <!-- =========================
+       ANIMATED CHAT BACKGROUND
+  ========================== -->
+
+  <div class="chat-background" aria-hidden="true">
+
+    <span class="chat-icon icon-1">💬</span>
+    <span class="chat-icon icon-2">✉️</span>
+    <span class="chat-icon icon-3">💭</span>
+    <span class="chat-icon icon-4">🗨️</span>
+    <span class="chat-icon icon-5">💬</span>
+    <span class="chat-icon icon-6">✉️</span>
+    <span class="chat-icon icon-7">💭</span>
+    <span class="chat-icon icon-8">🗨️</span>
+    <span class="chat-icon icon-9">💬</span>
+    <span class="chat-icon icon-10">✉️</span>
+    <span class="chat-icon icon-11">💭</span>
+    <span class="chat-icon icon-12">🗨️</span>
+
+  </div>
+
+
+  <!-- =========================
+       AMBIENT GLOW
+  ========================== -->
+
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="ambient ambient-three"></div>
+
+
+  <!-- =========================
+       LOADER
+  ========================== -->
+
+  <div id="loader">
+
+    <div class="spinner"></div>
+
+    <div class="loader-text">
+      NICEGOLD CHAT
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       AUTH PAGE
+  ========================== -->
+
+  <main class="auth-page">
+
+    <!-- BRAND -->
+
+    <section class="brand">
+
+      <div class="brand-name">
+        NICEGOLD
+      </div>
+
+      <div class="brand-chat">
+        CHAT
+      </div>
+
+      <p>
+        Private conversations. Clean connection.
+      </p>
+
+    </section>
+
+
+    <!-- AUTH CARD -->
+
+    <section class="auth-card">
+
+      <div class="auth-heading">
+
+        <h1 id="auth-title">
+          Welcome back
+        </h1>
+
+        <p id="auth-subtitle">
+          Login to continue to NICEGOLD CHAT.
+        </p>
+
+      </div>
+
+
+      <form id="auth-form">
+
+        <!-- USERNAME -->
+
+        <div id="username-group" class="field">
+
+          <label for="username">
+            Username
+          </label>
+
+          <div class="input-glass">
+
+            <span class="input-icon">
+              @
+            </span>
+
+            <input
+              id="username"
+              type="text"
+              autocomplete="username"
+              placeholder="Enter your username"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- PHONE -->
+
+        <div id="phone-group" class="field hidden">
+
+          <label for="phone">
+            Phone Number
+          </label>
+
+          <div class="input-glass">
+
+            <span class="input-icon">
+              +
+            </span>
+
+            <input
+              id="phone"
+              type="tel"
+              autocomplete="tel"
+              placeholder="Enter your phone number"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- PROFILE PICTURE -->
+
+        <div
+          id="avatar-group"
+          class="avatar-section hidden"
+        >
+
+          <label>
+            Profile Picture
+          </label>
+
+
+          <div class="avatar-upload">
+
+            <div
+              id="avatar-preview"
+              class="avatar-preview"
+            >
+              <span>+</span>
+            </div>
+
+
+            <div class="avatar-actions">
+
+              <label
+                for="avatar"
+                class="avatar-button"
+              >
+                Choose Picture
+              </label>
+
+              <input
+                id="avatar"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                hidden
+              >
+
+
+              <button
+                type="button"
+                id="remove-avatar"
+                class="remove-avatar"
+                hidden
+              >
+                Remove
+              </button>
+
+
+              <small>
+                Optional. You can skip this.
+              </small>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PASSWORD -->
+
+        <div class="field">
+
+          <label for="password">
+            Password
+          </label>
+
+
+          <div class="input-glass">
+
+            <span class="input-icon">
+              •
+            </span>
+
+            <input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Enter your password"
+              required
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- AUTH BUTTON -->
+
+        <button
+          id="auth-button"
+          type="submit"
+        >
+          Login
+        </button>
+
+      </form>
+
+
+      <!-- MESSAGE -->
+
+      <div id="auth-message"></div>
+
+
+      <!-- SWITCH -->
+
+      <button
+        id="switch-auth"
+        class="switch-button"
+      >
+        Create a new account
+      </button>
+
+    </section>
+
+  </main>
+
+
+  <script src="/app.js"></script>
+
+</body>
+</html>
