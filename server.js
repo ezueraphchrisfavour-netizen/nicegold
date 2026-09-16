@@ -921,6 +921,72 @@ app.delete(
   }
 );
 
+app.get("/api/users/search", authMiddleware, (req, res) => {
+  try {
+    const db = getDatabase();
+
+    const query = String(req.query.q || "")
+      .trim()
+      .toLowerCase();
+
+    const currentUserId = String(req.auth?.userId || "");
+
+    const users = Array.isArray(db?.data?.users)
+      ? db.data.users
+      : [];
+
+    console.log("[USER SEARCH DEBUG]");
+    console.log("Query:", query);
+    console.log("Current user ID:", currentUserId);
+    console.log("Users in database:", users.length);
+
+    const results = users
+      .filter(user => user && String(user.id || "") !== currentUserId)
+      .filter(user => {
+        const username = String(user.username || "").toLowerCase();
+        const displayName = String(user.displayName || "").toLowerCase();
+        const phone = String(user.phone || "").toLowerCase();
+
+        return (
+          username.includes(query) ||
+          displayName.includes(query) ||
+          phone.includes(query)
+        );
+      })
+      .slice(0, 30)
+      .map(user => ({
+        id: user.id,
+        username: user.username || "",
+        displayName: user.displayName || user.username || "",
+        phone: user.phone || null,
+        avatar: user.avatar || null,
+        bio: user.bio || "",
+        online: Boolean(user.online),
+        lastSeen: user.lastSeen || null
+      }));
+
+    console.log("Search results:", results.length);
+
+    return res.status(200).json({
+      ok: true,
+      query,
+      currentUserId,
+      totalUsers: users.length,
+      users: results
+    });
+
+  } catch (error) {
+    console.error("[USER SEARCH ERROR]", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Unable to search users.",
+      details: error.message
+    });
+  }
+});
+
+
 app.get(
   "/api/users/:userId",
   authMiddleware,
@@ -950,52 +1016,6 @@ app.get(
    USER SEARCH
 ========================================================= */
 
-app.get(
-  "/api/users/search",
-  authMiddleware,
-  (req, res) => {
-    const db = getDatabase();
-
-    const query = String(
-      req.query.q || ""
-    )
-      .trim()
-      .toLowerCase();
-
-    if (!query) {
-      return res.json({
-        ok: true,
-        users: []
-      });
-    }
-
-    const users = db.data.users
-      .filter(
-        (user) =>
-          user.id !== req.auth.userId
-      )
-      .filter(
-        (user) =>
-          user.username
-            .toLowerCase()
-            .includes(query) ||
-          user.displayName
-            .toLowerCase()
-            .includes(query)
-      )
-      .slice(0, 30)
-      .map(cleanUser);
-
-    res.json({
-      ok: true,
-      users
-    });
-  }
-);
-
-/* =========================================================
-   BLOCKS
-========================================================= */
 
 app.get(
   "/api/blocks",
