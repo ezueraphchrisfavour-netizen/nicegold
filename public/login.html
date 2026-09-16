@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#020b20">
+
+  <title>NICEGOLD MON • Admin Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      overflow: hidden;
+
+      font-family: Arial, sans-serif;
+
+      color: #ffffff;
+
+      background:
+        radial-gradient(
+          circle at 15% 20%,
+          rgba(0, 100, 255, 0.35),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 85% 20%,
+          rgba(0, 210, 255, 0.25),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 50% 100%,
+          rgba(75, 40, 255, 0.30),
+          transparent 35%
+        ),
+        #020817;
+
+      position: relative;
+    }
+
+    /* =========================================
+       ANIMATED BACKGROUND
+       ========================================= */
+
+    .background {
+      position: fixed;
+      inset: 0;
+
+      overflow: hidden;
+
+      pointer-events: none;
+    }
+
+    .orb {
+      position: absolute;
+
+      border-radius: 50%;
+
+      filter: blur(75px);
+
+      opacity: 0.55;
+
+      animation:
+        drift 13s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      width: 300px;
+      height: 300px;
+
+      left: -100px;
+      top: -100px;
+
+      background:
+        rgba(0, 80, 255, 0.75);
+
+      animation-duration: 14s;
+    }
+
+    .orb.two {
+      width: 260px;
+      height: 260px;
+
+      right: -90px;
+      top: 10%;
+
+      background:
+        rgba(0, 200, 255, 0.65);
+
+      animation-duration: 17s;
+
+      animation-delay: -4s;
+    }
+
+    .orb.three {
+      width: 330px;
+      height: 330px;
+
+      left: 20%;
+      bottom: -160px;
+
+      background:
+        rgba(80, 45, 255, 0.70);
+
+      animation-duration: 19s;
+
+      animation-delay: -7s;
+    }
+
+    .orb.four {
+      width: 190px;
+      height: 190px;
+
+      right: 15%;
+      bottom: 10%;
+
+      background:
+        rgba(0, 140, 255, 0.50);
+
+      animation-duration: 12s;
+
+      animation-delay: -2s;
+    }
+
+    @keyframes drift {
+
+      0% {
+        transform:
+          translate3d(0, 0, 0)
+          scale(1);
+      }
+
+      35% {
+        transform:
+          translate3d(45px, -30px, 0)
+          scale(1.12);
+      }
+
+      70% {
+        transform:
+          translate3d(-30px, 45px, 0)
+          scale(0.94);
+      }
+
+      100% {
+        transform:
+          translate3d(55px, 20px, 0)
+          scale(1.08);
+      }
+    }
+
+    /* =========================================
+       MOVING LIGHT RIBBONS
+       ========================================= */
+
+    .light {
+      position: absolute;
+
+      width: 700px;
+      height: 100px;
+
+      border-radius: 50%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 180, 255, 0.18),
+          transparent
+        );
+
+      filter: blur(25px);
+
+      transform: rotate(-25deg);
+
+      animation: sweep 12s linear infinite;
+
+      opacity: 0.65;
+    }
+
+    .light.one {
+      top: 20%;
+      left: -300px;
+    }
+
+    .light.two {
+      top: 65%;
+      left: -400px;
+
+      animation-delay: -5s;
+
+      animation-duration: 16s;
+    }
+
+    @keyframes sweep {
+
+      from {
+        transform:
+          translateX(-20vw)
+          rotate(-25deg);
+      }
+
+      to {
+        transform:
+          translateX(130vw)
+          rotate(-25deg);
+      }
+    }
+
+    /* =========================================
+       PARTICLES
+       ========================================= */
+
+    .particles {
+      position: absolute;
+
+      inset: 0;
+    }
+
+    .particle {
+      position: absolute;
+
+      width: 3px;
+      height: 3px;
+
+      border-radius: 50%;
+
+      background: #79ddff;
+
+      box-shadow:
+        0 0 8px #2bc5ff,
+        0 0 18px rgba(30, 180, 255, 0.8);
+
+      animation:
+        rise 10s linear infinite;
+
+      opacity: 0;
+    }
+
+    .particle:nth-child(1) {
+      left: 8%;
+      bottom: -10px;
+      animation-delay: 1s;
+    }
+
+    .particle:nth-child(2) {
+      left: 18%;
+      bottom: -10px;
+      animation-delay: 5s;
+    }
+
+    .particle:nth-child(3) {
+      left: 31%;
+      bottom: -10px;
+      animation-delay: 2s;
+    }
+
+    .particle:nth-child(4) {
+      left: 45%;
+      bottom: -10px;
+      animation-delay: 7s;
+    }
+
+    .particle:nth-child(5) {
+      left: 59%;
+      bottom: -10px;
+      animation-delay: 4s;
+    }
+
+    .particle:nth-child(6) {
+      left: 72%;
+      bottom: -10px;
+      animation-delay: 8s;
+    }
+
+    .particle:nth-child(7) {
+      left: 86%;
+      bottom: -10px;
+      animation-delay: 3s;
+    }
+
+    @keyframes rise {
+
+      0% {
+        transform:
+          translateY(0)
+          scale(0.5);
+
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 0.8;
+      }
+
+      80% {
+        opacity: 0.4;
+      }
+
+      100% {
+        transform:
+          translateY(-110vh)
+          scale(1.2);
+
+        opacity: 0;
+      }
+    }
+
+    /* =========================================
+       LOGIN CARD
+       ========================================= */
+
+    .login-box {
+      position: relative;
+
+      z-index: 10;
+
+      width: 100%;
+      max-width: 410px;
+
+      padding: 32px 24px;
+
+      border-radius: 26px;
+
+      border:
+        1px solid
+        rgba(150, 220, 255, 0.18);
+
+      background:
+        rgba(3, 12, 30, 0.66);
+
+      backdrop-filter:
+        blur(25px);
+
+      -webkit-backdrop-filter:
+        blur(25px);
+
+      box-shadow:
+        0 30px 90px
+        rgba(0, 0, 0, 0.60),
+
+        0 0 60px
+        rgba(0, 130, 255, 0.12),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.08);
+
+      animation:
+        cardAppear 0.8s ease;
+    }
+
+    @keyframes cardAppear {
+
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(20px)
+          scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+      }
+    }
+
+    /* =========================================
+       BRAND
+       ========================================= */
+
+    .brand {
+      text-align: center;
+
+      font-size: 21px;
+
+      font-weight: 800;
+
+      line-height: 1.5;
+
+      text-shadow:
+        0 0 20px
+        rgba(75, 190, 255, 0.25);
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      margin-bottom: 23px;
+
+      text-align: center;
+
+      color: #9eb0ca;
+
+      font-size: 13px;
+    }
+
+    /* =========================================
+       SECURITY STATUS
+       ========================================= */
+
+    .secure {
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 8px;
+
+      margin-bottom: 23px;
+
+      color: #8fa5c2;
+
+      font-size: 11px;
+    }
+
+    .secure-dot {
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: #36df83;
+
+      box-shadow:
+        0 0 8px #36df83,
+        0 0 18px rgba(54, 223, 131, 0.55);
+    }
+
+    /* =========================================
+       FORM
+       ========================================= */
+
+    label {
+      display: block;
+
+      margin-bottom: 8px;
+
+      color: #b9c6d9;
+
+      font-size: 12px;
+    }
+
+    input {
+      width: 100%;
+
+      padding: 15px;
+
+      margin-bottom: 17px;
+
+      border-radius: 13px;
+
+      border:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
+      outline: none;
+
+      background:
+        rgba(0, 0, 0, 0.28);
+
+      color: #ffffff;
+
+      font-size: 14px;
+
+      transition:
+        border 0.25s,
+        box-shadow 0.25s;
+    }
+
+    input::placeholder {
+      color: #64738a;
+    }
+
+    input:focus {
+      border-color:
+        rgba(60, 190, 255, 0.65);
+
+      box-shadow:
+        0 0 0 3px
+        rgba(0, 160, 255, 0.08),
+
+        0 0 25px
+        rgba(0, 160, 255, 0.10);
+    }
+
+    /* =========================================
+       BUTTON
+       ========================================= */
+
+    button {
+      width: 100%;
+
+      padding: 15px;
+
+      border: none;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #ffffff,
+          #c8edff
+        );
+
+      color: #06101c;
+
+      font-size: 14px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform:
+        translateY(-2px);
+
+      box-shadow:
+        0 12px 30px
+        rgba(0, 170, 255, 0.18);
+    }
+
+    button:active {
+      transform:
+        scale(0.98);
+    }
+
+    /* =========================================
+       MESSAGE
+       ========================================= */
+
+    #message {
+      min-height: 20px;
+
+      margin-top: 15px;
+
+      text-align: center;
+
+      font-size: 12px;
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+
+    .footer {
+      margin-top: 23px;
+
+      text-align: center;
+
+      color: #60718a;
+
+      font-size: 10px;
+    }
+
+    /* =========================================
+       MOBILE
+       ========================================= */
+
+    @media (max-width: 600px) {
+
+      .login-box {
+        padding: 28px 20px;
+      }
+
+      .brand {
+        font-size: 18px;
+      }
+
+      .orb {
+        filter: blur(65px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Animated background -->
+
+  <div class="background">
+
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+    <div class="orb four"></div>
+
+    <div class="light one"></div>
+    <div class="light two"></div>
+
+    <div class="particles">
+
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+
+    </div>
+
+  </div>
+
+
+  <!-- Login -->
+
+  <div class="login-box">
+
+    <div class="brand">
+      ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+    </div>
+
+    <div class="subtitle">
+      Administrator Login
+    </div>
+
+    <div class="secure">
+
+      <span class="secure-dot"></span>
+
+      Secure administrator access
+
+    </div>
+
+
+    <form id="loginForm">
+
+      <label for="username">
+        Admin username
+      </label>
+
+      <input
+        id="username"
+        type="text"
+        autocomplete="username"
+        placeholder="Enter username"
+        required
+      >
+
+
+      <label for="password">
+        Admin password
+      </label>
+
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Enter password"
+        required
+      >
+
+
+      <button type="submit">
+        🔐 Sign in
+      </button>
+
+
+      <div id="message"></div>
+
+    </form>
+
+
+    <div class="footer">
+      NICEGOLD MON • Secure Admin Area
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const form =
+      document.getElementById("loginForm");
+
+    const message =
+      document.getElementById("message");
+
+
+    form.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+
+        message.style.color =
+          "#9eb0ca";
+
+        message.textContent =
+          "Signing in...";
+
+
+        const username =
+          document
+            .getElementById("username")
+            .value
+            .trim();
+
+
+        const password =
+          document
+            .getElementById("password")
+            .value;
+
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/login",
+              {
+                method: "POST",
+                credentials: "include",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                  JSON.stringify({
+                    username,
+                    password
+                  })
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          if (
+            response.ok &&
+            data.ok
+          ) {
+
+            message.style.color =
+              "#36df83";
+
+            message.textContent =
+              "Login successful.";
+
+            setTimeout(
+              () => {
+                window.location.href =
+                  "/";
+              },
+              700
+            );
+
+          } else {
+
+            message.style.color =
+              "#ff6262";
+
+            message.textContent =
+              data.message ||
+              "Login failed.";
+
+          }
+
+        } catch (error) {
+
+          message.style.color =
+            "#ff6262";
+
+          message.textContent =
+            "Could not reach the server.";
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>

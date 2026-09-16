@@ -1,0 +1,12 @@
+[
+  {
+    "requestId": "NG-MSWC6BQV-548463",
+    "name": "Test User",
+    "contact": "test@example.com",
+    "status": "pending",
+    "accessCode": null,
+    "createdAt": "2026-08-16T21:48:03.709Z",
+    "approvedAt": null,
+    "rejectedAt": null
+  }
+]

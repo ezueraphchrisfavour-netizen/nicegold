@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05020f">
+
+  <title>NICEGOLD MON • Request Access</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      color: #fff;
+
+      background:
+        radial-gradient(
+          circle at 15% 10%,
+          rgba(130, 61, 255, .34),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 85% 20%,
+          rgba(39, 201, 255, .23),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 50% 105%,
+          rgba(150, 45, 255, .27),
+          transparent 38%
+        ),
+        #05020f;
+    }
+
+    /* =========================
+       MOVING AURORA
+       ========================= */
+
+    .aurora {
+      position: fixed;
+      inset: -30%;
+
+      z-index: 0;
+
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          ellipse at 30% 40%,
+          rgba(124, 55, 255, .18),
+          transparent 35%
+        ),
+        radial-gradient(
+          ellipse at 70% 60%,
+          rgba(36, 196, 255, .13),
+          transparent 35%
+        );
+
+      filter: blur(60px);
+
+      animation:
+        auroraMove 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes auroraMove {
+      0% {
+        transform:
+          translate3d(-2%, -2%, 0)
+          rotate(0deg)
+          scale(1);
+      }
+
+      50% {
+        transform:
+          translate3d(4%, 3%, 0)
+          rotate(3deg)
+          scale(1.07);
+      }
+
+      100% {
+        transform:
+          translate3d(-3%, 5%, 0)
+          rotate(-3deg)
+          scale(1.03);
+      }
+    }
+
+    /* =========================
+       GLOWING ORBS
+       ========================= */
+
+    .orb {
+      position: fixed;
+
+      width: 320px;
+      height: 320px;
+
+      border-radius: 50%;
+
+      filter: blur(100px);
+
+      opacity: .30;
+
+      pointer-events: none;
+
+      z-index: 1;
+
+      animation:
+        orbFloat 16s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      background: #873dff;
+
+      left: -140px;
+      top: -130px;
+    }
+
+    .orb.two {
+      background: #20cfff;
+
+      right: -150px;
+      top: 35%;
+
+      animation-delay: -5s;
+      animation-duration: 19s;
+    }
+
+    .orb.three {
+      background: #d04cff;
+
+      bottom: -180px;
+      left: 35%;
+
+      animation-delay: -9s;
+      animation-duration: 22s;
+    }
+
+    @keyframes orbFloat {
+      0% {
+        transform:
+          translate3d(0, 0, 0)
+          scale(1);
+      }
+
+      50% {
+        transform:
+          translate3d(70px, -45px, 0)
+          scale(1.12);
+      }
+
+      100% {
+        transform:
+          translate3d(-45px, 70px, 0)
+          scale(.95);
+      }
+    }
+
+    /* =========================
+       MOVING GRID
+       ========================= */
+
+    .grid {
+      position: fixed;
+      inset: 0;
+
+      z-index: 1;
+
+      pointer-events: none;
+
+      opacity: .10;
+
+      background-image:
+        linear-gradient(
+          rgba(155, 92, 255, .20) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(155, 92, 255, .20) 1px,
+          transparent 1px
+        );
+
+      background-size: 62px 62px;
+
+      animation:
+        gridMove 18s linear infinite;
+    }
+
+    @keyframes gridMove {
+      from {
+        transform: translateY(0);
+      }
+
+      to {
+        transform: translateY(62px);
+      }
+    }
+
+    /* =========================
+       FLOATING PARTICLES
+       ========================= */
+
+    .particles {
+      position: fixed;
+      inset: 0;
+
+      overflow: hidden;
+
+      z-index: 2;
+
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+
+      width: 3px;
+      height: 3px;
+
+      border-radius: 50%;
+
+      background: #cba4ff;
+
+      box-shadow:
+        0 0 10px #995cff,
+        0 0 22px rgba(153, 92, 255, .6);
+
+      animation:
+        particleRise linear infinite;
+    }
+
+    .particle:nth-child(1) {
+      left: 6%;
+      bottom: -20px;
+      animation-duration: 12s;
+    }
+
+    .particle:nth-child(2) {
+      left: 20%;
+      bottom: -20px;
+      animation-duration: 17s;
+      animation-delay: -4s;
+    }
+
+    .particle:nth-child(3) {
+      left: 36%;
+      bottom: -20px;
+      animation-duration: 14s;
+      animation-delay: -7s;
+    }
+
+    .particle:nth-child(4) {
+      left: 53%;
+      bottom: -20px;
+      animation-duration: 19s;
+      animation-delay: -2s;
+    }
+
+    .particle:nth-child(5) {
+      left: 70%;
+      bottom: -20px;
+      animation-duration: 15s;
+      animation-delay: -8s;
+    }
+
+    .particle:nth-child(6) {
+      left: 88%;
+      bottom: -20px;
+      animation-duration: 18s;
+      animation-delay: -5s;
+    }
+
+    @keyframes particleRise {
+      0% {
+        transform:
+          translate3d(0, 0, 0)
+          scale(.4);
+
+        opacity: 0;
+      }
+
+      15% {
+        opacity: .8;
+      }
+
+      50% {
+        transform:
+          translate3d(35px, -50vh, 0)
+          scale(1);
+      }
+
+      85% {
+        opacity: .7;
+      }
+
+      100% {
+        transform:
+          translate3d(-30px, -115vh, 0)
+          scale(.3);
+
+        opacity: 0;
+      }
+    }
+
+    /* =========================
+       DECORATIVE RINGS
+       ========================= */
+
+    .ring {
+      position: fixed;
+
+      width: 430px;
+      height: 430px;
+
+      border-radius: 50%;
+
+      border:
+        1px solid
+        rgba(164, 101, 255, .09);
+
+      z-index: 1;
+
+      pointer-events: none;
+
+      animation:
+        ringRotate 32s linear infinite;
+    }
+
+    .ring.one {
+      left: -230px;
+      bottom: -200px;
+    }
+
+    .ring.two {
+      right: -260px;
+      top: -220px;
+
+      width: 510px;
+      height: 510px;
+
+      border-color:
+        rgba(69, 207, 255, .07);
+
+      animation-duration: 40s;
+      animation-direction: reverse;
+    }
+
+    @keyframes ringRotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* =========================
+       PAGE
+       ========================= */
+
+    .page {
+      position: relative;
+
+      z-index: 5;
+
+      min-height: 100vh;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 35px 18px;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 960px;
+
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 22px;
+    }
+
+    /* =========================
+       WELCOME PANEL
+       ========================= */
+
+    .welcome {
+      padding: 42px 36px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      border-radius: 30px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(125, 55, 255, .17),
+          rgba(20, 130, 255, .06)
+        );
+
+      border:
+        1px solid
+        rgba(192, 151, 255, .15);
+
+      backdrop-filter: blur(28px);
+
+      box-shadow:
+        0 35px 100px
+        rgba(0,0,0,.45),
+
+        inset 0 1px 0
+        rgba(255,255,255,.08);
+
+      animation:
+        welcomeFloat 7s ease-in-out infinite;
+    }
+
+    @keyframes welcomeFloat {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .badge {
+      width: fit-content;
+
+      padding: 8px 13px;
+
+      border-radius: 100px;
+
+      background:
+        rgba(155, 92, 255, .10);
+
+      border:
+        1px solid
+        rgba(155, 92, 255, .22);
+
+      color: #cfacff;
+
+      font-size: 10px;
+
+      font-weight: 800;
+
+      letter-spacing: .7px;
+
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      font-size: 25px;
+
+      font-weight: 900;
+
+      line-height: 1.3;
+
+      background:
+        linear-gradient(
+          90deg,
+          #ffffff,
+          #d5b6ff,
+          #72d9ff,
+          #ffffff
+        );
+
+      background-size: 220% auto;
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      animation:
+        brandShine 7s linear infinite;
+    }
+
+    @keyframes brandShine {
+      from {
+        background-position: 0% center;
+      }
+
+      to {
+        background-position: 220% center;
+      }
+    }
+
+    .welcome h1 {
+      margin-top: 20px;
+
+      font-size: 38px;
+
+      line-height: 1.04;
+
+      letter-spacing: -1.5px;
+    }
+
+    .welcome h1 span {
+      color: #b77aff;
+
+      text-shadow:
+        0 0 25px
+        rgba(183, 122, 255, .30);
+    }
+
+    .welcome-text {
+      margin-top: 18px;
+
+      color: #aaa4c5;
+
+      font-size: 14px;
+
+      line-height: 1.8;
+    }
+
+    .feature-list {
+      margin-top: 25px;
+
+      display: grid;
+
+      gap: 11px;
+    }
+
+    .feature {
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      color: #ddd8ee;
+
+      font-size: 12px;
+    }
+
+    .check {
+      width: 27px;
+      height: 27px;
+
+      flex-shrink: 0;
+
+      display: grid;
+
+      place-items: center;
+
+      border-radius: 8px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(155,92,255,.22),
+          rgba(77,200,255,.12)
+        );
+
+      border:
+        1px solid
+        rgba(155,92,255,.25);
+
+      color: #d0a7ff;
+    }
+
+    /* =========================
+       REQUEST CARD
+       ========================= */
+
+    .card {
+      padding: 36px;
+
+      border-radius: 30px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(13, 7, 37, .90),
+          rgba(5, 15, 38, .80)
+        );
+
+      border:
+        1px solid
+        rgba(255,255,255,.10);
+
+      backdrop-filter: blur(30px);
+
+      box-shadow:
+        0 35px 110px
+        rgba(0,0,0,.52),
+
+        inset 0 1px 0
+        rgba(255,255,255,.07);
+
+      animation:
+        cardFloat 8s ease-in-out infinite;
+    }
+
+    @keyframes cardFloat {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(4px);
+      }
+    }
+
+    .card-title {
+      font-size: 23px;
+
+      font-weight: 900;
+    }
+
+    .card-subtitle {
+      margin-top: 8px;
+
+      color: #9089aa;
+
+      font-size: 12px;
+
+      line-height: 1.65;
+    }
+
+    label {
+      display: block;
+
+      margin-top: 22px;
+      margin-bottom: 8px;
+
+      color: #c9c2df;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      letter-spacing: .5px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+
+      left: 15px;
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      color: #ae78ff;
+
+      pointer-events: none;
+    }
+
+    input {
+      width: 100%;
+
+      padding:
+        15px
+        15px
+        15px
+        43px;
+
+      border-radius: 14px;
+
+      outline: none;
+
+      color: white;
+
+      background:
+        rgba(255,255,255,.045);
+
+      border:
+        1px solid
+        rgba(255,255,255,.09);
+
+      font-size: 14px;
+
+      transition:
+        .25s ease;
+    }
+
+    input::placeholder {
+      color: #625d78;
+    }
+
+    input:focus {
+      background:
+        rgba(155,92,255,.06);
+
+      border-color:
+        rgba(155,92,255,.65);
+
+      box-shadow:
+        0 0 0 3px
+        rgba(155,92,255,.08),
+
+        0 0 35px
+        rgba(155,92,255,.08);
+    }
+
+    /* =========================
+       BUTTON
+       ========================= */
+
+    button {
+      position: relative;
+
+      overflow: hidden;
+
+      width: 100%;
+
+      margin-top: 25px;
+
+      padding: 15px;
+
+      border: 0;
+
+      border-radius: 14px;
+
+      cursor: pointer;
+
+      color: white;
+
+      font-size: 12px;
+
+      font-weight: 900;
+
+      letter-spacing: .7px;
+
+      background:
+        linear-gradient(
+          100deg,
+          #7140d4,
+          #a057f2,
+          #358fe9
+        );
+
+      background-size: 200% auto;
+
+      box-shadow:
+        0 14px 40px
+        rgba(116,65,216,.30);
+
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+      animation:
+        buttonGlow 6s ease-in-out infinite;
+    }
+
+    button::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+      left: -80%;
+
+      width: 55%;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,.25),
+          transparent
+        );
+
+      transform:
+        skewX(-20deg);
+
+      animation:
+        buttonShine 4s ease-in-out infinite;
+    }
+
+    @keyframes buttonShine {
+      0%,
+      55% {
+        left: -80%;
+      }
+
+      75%,
+      100% {
+        left: 130%;
+      }
+    }
+
+    @keyframes buttonGlow {
+      0%,
+      100% {
+        box-shadow:
+          0 14px 40px
+          rgba(116,65,216,.25);
+      }
+
+      50% {
+        box-shadow:
+          0 16px 48px
+          rgba(116,65,216,.42);
+      }
+    }
+
+    button:hover {
+      transform:
+        translateY(-2px);
+
+      box-shadow:
+        0 18px 50px
+        rgba(116,65,216,.45);
+    }
+
+    button:disabled {
+      opacity: .55;
+
+      cursor: not-allowed;
+
+      transform: none;
+    }
+
+    /* =========================
+       RESULT CARD
+       ========================= */
+
+    .result {
+      display: none;
+
+      margin-top: 20px;
+
+      padding: 18px;
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(82, 215, 157, .08),
+          rgba(68, 177, 255, .06)
+        );
+
+      border:
+        1px solid
+        rgba(94, 231, 162, .20);
+
+      animation:
+        resultAppear .45s ease;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    @keyframes resultAppear {
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(12px)
+          scale(.98);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+      }
+    }
+
+    .result-icon {
+      font-size: 24px;
+
+      margin-bottom: 8px;
+    }
+
+    .result-title {
+      color: #6ee7a8;
+
+      font-size: 14px;
+
+      font-weight: 900;
+    }
+
+    .result-text {
+      margin-top: 7px;
+
+      color: #aaa5ba;
+
+      font-size: 11px;
+
+      line-height: 1.6;
+    }
+
+    .request-id {
+      margin-top: 13px;
+
+      padding: 12px;
+
+      border-radius: 11px;
+
+      background:
+        rgba(0,0,0,.25);
+
+      border:
+        1px dashed
+        rgba(174,120,255,.35);
+
+      color: #d2b3ff;
+
+      font-family:
+        monospace;
+
+      font-size: 12px;
+
+      word-break: break-all;
+
+      user-select: all;
+    }
+
+    .verify-link {
+      display: block;
+
+      margin-top: 13px;
+
+      padding: 12px;
+
+      border-radius: 11px;
+
+      text-decoration: none;
+
+      color: white;
+
+      background:
+        rgba(155,92,255,.15);
+
+      border:
+        1px solid
+        rgba(155,92,255,.25);
+
+      font-size: 11px;
+
+      font-weight: 800;
+    }
+
+    /* =========================
+       MESSAGE
+       ========================= */
+
+    #message {
+      min-height: 20px;
+
+      margin-top: 16px;
+
+      text-align: center;
+
+      color: #918ba7;
+
+      font-size: 12px;
+
+      line-height: 1.6;
+    }
+
+    .success {
+      color: #5ee7a2 !important;
+    }
+
+    .error {
+      color: #ff7d91 !important;
+    }
+
+    .secure {
+      display: flex;
+
+      justify-content: center;
+
+      margin-top: 16px;
+
+      color: #6c6680;
+
+      font-size: 10px;
+    }
+
+    /* =========================
+       MOBILE
+       ========================= */
+
+    @media (max-width: 760px) {
+
+      .wrapper {
+        grid-template-columns: 1fr;
+
+        max-width: 500px;
+      }
+
+      .welcome {
+        padding: 33px 27px;
+      }
+
+      .welcome h1 {
+        font-size: 31px;
+      }
+
+      .card {
+        padding: 29px 24px;
+      }
+    }
+
+    @media (max-width: 400px) {
+
+      .page {
+        padding: 20px 12px;
+      }
+
+      .brand {
+        font-size: 21px;
+      }
+
+      .welcome h1 {
+        font-size: 28px;
+      }
+
+      .card-title {
+        font-size: 21px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="aurora"></div>
+
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="orb three"></div>
+
+  <div class="grid"></div>
+
+  <div class="ring one"></div>
+  <div class="ring two"></div>
+
+  <div class="particles">
+
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+  </div>
+
+
+  <main class="page">
+
+    <div class="wrapper">
+
+
+      <!-- WELCOME -->
+
+      <section class="welcome">
+
+        <div class="badge">
+          ✦ PRIVATE ACCESS SYSTEM
+        </div>
+
+        <div class="brand">
+          ✞𓉳 ⃝𝗡𝗜𝗖𝗘𝗚𝗢𝗟𝗗₊ ⃝ 𝗠𝗢𝗡𓉳 ⃝𓃵
+        </div>
+
+        <h1>
+          Enter the
+          <span>NICEGOLD</span>
+          experience.
+        </h1>
+
+        <p class="welcome-text">
+          Access to this private system is
+          controlled by the administrator.
+          Submit your request and wait for
+          approval before continuing.
+        </p>
+
+        <div class="feature-list">
+
+          <div class="feature">
+            <div class="check">✓</div>
+            Administrator-approved access
+          </div>
+
+          <div class="feature">
+            <div class="check">✓</div>
+            Temporary verification code
+          </div>
+
+          <div class="feature">
+            <div class="check">✓</div>
+            Protected private access
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- REQUEST FORM -->
+
+      <section class="card">
+
+        <div class="card-title">
+          Request Access
+        </div>
+
+        <div class="card-subtitle">
+          Tell us who you are. Your request will
+          be sent to the NICEGOLD administrator
+          for approval.
+        </div>
+
+
+        <form id="requestForm">
+
+          <label for="name">
+            YOUR NAME
+          </label>
+
+          <div class="input-wrap">
+
+            <div class="input-icon">
+              ✦
+            </div>
+
+            <input
+              id="name"
+              type="text"
+              placeholder="Enter your name"
+              autocomplete="name"
+              required
+            >
+
+          </div>
+
+
+          <label for="contact">
+            CONTACT
+          </label>
+
+          <div class="input-wrap">
+
+            <div class="input-icon">
+              ◉
+            </div>
+
+            <input
+              id="contact"
+              type="text"
+              placeholder="Telegram, WhatsApp, etc."
+              required
+            >
+
+          </div>
+
+
+          <button
+            id="submitButton"
+            type="submit"
+          >
+            SEND ACCESS REQUEST
+          </button>
+
+        </form>
+
+
+        <div
+          id="message"
+        ></div>
+
+
+        <!-- Request result -->
+
+        <div
+          id="result"
+          class="result"
+        >
+
+          <div class="result-icon">
+            ✓
+          </div>
+
+          <div class="result-title">
+            Request Submitted
+          </div>
+
+          <div class="result-text">
+            Save your Request ID. You may need
+            it together with your temporary access
+            code after the administrator approves
+            your request.
+          </div>
+
+          <div
+            id="requestId"
+            class="request-id"
+          ></div>
+
+          <a
+            class="verify-link"
+            href="/verify.html"
+          >
+            🔐 Go to Access Verification
+          </a>
+
+        </div>
+
+
+        <div class="secure">
+          🔒 Protected NICEGOLD access system
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <script>
+
+    const form =
+      document.getElementById(
+        "requestForm"
+      );
+
+    const button =
+      document.getElementById(
+        "submitButton"
+      );
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+    const result =
+      document.getElementById(
+        "result"
+      );
+
+    const requestIdBox =
+      document.getElementById(
+        "requestId"
+      );
+
+
+    form.addEventListener(
+      "submit",
+      async function (event) {
+
+        event.preventDefault();
+
+
+        const name =
+          document
+            .getElementById("name")
+            .value
+            .trim();
+
+
+        const contact =
+          document
+            .getElementById("contact")
+            .value
+            .trim();
+
+
+        if (!name || !contact) {
+
+          message.className =
+            "error";
+
+          message.textContent =
+            "Please complete both fields.";
+
+          return;
+        }
+
+
+        button.disabled = true;
+
+        button.textContent =
+          "SENDING REQUEST...";
+
+        message.className = "";
+
+        message.textContent =
+          "Sending your request...";
+
+        result.classList.remove(
+          "show"
+        );
+
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/access/request",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                  JSON.stringify({
+                    name: name,
+                    contact: contact
+                  })
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          if (!response.ok) {
+
+            throw new Error(
+              data.message ||
+              "Could not submit request."
+            );
+
+          }
+
+
+          /*
+           * The server already returns
+           * the requestId.
+           */
+
+          const id =
+            data.requestId;
+
+
+          if (!id) {
+
+            throw new Error(
+              "Request was submitted, but no Request ID was returned."
+            );
+
+          }
+
+
+          /*
+           * Save the Request ID locally
+           * so the visitor can return later.
+           */
+
+          localStorage.setItem(
+            "nicegold_request_id",
+            id
+          );
+
+
+          requestIdBox.textContent =
+            id;
+
+
+          result.classList.add(
+            "show"
+          );
+
+
+          message.className =
+            "success";
+
+          message.textContent =
+            "✓ Your access request has been submitted.";
+
+
+          form.reset();
+
+
+        } catch (error) {
+
+          message.className =
+            "error";
+
+          message.textContent =
+            error.message;
+
+        } finally {
+
+          button.disabled = false;
+
+          button.textContent =
+            "SEND ACCESS REQUEST";
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
