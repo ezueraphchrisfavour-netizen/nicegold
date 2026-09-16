@@ -1,0 +1,2909 @@
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const fs = require("fs");
+const http = require("http");
+const crypto = require("crypto");
+const multer = require("multer");
+const { Server } = require("socket.io");
+
+const {
+  initDatabase,
+  getDatabase,
+  saveDatabase
+} = require("./database");
+
+const {
+  hashPassword,
+  comparePassword,
+  createToken,
+  authMiddleware,
+  verifyToken
+} = require("./auth");
+
+const app = express();
+const server = http.createServer(app);
+
+const PORT = Number(process.env.PORT) || 3000;
+
+const PUBLIC_DIR = path.join(__dirname, "public");
+const UPLOADS_DIR = path.join(__dirname, "uploads");
+const AVATARS_DIR = path.join(UPLOADS_DIR, "avatars");
+const MEDIA_DIR = path.join(UPLOADS_DIR, "media");
+
+for (const directory of [
+  PUBLIC_DIR,
+  UPLOADS_DIR,
+  AVATARS_DIR,
+  MEDIA_DIR
+]) {
+  fs.mkdirSync(directory, { recursive: true });
+}
+
+/* =========================================================
+   EXPRESS
+========================================================= */
+
+app.disable("x-powered-by");
+
+app.use(
+  cors({
+    origin: true,
+    credentials: true
+  })
+);
+
+app.use(
+  express.json({
+    limit: "10mb"
+  })
+);
+
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "10mb"
+  })
+);
+
+
+/* =========================================================
+   NICEGOLD CHAT WEB APP
+========================================================= */
+
+app.use(
+  express.static(PUBLIC_DIR, {
+    index: "index.html"
+  })
+);
+
+app.get("/", (req, res) => {
+  res.sendFile(
+    path.join(PUBLIC_DIR, "index.html")
+  );
+});
+
+
+app.use(
+  "/uploads",
+  express.static(UPLOADS_DIR, {
+    maxAge: "1d"
+  })
+);
+
+/* =========================================================
+   SOCKET.IO
+========================================================= */
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PATCH", "DELETE"]
+  },
+  maxHttpBufferSize: 10 * 1024 * 1024
+});
+
+/* =========================================================
+   MULTER
+========================================================= */
+
+const avatarStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, AVATARS_DIR);
+  },
+
+  filename(req, file, cb) {
+    const extension =
+      path.extname(file.originalname).toLowerCase() || ".jpg";
+
+    const safeExtension = [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".webp"
+    ].includes(extension)
+      ? extension
+      : ".jpg";
+
+    cb(
+      null,
+      `${Date.now()}-${crypto.randomBytes(8).toString("hex")}${safeExtension}`
+    );
+  }
+});
+
+const mediaStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, MEDIA_DIR);
+  },
+
+  filename(req, file, cb) {
+    const extension =
+      path.extname(file.originalname).toLowerCase();
+
+    cb(
+      null,
+      `${Date.now()}-${crypto.randomBytes(10).toString("hex")}${extension}`
+    );
+  }
+});
+
+const uploadAvatar = multer({
+  storage: avatarStorage,
+
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  },
+
+  fileFilter(req, file, cb) {
+    const allowed = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
+
+    if (!allowed.includes(file.mimetype)) {
+      return cb(null, false);
+    }
+
+    cb(null, true);
+  }
+});
+
+const uploadMedia = multer({
+  storage: mediaStorage,
+
+  limits: {
+    fileSize: 25 * 1024 * 1024
+  }
+});
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function createId(prefix = "") {
+  return (
+    prefix +
+    crypto.randomUUID()
+  );
+}
+
+function now() {
+  return new Date().toISOString();
+}
+
+function normalizeUsername(username) {
+  return String(username || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^@+/, "");
+}
+
+function validateUsername(username) {
+  return /^[a-z0-9_]{3,24}$/.test(username);
+}
+
+function validatePassword(password) {
+  return (
+    typeof password === "string" &&
+    password.length >= 6 &&
+    password.length <= 128
+  );
+}
+
+function cleanUser(user) {
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName,
+    bio: user.bio || "",
+    phone: user.phone || null,
+    gender: user.gender || null,
+    avatar: user.avatar || null,
+    online: Boolean(user.online),
+    lastSeen: user.lastSeen || null,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt
+  };
+}
+
+function cleanMessage(message) {
+  if (!message) return null;
+
+  return {
+    id: message.id,
+    conversationId: message.conversationId,
+    senderId: message.senderId,
+    text: message.text || "",
+    type: message.type || "text",
+    media: message.media || null,
+    replyTo: message.replyTo || null,
+    edited: Boolean(message.edited),
+    deleted: Boolean(message.deleted),
+    deletedFor: message.deletedFor || [],
+    createdAt: message.createdAt,
+    updatedAt: message.updatedAt || null
+  };
+}
+
+function cleanConversation(conversation, userId, db) {
+  const members = conversation.members || [];
+
+  const otherId =
+    conversation.type === "direct"
+      ? members.find((id) => id !== userId)
+      : null;
+
+  const otherUser = otherId
+    ? getUser(db, otherId)
+    : null;
+
+  const lastMessages = db.data.messages
+    .filter(
+      (message) =>
+        message.conversationId === conversation.id &&
+        !(message.deletedFor || []).includes(userId)
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt) -
+        new Date(a.createdAt)
+    );
+
+  const unread = lastMessages.filter(
+    (message) =>
+      message.senderId !== userId &&
+      !message.readBy?.includes(userId)
+  ).length;
+
+  return {
+    id: conversation.id,
+    type: conversation.type,
+    name:
+      conversation.type === "direct"
+        ? otherUser?.displayName || "Unknown user"
+        : conversation.name || "Group",
+    username:
+      conversation.type === "direct"
+        ? otherUser?.username || null
+        : null,
+    avatar:
+      conversation.type === "direct"
+        ? otherUser?.avatar || null
+        : conversation.avatar || null,
+    members,
+    admins: conversation.admins || [],
+    description: conversation.description || "",
+    pinned: Boolean(
+      conversation.pinnedBy?.includes(userId)
+    ),
+    muted: Boolean(
+      conversation.mutedBy?.includes(userId)
+    ),
+    archived: Boolean(
+      conversation.archivedBy?.includes(userId)
+    ),
+    unread,
+    lastMessage: lastMessages[0]
+      ? cleanMessage(lastMessages[0])
+      : null,
+    createdAt: conversation.createdAt,
+    updatedAt: conversation.updatedAt
+  };
+}
+
+function getUser(db, userId) {
+  return db.data.users.find(
+    (user) => user.id === userId
+  );
+}
+
+function getUserByUsername(db, username) {
+  const normalized = normalizeUsername(username);
+
+  return db.data.users.find(
+    (user) =>
+      user.username.toLowerCase() === normalized
+  );
+}
+
+function getConversation(db, conversationId) {
+  return db.data.conversations.find(
+    (conversation) =>
+      conversation.id === conversationId
+  );
+}
+
+function isMember(conversation, userId) {
+  return Boolean(
+    conversation &&
+      Array.isArray(conversation.members) &&
+      conversation.members.includes(userId)
+  );
+}
+
+function isBlockedEitherWay(db, userA, userB) {
+  return db.data.blocks.some(
+    (block) =>
+      (block.blockerId === userA &&
+        block.blockedId === userB) ||
+      (block.blockerId === userB &&
+        block.blockedId === userA)
+  );
+}
+
+function isBlockedBy(db, blockerId, blockedId) {
+  return db.data.blocks.some(
+    (block) =>
+      block.blockerId === blockerId &&
+      block.blockedId === blockedId
+  );
+}
+
+function getDirectConversation(db, userA, userB) {
+  return db.data.conversations.find(
+    (conversation) =>
+      conversation.type === "direct" &&
+      conversation.members.length === 2 &&
+      conversation.members.includes(userA) &&
+      conversation.members.includes(userB)
+  );
+}
+
+function deleteFile(relativeUrl) {
+  if (!relativeUrl) return;
+
+  const normalized = String(relativeUrl)
+    .replace(/^\/+/, "");
+
+  if (
+    !normalized.startsWith("uploads/")
+  ) {
+    return;
+  }
+
+  const filePath = path.resolve(
+    __dirname,
+    normalized
+  );
+
+  const uploadsRoot = path.resolve(
+    UPLOADS_DIR
+  );
+
+  if (
+    filePath !== uploadsRoot &&
+    !filePath.startsWith(
+      uploadsRoot + path.sep
+    )
+  ) {
+    return;
+  }
+
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  } catch (error) {
+    console.error(
+      "File deletion error:",
+      error.message
+    );
+  }
+}
+
+function deleteAvatarFile(avatar) {
+  deleteFile(avatar);
+}
+
+function emitConversationUpdate(conversationId) {
+  io.to(`conversation:${conversationId}`)
+    .emit("conversation:update", {
+      conversationId
+    });
+}
+
+function emitToUser(userId, event, payload) {
+  io.to(`user:${userId}`)
+    .emit(event, payload);
+}
+
+function getUserSockets(userId) {
+  const room = io.sockets.adapter.rooms.get(
+    `user:${userId}`
+  );
+
+  return room ? room.size : 0;
+}
+
+/* =========================================================
+   BASIC ROUTES
+========================================================= */
+
+app.get("/api", (req, res) => {
+  res.json({
+    ok: true,
+    app: "NICEGOLD Chat",
+    version: "1.0.0",
+    status: "ONLINE"
+  });
+});
+
+app.get("/api/health", (req, res) => {
+  let database = "OFFLINE";
+
+  try {
+    getDatabase();
+    database = "ONLINE";
+  } catch {}
+
+  res.json({
+    ok: true,
+    app: "NICEGOLD Chat",
+    status: "ONLINE",
+    database,
+    socketio: true,
+    time: now()
+  });
+});
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+app.post("/api/auth/register", uploadAvatar.single("avatar"), async (req, res, next) => {
+  try {
+    const db = getDatabase();
+
+    const username = normalizeUsername(
+      req.body.username
+    );
+
+    const displayName = String(
+      req.body.displayName ||
+        username
+    ).trim();
+
+    const password = String(
+      req.body.password || ""
+    );
+
+    const phone = String(
+      req.body.phone || ""
+    ).trim();
+
+    const gender = String(
+      req.body.gender || ""
+    ).trim();
+
+    if (!validateUsername(username)) {
+      return res.status(400).json({
+        ok: false,
+        error:
+          "Username must contain 3-24 lowercase letters, numbers or underscores"
+      });
+    }
+
+    if (!validatePassword(password)) {
+      return res.status(400).json({
+        ok: false,
+        error:
+          "Password must be between 6 and 128 characters"
+      });
+    }
+
+    if (
+      !displayName ||
+      displayName.length > 40
+    ) {
+      return res.status(400).json({
+        ok: false,
+        error:
+          "Display name must be between 1 and 40 characters"
+      });
+    }
+
+    if (getUserByUsername(db, username)) {
+      return res.status(409).json({
+        ok: false,
+        error: "Username is already taken"
+      });
+    }
+
+    const passwordHash =
+      await hashPassword(password);
+
+    const user = {
+      id: createId("usr_"),
+      username,
+      displayName,
+      passwordHash,
+      phone: phone || null,
+      gender: gender || null,
+      bio: "",
+      avatar: req.file
+        ? `/uploads/avatars/${req.file.filename}`
+        : null,
+      online: true,
+      lastSeen: now(),
+      createdAt: now(),
+      updatedAt: now()
+    };
+
+    db.data.users.push(user);
+
+    db.data.settings.push({
+      id: createId("set_"),
+      userId: user.id,
+      bubbleColor: "#292929",
+      sentBubbleColor: "#343434",
+      ambientHue: "blue",
+      ambientIntensity: 0.18,
+      ambientSize: 55,
+      ambientBlur: 70,
+      ambientAnimation: true,
+      wallpaper: "default",
+      wallpaperBrightness: 1,
+      wallpaperOverlay: 0.35,
+      wallpaperBlur: 0,
+      animationEnabled: true,
+      lastSeenVisibility: "everyone",
+      onlineVisibility: "everyone",
+      readReceipts: true,
+      profilePictureVisibility: "everyone",
+      statusPrivacy: "contacts",
+      groupPrivacy: "everyone",
+      notifications: true,
+      sound: true,
+      vibration: true,
+      createdAt: now(),
+      updatedAt: now()
+    });
+
+    await saveDatabase();
+
+    const token = createToken(user);
+
+    res.status(201).json({
+      ok: true,
+      message: "Account created",
+      token,
+      user: cleanUser(user)
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post("/api/auth/login", async (req, res, next) => {
+  try {
+    const db = getDatabase();
+
+    const username = normalizeUsername(
+      req.body.username
+    );
+
+    const password = String(
+      req.body.password || ""
+    );
+
+    const user = getUserByUsername(
+      db,
+      username
+    );
+
+    if (!user) {
+      return res.status(401).json({
+        ok: false,
+        error: "Invalid username or password"
+      });
+    }
+
+    const valid =
+      await comparePassword(
+        password,
+        user.passwordHash
+      );
+
+    if (!valid) {
+      return res.status(401).json({
+        ok: false,
+        error: "Invalid username or password"
+      });
+    }
+
+    user.online = true;
+    user.lastSeen = now();
+    user.updatedAt = now();
+
+    await saveDatabase();
+
+    const token = createToken(user);
+
+    res.json({
+      ok: true,
+      message: "Login successful",
+      token,
+      user: cleanUser(user)
+    });
+
+    emitToUser(user.id, "presence:update", {
+      userId: user.id,
+      online: true,
+      lastSeen: user.lastSeen
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post(
+  "/api/auth/logout",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const user = getUser(
+        db,
+        req.auth.userId
+      );
+
+      if (user) {
+        user.online = false;
+        user.lastSeen = now();
+        user.updatedAt = now();
+
+        await saveDatabase();
+
+        io.emit("presence:update", {
+          userId: user.id,
+          online: false,
+          lastSeen: user.lastSeen
+        });
+      }
+
+      res.json({
+        ok: true,
+        message: "Logged out"
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+app.get(
+  "/api/auth/me",
+  authMiddleware,
+  (req, res) => {
+    const db = getDatabase();
+
+    const user = getUser(
+      db,
+      req.auth.userId
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        error: "User not found"
+      });
+    }
+
+    res.json({
+      ok: true,
+      user: cleanUser(user)
+    });
+  }
+);
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+app.patch(
+  "/api/profile",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const user = getUser(
+        db,
+        req.auth.userId
+      );
+
+      if (!user) {
+        return res.status(404).json({
+          ok: false,
+          error: "User not found"
+        });
+      }
+
+      if (
+        req.body.displayName !== undefined
+      ) {
+        const displayName = String(
+          req.body.displayName
+        ).trim();
+
+        if (
+          !displayName ||
+          displayName.length > 40
+        ) {
+          return res.status(400).json({
+            ok: false,
+            error:
+              "Display name must be between 1 and 40 characters"
+          });
+        }
+
+        user.displayName = displayName;
+      }
+
+      if (req.body.bio !== undefined) {
+        const bio = String(
+          req.body.bio
+        ).trim();
+
+        if (bio.length > 160) {
+          return res.status(400).json({
+            ok: false,
+            error:
+              "Bio cannot exceed 160 characters"
+          });
+        }
+
+        user.bio = bio;
+      }
+
+      if (req.body.phone !== undefined) {
+        user.phone =
+          String(req.body.phone)
+            .trim() || null;
+      }
+
+      if (req.body.gender !== undefined) {
+        user.gender =
+          String(req.body.gender)
+            .trim() || null;
+      }
+
+      user.updatedAt = now();
+
+      await saveDatabase();
+
+      io.emit("profile:update", {
+        user: cleanUser(user)
+      });
+
+      res.json({
+        ok: true,
+        message: "Profile updated",
+        user: cleanUser(user)
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+app.post(
+  "/api/profile/avatar",
+  authMiddleware,
+  uploadAvatar.single("avatar"),
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const user = getUser(
+        db,
+        req.auth.userId
+      );
+
+      if (!user) {
+        if (req.file) {
+          deleteFile(
+            `/uploads/avatars/${req.file.filename}`
+          );
+        }
+
+        return res.status(404).json({
+          ok: false,
+          error: "User not found"
+        });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({
+          ok: false,
+          error:
+            "No valid avatar image supplied"
+        });
+      }
+
+      deleteAvatarFile(user.avatar);
+
+      user.avatar =
+        `/uploads/avatars/${req.file.filename}`;
+
+      user.updatedAt = now();
+
+      await saveDatabase();
+
+      io.emit("profile:update", {
+        user: cleanUser(user)
+      });
+
+      res.json({
+        ok: true,
+        message:
+          "Profile picture updated",
+        user: cleanUser(user)
+      });
+    } catch (error) {
+      if (req.file) {
+        deleteFile(
+          `/uploads/avatars/${req.file.filename}`
+        );
+      }
+
+      next(error);
+    }
+  }
+);
+
+app.delete(
+  "/api/profile/avatar",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const user = getUser(
+        db,
+        req.auth.userId
+      );
+
+      if (!user) {
+        return res.status(404).json({
+          ok: false,
+          error: "User not found"
+        });
+      }
+
+      deleteAvatarFile(user.avatar);
+
+      user.avatar = null;
+      user.updatedAt = now();
+
+      await saveDatabase();
+
+      io.emit("profile:update", {
+        user: cleanUser(user)
+      });
+
+      res.json({
+        ok: true,
+        message:
+          "Profile picture removed",
+        user: cleanUser(user)
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+app.get(
+  "/api/users/:userId",
+  authMiddleware,
+  (req, res) => {
+    const db = getDatabase();
+
+    const user = getUser(
+      db,
+      req.params.userId
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        error: "User not found"
+      });
+    }
+
+    res.json({
+      ok: true,
+      user: cleanUser(user)
+    });
+  }
+);
+
+/* =========================================================
+   USER SEARCH
+========================================================= */
+
+app.get(
+  "/api/users/search",
+  authMiddleware,
+  (req, res) => {
+    const db = getDatabase();
+
+    const query = String(
+      req.query.q || ""
+    )
+      .trim()
+      .toLowerCase();
+
+    if (!query) {
+      return res.json({
+        ok: true,
+        users: []
+      });
+    }
+
+    const users = db.data.users
+      .filter(
+        (user) =>
+          user.id !== req.auth.userId
+      )
+      .filter(
+        (user) =>
+          user.username
+            .toLowerCase()
+            .includes(query) ||
+          user.displayName
+            .toLowerCase()
+            .includes(query)
+      )
+      .slice(0, 30)
+      .map(cleanUser);
+
+    res.json({
+      ok: true,
+      users
+    });
+  }
+);
+
+/* =========================================================
+   BLOCKS
+========================================================= */
+
+app.get(
+  "/api/blocks",
+  authMiddleware,
+  (req, res) => {
+    const db = getDatabase();
+
+    const blocked = db.data.blocks
+      .filter(
+        (block) =>
+          block.blockerId ===
+          req.auth.userId
+      )
+      .map((block) =>
+        getUser(
+          db,
+          block.blockedId
+        )
+      )
+      .filter(Boolean)
+      .map(cleanUser);
+
+    res.json({
+      ok: true,
+      users: blocked
+    });
+  }
+);
+
+app.post(
+  "/api/blocks/:userId",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const targetId =
+        req.params.userId;
+
+      if (
+        targetId ===
+        req.auth.userId
+      ) {
+        return res.status(400).json({
+          ok: false,
+          error:
+            "You cannot block yourself"
+        });
+      }
+
+      const target = getUser(
+        db,
+        targetId
+      );
+
+      if (!target) {
+        return res.status(404).json({
+          ok: false,
+          error: "User not found"
+        });
+      }
+
+      if (
+        isBlockedBy(
+          db,
+          req.auth.userId,
+          targetId
+        )
+      ) {
+        return res.json({
+          ok: true,
+          message: "User already blocked"
+        });
+      }
+
+      db.data.blocks.push({
+        id: createId("blk_"),
+        blockerId: req.auth.userId,
+        blockedId: targetId,
+        createdAt: now()
+      });
+
+      await saveDatabase();
+
+      emitToUser(
+        targetId,
+        "block:update",
+        {
+          userId:
+            req.auth.userId,
+          blocked: true
+        }
+      );
+
+      res.json({
+        ok: true,
+        message: "User blocked"
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+app.delete(
+  "/api/blocks/:userId",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const before =
+        db.data.blocks.length;
+
+      db.data.blocks =
+        db.data.blocks.filter(
+          (block) =>
+            !(
+              block.blockerId ===
+                req.auth.userId &&
+              block.blockedId ===
+                req.params.userId
+            )
+        );
+
+      if (
+        db.data.blocks.length !==
+        before
+      ) {
+        await saveDatabase();
+      }
+
+      res.json({
+        ok: true,
+        message: "User unblocked"
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   CONVERSATIONS
+========================================================= */
+
+app.get(
+  "/api/conversations",
+  authMiddleware,
+  (req, res) => {
+    const db = getDatabase();
+
+    const conversations =
+      db.data.conversations
+        .filter((conversation) =>
+          isMember(
+            conversation,
+            req.auth.userId
+          )
+        )
+        .map((conversation) =>
+          cleanConversation(
+            conversation,
+            req.auth.userId,
+            db
+          )
+        )
+        .sort(
+          (a, b) =>
+            new Date(b.updatedAt) -
+            new Date(a.updatedAt)
+        );
+
+    res.json({
+      ok: true,
+      conversations
+    });
+  }
+);
+
+app.post(
+  "/api/conversations/direct",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const targetId =
+        String(
+          req.body.userId || ""
+        ).trim();
+
+      if (!targetId) {
+        return res.status(400).json({
+          ok: false,
+          error: "userId is required"
+        });
+      }
+
+      if (
+        targetId ===
+        req.auth.userId
+      ) {
+        return res.status(400).json({
+          ok: false,
+          error:
+            "You cannot start a direct chat with yourself"
+        });
+      }
+
+      const target = getUser(
+        db,
+        targetId
+      );
+
+      if (!target) {
+        return res.status(404).json({
+          ok: false,
+          error: "User not found"
+        });
+      }
+
+      if (
+        isBlockedEitherWay(
+          db,
+          req.auth.userId,
+          targetId
+        )
+      ) {
+        return res.status(403).json({
+          ok: false,
+          error:
+            "This conversation is unavailable"
+        });
+      }
+
+      let conversation =
+        getDirectConversation(
+          db,
+          req.auth.userId,
+          targetId
+        );
+
+      let created = false;
+
+      if (!conversation) {
+        conversation = {
+          id: createId("conv_"),
+          type: "direct",
+          members: [
+            req.auth.userId,
+            targetId
+          ],
+          admins: [],
+          name: null,
+          avatar: null,
+          description: "",
+          pinnedBy: [],
+          mutedBy: [],
+          archivedBy: [],
+          createdAt: now(),
+          updatedAt: now()
+        };
+
+        db.data.conversations.push(
+          conversation
+        );
+
+        created = true;
+
+        await saveDatabase();
+
+        emitToUser(
+          targetId,
+          "conversation:new",
+          {
+            conversation:
+              cleanConversation(
+                conversation,
+                targetId,
+                db
+              )
+          }
+        );
+      }
+
+      res.status(
+        created ? 201 : 200
+      ).json({
+        ok: true,
+        created,
+        conversation:
+          cleanConversation(
+            conversation,
+            req.auth.userId,
+            db
+          )
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+app.get(
+  "/api/conversations/:conversationId",
+  authMiddleware,
+  (req, res) => {
+    const db = getDatabase();
+
+    const conversation =
+      getConversation(
+        db,
+        req.params.conversationId
+      );
+
+    if (
+      !conversation ||
+      !isMember(
+        conversation,
+        req.auth.userId
+      )
+    ) {
+      return res.status(404).json({
+        ok: false,
+        error: "Conversation not found"
+      });
+    }
+
+    res.json({
+      ok: true,
+      conversation:
+        cleanConversation(
+          conversation,
+          req.auth.userId,
+          db
+        )
+    });
+  }
+);
+
+/* =========================================================
+   CHAT MANAGEMENT
+========================================================= */
+
+app.patch(
+  "/api/conversations/:conversationId",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const conversation =
+        getConversation(
+          db,
+          req.params.conversationId
+        );
+
+      if (
+        !conversation ||
+        !isMember(
+          conversation,
+          req.auth.userId
+        )
+      ) {
+        return res.status(404).json({
+          ok: false,
+          error: "Conversation not found"
+        });
+      }
+
+      const userId =
+        req.auth.userId;
+
+      if (req.body.pinned !== undefined) {
+        conversation.pinnedBy =
+          conversation.pinnedBy || [];
+
+        conversation.pinnedBy =
+          req.body.pinned
+            ? Array.from(
+                new Set([
+                  ...conversation.pinnedBy,
+                  userId
+                ])
+              )
+            : conversation.pinnedBy.filter(
+                (id) => id !== userId
+              );
+      }
+
+      if (req.body.muted !== undefined) {
+        conversation.mutedBy =
+          conversation.mutedBy || [];
+
+        conversation.mutedBy =
+          req.body.muted
+            ? Array.from(
+                new Set([
+                  ...conversation.mutedBy,
+                  userId
+                ])
+              )
+            : conversation.mutedBy.filter(
+                (id) => id !== userId
+              );
+      }
+
+      if (
+        req.body.archived !== undefined
+      ) {
+        conversation.archivedBy =
+          conversation.archivedBy || [];
+
+        conversation.archivedBy =
+          req.body.archived
+            ? Array.from(
+                new Set([
+                  ...conversation.archivedBy,
+                  userId
+                ])
+              )
+            : conversation.archivedBy.filter(
+                (id) => id !== userId
+              );
+      }
+
+      if (
+        req.body.name !== undefined &&
+        conversation.type === "group"
+      ) {
+        const name = String(
+          req.body.name
+        ).trim();
+
+        if (
+          name &&
+          name.length <= 60
+        ) {
+          conversation.name = name;
+        }
+      }
+
+      if (
+        req.body.description !==
+        undefined
+      ) {
+        const description =
+          String(
+            req.body.description
+          ).trim();
+
+        if (description.length <= 500) {
+          conversation.description =
+            description;
+        }
+      }
+
+      conversation.updatedAt = now();
+
+      await saveDatabase();
+
+      emitConversationUpdate(
+        conversation.id
+      );
+
+      res.json({
+        ok: true,
+        conversation:
+          cleanConversation(
+            conversation,
+            userId,
+            db
+          )
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+app.delete(
+  "/api/conversations/:conversationId",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const conversation =
+        getConversation(
+          db,
+          req.params.conversationId
+        );
+
+      if (
+        !conversation ||
+        !isMember(
+          conversation,
+          req.auth.userId
+        )
+      ) {
+        return res.status(404).json({
+          ok: false,
+          error: "Conversation not found"
+        });
+      }
+
+      db.data.messages =
+        db.data.messages.filter(
+          (message) =>
+            message.conversationId !==
+            conversation.id
+        );
+
+      db.data.reactions =
+        db.data.reactions.filter(
+          (reaction) =>
+            reaction.conversationId !==
+            conversation.id
+        );
+
+      db.data.conversations =
+        db.data.conversations.filter(
+          (item) =>
+            item.id !==
+            conversation.id
+        );
+
+      await saveDatabase();
+
+      io.to(
+        `conversation:${conversation.id}`
+      ).emit(
+        "conversation:deleted",
+        {
+          conversationId:
+            conversation.id
+        }
+      );
+
+      res.json({
+        ok: true,
+        message:
+          "Conversation deleted"
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+app.post(
+  "/api/conversations/:conversationId/clear",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const conversation =
+        getConversation(
+          db,
+          req.params.conversationId
+        );
+
+      if (
+        !conversation ||
+        !isMember(
+          conversation,
+          req.auth.userId
+        )
+      ) {
+        return res.status(404).json({
+          ok: false,
+          error: "Conversation not found"
+        });
+      }
+
+      const userId =
+        req.auth.userId;
+
+      for (const message of db.data.messages) {
+        if (
+          message.conversationId ===
+          conversation.id
+        ) {
+          message.deletedFor =
+            message.deletedFor || [];
+
+          if (
+            !message.deletedFor.includes(
+              userId
+            )
+          ) {
+            message.deletedFor.push(
+              userId
+            );
+          }
+        }
+      }
+
+      conversation.updatedAt = now();
+
+      await saveDatabase();
+
+      emitConversationUpdate(
+        conversation.id
+      );
+
+      res.json({
+        ok: true,
+        message:
+          "Messages cleared for you"
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+app.get(
+  "/api/conversations/:conversationId/messages",
+  authMiddleware,
+  (req, res) => {
+    const db = getDatabase();
+
+    const conversation =
+      getConversation(
+        db,
+        req.params.conversationId
+      );
+
+    if (
+      !conversation ||
+      !isMember(
+        conversation,
+        req.auth.userId
+      )
+    ) {
+      return res.status(404).json({
+        ok: false,
+        error: "Conversation not found"
+      });
+    }
+
+    const limit = Math.min(
+      Math.max(
+        Number(req.query.limit) || 100,
+        1
+      ),
+      200
+    );
+
+    const messages =
+      db.data.messages
+        .filter(
+          (message) =>
+            message.conversationId ===
+              conversation.id &&
+            !(message.deletedFor || [])
+              .includes(
+                req.auth.userId
+              )
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.createdAt) -
+            new Date(b.createdAt)
+        )
+        .slice(-limit)
+        .map(cleanMessage);
+
+    for (const message of db.data.messages) {
+      if (
+        message.conversationId ===
+          conversation.id &&
+        message.senderId !==
+          req.auth.userId
+      ) {
+        message.readBy =
+          message.readBy || [];
+
+        if (
+          !message.readBy.includes(
+            req.auth.userId
+          )
+        ) {
+          message.readBy.push(
+            req.auth.userId
+          );
+        }
+      }
+    }
+
+    saveDatabase().catch(() => {});
+
+    res.json({
+      ok: true,
+      messages
+    });
+  }
+);
+
+app.post(
+  "/api/conversations/:conversationId/messages",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const conversation =
+        getConversation(
+          db,
+          req.params.conversationId
+        );
+
+      if (
+        !conversation ||
+        !isMember(
+          conversation,
+          req.auth.userId
+        )
+      ) {
+        return res.status(404).json({
+          ok: false,
+          error: "Conversation not found"
+        });
+      }
+
+      const text = String(
+        req.body.text || ""
+      ).trim();
+
+      const type =
+        String(
+          req.body.type || "text"
+        ).trim();
+
+      if (!text) {
+        return res.status(400).json({
+          ok: false,
+          error: "Message cannot be empty"
+        });
+      }
+
+      if (text.length > 5000) {
+        return res.status(400).json({
+          ok: false,
+          error:
+            "Message cannot exceed 5000 characters"
+        });
+      }
+
+      if (
+        conversation.type ===
+          "direct"
+      ) {
+        const otherUserId =
+          conversation.members.find(
+            (id) =>
+              id !==
+              req.auth.userId
+          );
+
+        if (
+          otherUserId &&
+          isBlockedEitherWay(
+            db,
+            req.auth.userId,
+            otherUserId
+          )
+        ) {
+          return res.status(403).json({
+            ok: false,
+            error:
+              "This conversation is unavailable"
+          });
+        }
+      }
+
+      let replyTo = null;
+
+      if (req.body.replyTo) {
+        const original =
+          db.data.messages.find(
+            (message) =>
+              message.id ===
+                req.body.replyTo &&
+              message.conversationId ===
+                conversation.id
+          );
+
+        if (original) {
+          replyTo = {
+            id: original.id,
+            senderId:
+              original.senderId,
+            text:
+              original.deleted
+                ? "Message deleted"
+                : original.text,
+            type:
+              original.type
+          };
+        }
+      }
+
+      const message = {
+        id: createId("msg_"),
+        conversationId:
+          conversation.id,
+        senderId:
+          req.auth.userId,
+        text,
+        type,
+        media: req.body.media || null,
+        replyTo,
+        edited: false,
+        deleted: false,
+        deletedFor: [],
+        readBy: [req.auth.userId],
+        createdAt: now(),
+        updatedAt: now()
+      };
+
+      db.data.messages.push(
+        message
+      );
+
+      conversation.updatedAt =
+        message.createdAt;
+
+      await saveDatabase();
+
+      const output =
+        cleanMessage(message);
+
+      io.to(
+        `conversation:${conversation.id}`
+      ).emit(
+        "message:new",
+        output
+      );
+
+      for (const memberId of conversation.members) {
+        if (
+          memberId !==
+          req.auth.userId
+        ) {
+          emitToUser(
+            memberId,
+            "message:notification",
+            {
+              conversationId:
+                conversation.id,
+              message: output
+            }
+          );
+        }
+      }
+
+      res.status(201).json({
+        ok: true,
+        message: output
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   MEDIA MESSAGES
+========================================================= */
+
+app.post(
+  "/api/conversations/:conversationId/media",
+  authMiddleware,
+  uploadMedia.single("file"),
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const conversation =
+        getConversation(
+          db,
+          req.params.conversationId
+        );
+
+      if (
+        !conversation ||
+        !isMember(
+          conversation,
+          req.auth.userId
+        )
+      ) {
+        if (req.file) {
+          deleteFile(
+            `/uploads/media/${req.file.filename}`
+          );
+        }
+
+        return res.status(404).json({
+          ok: false,
+          error: "Conversation not found"
+        });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({
+          ok: false,
+          error:
+            "No media file supplied"
+        });
+      }
+
+      let type = "document";
+
+      if (
+        req.file.mimetype.startsWith(
+          "image/"
+        )
+      ) {
+        type = "image";
+      } else if (
+        req.file.mimetype.startsWith(
+          "video/"
+        )
+      ) {
+        type = "video";
+      } else if (
+        req.file.mimetype.startsWith(
+          "audio/"
+        )
+      ) {
+        type = "audio";
+      }
+
+      const media = {
+        url:
+          `/uploads/media/${req.file.filename}`,
+        name:
+          req.file.originalname,
+        mime:
+          req.file.mimetype,
+        size:
+          req.file.size
+      };
+
+      const message = {
+        id: createId("msg_"),
+        conversationId:
+          conversation.id,
+        senderId:
+          req.auth.userId,
+        text:
+          String(
+            req.body.caption || ""
+          ).trim(),
+        type,
+        media,
+        replyTo: null,
+        edited: false,
+        deleted: false,
+        deletedFor: [],
+        readBy: [req.auth.userId],
+        createdAt: now(),
+        updatedAt: now()
+      };
+
+      db.data.messages.push(
+        message
+      );
+
+      conversation.updatedAt =
+        message.createdAt;
+
+      await saveDatabase();
+
+      const output =
+        cleanMessage(message);
+
+      io.to(
+        `conversation:${conversation.id}`
+      ).emit(
+        "message:new",
+        output
+      );
+
+      res.status(201).json({
+        ok: true,
+        message: output
+      });
+    } catch (error) {
+      if (req.file) {
+        deleteFile(
+          `/uploads/media/${req.file.filename}`
+        );
+      }
+
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   MESSAGE EDIT
+========================================================= */
+
+app.patch(
+  "/api/messages/:messageId",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const message =
+        db.data.messages.find(
+          (item) =>
+            item.id ===
+            req.params.messageId
+        );
+
+      if (!message) {
+        return res.status(404).json({
+          ok: false,
+          error: "Message not found"
+        });
+      }
+
+      if (
+        message.senderId !==
+        req.auth.userId
+      ) {
+        return res.status(403).json({
+          ok: false,
+          error:
+            "You can only edit your own messages"
+        });
+      }
+
+      if (message.deleted) {
+        return res.status(400).json({
+          ok: false,
+          error:
+            "Deleted messages cannot be edited"
+        });
+      }
+
+      const text = String(
+        req.body.text || ""
+      ).trim();
+
+      if (!text) {
+        return res.status(400).json({
+          ok: false,
+          error: "Message cannot be empty"
+        });
+      }
+
+      if (text.length > 5000) {
+        return res.status(400).json({
+          ok: false,
+          error:
+            "Message cannot exceed 5000 characters"
+        });
+      }
+
+      message.text = text;
+      message.edited = true;
+      message.updatedAt = now();
+
+      await saveDatabase();
+
+      const output =
+        cleanMessage(message);
+
+      io.to(
+        `conversation:${message.conversationId}`
+      ).emit(
+        "message:update",
+        output
+      );
+
+      res.json({
+        ok: true,
+        message: output
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   MESSAGE DELETE
+========================================================= */
+
+app.delete(
+  "/api/messages/:messageId",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const message =
+        db.data.messages.find(
+          (item) =>
+            item.id ===
+            req.params.messageId
+        );
+
+      if (!message) {
+        return res.status(404).json({
+          ok: false,
+          error: "Message not found"
+        });
+      }
+
+      const mode =
+        String(
+          req.query.mode ||
+            req.body?.mode ||
+            "me"
+        ).toLowerCase();
+
+      if (mode === "everyone") {
+        if (
+          message.senderId !==
+          req.auth.userId
+        ) {
+          return res.status(403).json({
+            ok: false,
+            error:
+              "You can only delete your own message for everyone"
+          });
+        }
+
+        message.deleted = true;
+        message.text =
+          "This message was deleted";
+        message.media = null;
+        message.updatedAt = now();
+      } else {
+        message.deletedFor =
+          message.deletedFor || [];
+
+        if (
+          !message.deletedFor.includes(
+            req.auth.userId
+          )
+        ) {
+          message.deletedFor.push(
+            req.auth.userId
+          );
+        }
+      }
+
+      await saveDatabase();
+
+      io.to(
+        `conversation:${message.conversationId}`
+      ).emit(
+        "message:delete",
+        {
+          messageId: message.id,
+          mode,
+          message:
+            cleanMessage(message)
+        }
+      );
+
+      res.json({
+        ok: true,
+        message:
+          "Message deleted"
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   REACTIONS
+========================================================= */
+
+const ALLOWED_REACTIONS = [
+  "❤️",
+  "😂",
+  "👍",
+  "😮",
+  "😢",
+  "🔥"
+];
+
+app.get(
+  "/api/messages/:messageId/reactions",
+  authMiddleware,
+  (req, res) => {
+    const db = getDatabase();
+
+    const message =
+      db.data.messages.find(
+        (item) =>
+          item.id ===
+          req.params.messageId
+      );
+
+    if (!message) {
+      return res.status(404).json({
+        ok: false,
+        error: "Message not found"
+      });
+    }
+
+    const reactions =
+      db.data.reactions.filter(
+        (reaction) =>
+          reaction.messageId ===
+          message.id
+      );
+
+    const counts = {};
+
+    for (const reaction of reactions) {
+      counts[reaction.emoji] =
+        (counts[reaction.emoji] || 0) +
+        1;
+    }
+
+    res.json({
+      ok: true,
+      reactions,
+      counts
+    });
+  }
+);
+
+app.post(
+  "/api/messages/:messageId/reactions",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      const message =
+        db.data.messages.find(
+          (item) =>
+            item.id ===
+            req.params.messageId
+        );
+
+      if (!message) {
+        return res.status(404).json({
+          ok: false,
+          error: "Message not found"
+        });
+      }
+
+      const emoji = String(
+        req.body.emoji || ""
+      );
+
+      if (
+        !ALLOWED_REACTIONS.includes(
+          emoji
+        )
+      ) {
+        return res.status(400).json({
+          ok: false,
+          error:
+            "Unsupported reaction"
+        });
+      }
+
+      const existing =
+        db.data.reactions.find(
+          (reaction) =>
+            reaction.messageId ===
+              message.id &&
+            reaction.userId ===
+              req.auth.userId
+        );
+
+      if (existing) {
+        if (
+          existing.emoji ===
+          emoji
+        ) {
+          db.data.reactions =
+            db.data.reactions.filter(
+              (reaction) =>
+                reaction.id !==
+                existing.id
+            );
+        } else {
+          existing.emoji = emoji;
+          existing.updatedAt = now();
+        }
+      } else {
+        db.data.reactions.push({
+          id: createId("react_"),
+          messageId: message.id,
+          conversationId:
+            message.conversationId,
+          userId:
+            req.auth.userId,
+          emoji,
+          createdAt: now(),
+          updatedAt: now()
+        });
+      }
+
+      await saveDatabase();
+
+      const reactions =
+        db.data.reactions.filter(
+          (reaction) =>
+            reaction.messageId ===
+            message.id
+        );
+
+      io.to(
+        `conversation:${message.conversationId}`
+      ).emit(
+        "reaction:update",
+        {
+          messageId: message.id,
+          reactions
+        }
+      );
+
+      res.json({
+        ok: true,
+        reactions
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+const ALLOWED_SETTINGS = [
+  "bubbleColor",
+  "sentBubbleColor",
+  "ambientHue",
+  "ambientIntensity",
+  "ambientSize",
+  "ambientBlur",
+  "ambientAnimation",
+  "wallpaper",
+  "wallpaperBrightness",
+  "wallpaperOverlay",
+  "wallpaperBlur",
+  "animationEnabled",
+  "lastSeenVisibility",
+  "onlineVisibility",
+  "readReceipts",
+  "profilePictureVisibility",
+  "statusPrivacy",
+  "groupPrivacy",
+  "notifications",
+  "sound",
+  "vibration"
+];
+
+app.get(
+  "/api/settings",
+  authMiddleware,
+  (req, res) => {
+    const db = getDatabase();
+
+    let settings =
+      db.data.settings.find(
+        (item) =>
+          item.userId ===
+          req.auth.userId
+      );
+
+    if (!settings) {
+      settings = {
+        id: createId("set_"),
+        userId: req.auth.userId,
+        bubbleColor: "#292929",
+        sentBubbleColor: "#343434",
+        ambientHue: "blue",
+        ambientIntensity: 0.18,
+        ambientSize: 55,
+        ambientBlur: 70,
+        ambientAnimation: true,
+        wallpaper: "default",
+        wallpaperBrightness: 1,
+        wallpaperOverlay: 0.35,
+        wallpaperBlur: 0,
+        animationEnabled: true,
+        lastSeenVisibility: "everyone",
+        onlineVisibility: "everyone",
+        readReceipts: true,
+        profilePictureVisibility:
+          "everyone",
+        statusPrivacy: "contacts",
+        groupPrivacy: "everyone",
+        notifications: true,
+        sound: true,
+        vibration: true,
+        createdAt: now(),
+        updatedAt: now()
+      };
+
+      db.data.settings.push(
+        settings
+      );
+
+      saveDatabase().catch(() => {});
+    }
+
+    res.json({
+      ok: true,
+      settings
+    });
+  }
+);
+
+app.patch(
+  "/api/settings",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const db = getDatabase();
+
+      let settings =
+        db.data.settings.find(
+          (item) =>
+            item.userId ===
+            req.auth.userId
+        );
+
+      if (!settings) {
+        settings = {
+          id: createId("set_"),
+          userId: req.auth.userId,
+          createdAt: now()
+        };
+
+        db.data.settings.push(
+          settings
+        );
+      }
+
+      for (const key of ALLOWED_SETTINGS) {
+        if (
+          req.body[key] !== undefined
+        ) {
+          settings[key] =
+            req.body[key];
+        }
+      }
+
+      settings.updatedAt = now();
+
+      await saveDatabase();
+
+      res.json({
+        ok: true,
+        settings
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* =========================================================
+   SOCKET.IO AUTH
+========================================================= */
+
+io.use((socket, next) => {
+  try {
+    const token =
+      socket.handshake.auth?.token;
+
+    if (!token) {
+      return next(
+        new Error(
+          "Authentication required"
+        )
+      );
+    }
+
+    const payload =
+      verifyToken(token);
+
+    if (
+      !payload ||
+      !payload.userId
+    ) {
+      return next(
+        new Error(
+          "Invalid authentication token"
+        )
+      );
+    }
+
+    socket.userId =
+      payload.userId;
+
+    socket.username =
+      payload.username || null;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+/* =========================================================
+   SOCKET.IO EVENTS
+========================================================= */
+
+io.on("connection", async (socket) => {
+  try {
+    const db = getDatabase();
+
+    const user = getUser(
+      db,
+      socket.userId
+    );
+
+    if (!user) {
+      socket.disconnect(true);
+      return;
+    }
+
+    socket.join(
+      `user:${socket.userId}`
+    );
+
+    user.online = true;
+    user.lastSeen = now();
+    user.updatedAt = now();
+
+    await saveDatabase();
+
+    io.emit("presence:update", {
+      userId: user.id,
+      online: true,
+      lastSeen: user.lastSeen
+    });
+
+    socket.emit("socket:ready", {
+      ok: true,
+      userId: user.id
+    });
+
+    socket.on(
+      "conversation:join",
+      (conversationId) => {
+        const currentDb =
+          getDatabase();
+
+        const conversation =
+          getConversation(
+            currentDb,
+            conversationId
+          );
+
+        if (
+          conversation &&
+          isMember(
+            conversation,
+            socket.userId
+          )
+        ) {
+          socket.join(
+            `conversation:${conversationId}`
+          );
+        }
+      }
+    );
+
+    socket.on(
+      "conversation:leave",
+      (conversationId) => {
+        socket.leave(
+          `conversation:${conversationId}`
+        );
+      }
+    );
+
+    socket.on(
+      "typing:start",
+      (conversationId) => {
+        const currentDb =
+          getDatabase();
+
+        const conversation =
+          getConversation(
+            currentDb,
+            conversationId
+          );
+
+        if (
+          !conversation ||
+          !isMember(
+            conversation,
+            socket.userId
+          )
+        ) {
+          return;
+        }
+
+        socket.to(
+          `conversation:${conversationId}`
+        ).emit(
+          "typing:update",
+          {
+            conversationId,
+            userId:
+              socket.userId,
+            username:
+              socket.username,
+            typing: true
+          }
+        );
+      }
+    );
+
+    socket.on(
+      "typing:stop",
+      (conversationId) => {
+        socket.to(
+          `conversation:${conversationId}`
+        ).emit(
+          "typing:update",
+          {
+            conversationId,
+            userId:
+              socket.userId,
+            username:
+              socket.username,
+            typing: false
+          }
+        );
+      }
+    );
+
+    socket.on(
+      "message:read",
+      async (payload) => {
+        try {
+          const messageId =
+            payload?.messageId;
+
+          if (!messageId) {
+            return;
+          }
+
+          const currentDb =
+            getDatabase();
+
+          const message =
+            currentDb.data.messages.find(
+              (item) =>
+                item.id === messageId
+            );
+
+          if (!message) {
+            return;
+          }
+
+          const conversation =
+            getConversation(
+              currentDb,
+              message.conversationId
+            );
+
+          if (
+            !conversation ||
+            !isMember(
+              conversation,
+              socket.userId
+            )
+          ) {
+            return;
+          }
+
+          message.readBy =
+            message.readBy || [];
+
+          if (
+            !message.readBy.includes(
+              socket.userId
+            )
+          ) {
+            message.readBy.push(
+              socket.userId
+            );
+
+            await saveDatabase();
+          }
+
+          io.to(
+            `conversation:${message.conversationId}`
+          ).emit(
+            "message:read",
+            {
+              messageId:
+                message.id,
+              userId:
+                socket.userId
+            }
+          );
+        } catch {}
+      }
+    );
+
+    socket.on(
+      "disconnect",
+      async () => {
+        try {
+          const currentDb =
+            getDatabase();
+
+          const currentUser =
+            getUser(
+              currentDb,
+              socket.userId
+            );
+
+          if (!currentUser) {
+            return;
+          }
+
+          const remaining =
+            getUserSockets(
+              socket.userId
+            );
+
+          if (remaining > 0) {
+            return;
+          }
+
+          currentUser.online =
+            false;
+
+          currentUser.lastSeen =
+            now();
+
+          currentUser.updatedAt =
+            now();
+
+          await saveDatabase();
+
+          io.emit(
+            "presence:update",
+            {
+              userId:
+                currentUser.id,
+              online: false,
+              lastSeen:
+                currentUser.lastSeen
+            }
+          );
+        } catch (error) {
+          console.error(
+            "Disconnect error:",
+            error.message
+          );
+        }
+      }
+    );
+  } catch (error) {
+    console.error(
+      "Socket connection error:",
+      error.message
+    );
+
+    socket.disconnect(true);
+  }
+});
+
+/* =========================================================
+   ERROR HANDLING
+========================================================= */
+
+app.use(
+  (req, res) => {
+    res.status(404).json({
+      ok: false,
+      error: "Route not found"
+    });
+  }
+);
+
+app.use(
+  (error, req, res, next) => {
+    console.error(
+      "SERVER ERROR:",
+      error
+    );
+
+    if (
+      error instanceof
+      multer.MulterError
+    ) {
+      if (
+        error.code ===
+        "LIMIT_FILE_SIZE"
+      ) {
+        return res.status(413).json({
+          ok: false,
+          error:
+            "Uploaded file is too large"
+        });
+      }
+
+      return res.status(400).json({
+        ok: false,
+        error:
+          error.message
+      });
+    }
+
+    res.status(
+      error.status || 500
+    ).json({
+      ok: false,
+      error:
+        error.message ||
+        "Internal server error"
+    });
+  }
+);
+
+/* =========================================================
+   START SERVER
+========================================================= */
+
+async function startServer() {
+  try {
+    await initDatabase();
+
+    server.listen(
+      PORT,
+      "0.0.0.0",
+      () => {
+        console.log("");
+        console.log(
+          "=========================================="
+        );
+        console.log(
+          "          NICEGOLD CHAT V1"
+        );
+        console.log(
+          "=========================================="
+        );
+        console.log(
+          `Server running on port ${PORT}`
+        );
+        console.log(
+          `Local: http://127.0.0.1:${PORT}`
+        );
+        console.log(
+          "Database: INITIALIZED"
+        );
+        console.log(
+          "Authentication: ENABLED"
+        );
+        console.log(
+          "Profiles: ENABLED"
+        );
+        console.log(
+          "Profile Pictures: ENABLED"
+        );
+        console.log(
+          "Messaging: ENABLED"
+        );
+        console.log(
+          "Reactions: ENABLED"
+        );
+        console.log(
+          "Media Uploads: ENABLED"
+        );
+        console.log(
+          "Socket.IO: ENABLED"
+        );
+        console.log(
+          "=========================================="
+        );
+        console.log("");
+      }
+    );
+  } catch (error) {
+    console.error(
+      "Failed to start NICEGOLD Chat:",
+      error
+    );
+
+    process.exit(1);
+  }
+}
+
+startServer();
