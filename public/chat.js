@@ -1,391 +1,356 @@
 const token = localStorage.getItem("nicegold_token");
 
 if (!token) {
-  window.location.href = "/";
+  window.location.href = "/auth.html";
 }
 
 const state = {
-  user: null,
+  me: null,
   conversations: [],
   activeConversation: null,
   messages: [],
-  searchTimer: null,
-  socket: null,
   replyTo: null,
+  socket: null,
+  typingTimer: null,
   swipe: null
 };
 
-const $ = id => document.getElementById(id);
+const $ = (id) => document.getElementById(id);
 
 const chatLoader = $("chatLoader");
-const profileAvatar = $("profileAvatar");
-const profileName = $("profileName");
-const profileUsername = $("profileUsername");
-const profileOnline = $("profileOnline");
-
 const conversationList = $("conversationList");
 const conversationEmpty = $("conversationEmpty");
 const conversationCount = $("conversationCount");
 const conversationSearch = $("conversationSearch");
 
-const newChatButton = $("newChatButton");
-const welcomeNewChat = $("welcomeNewChat");
-const newChatModal = $("newChatModal");
-const closeNewChat = $("closeNewChat");
-const userSearchInput = $("userSearchInput");
-const userSearchResults = $("userSearchResults");
+const profileAvatar = $("profileAvatar");
+const profileName = $("profileName");
+const profileUsername = $("profileUsername");
 
+const chatArea = $("chatArea");
 const activeAvatar = $("activeAvatar");
 const activeName = $("activeName");
 const activeUsername = $("activeUsername");
 const activeStatus = $("activeStatus");
-const activeOnline = $("activeOnline");
 
 const messagesArea = $("messagesArea");
-const welcomeChat = $("welcomeChat");
-
-const replyBar = $("replyBar");
-const replyBarTitle = $("replyBarTitle");
-const replyBarText = $("replyBarText");
-const cancelReplyButton = $("cancelReplyButton");
-
-const typingIndicator = $("typingIndicator");
-
 const messageInput = $("messageInput");
 const sendButton = $("sendButton");
 const attachmentButton = $("attachmentButton");
 const voiceButton = $("voiceButton");
 
-const logoutButton = $("logoutButton");
 const mobileBackButton = $("mobileBackButton");
 
+const replyBar = $("replyBar");
+const replyBarName = $("replyBarName");
+const replyBarText = $("replyBarText");
+const cancelReplyButton = $("cancelReplyButton");
 
-/* =========================
-   API
-========================= */
+const newChatButton = $("newChatButton");
+const newChatModal = $("newChatModal");
+const closeNewChat = $("closeNewChat");
+const userSearchInput = $("userSearchInput");
+const userSearchResults = $("userSearchResults");
 
-async function api(url, options = {}) {
+function avatarUrl(avatar) {
+  if (!avatar) return "/images/default-avatar.png";
 
+  if (avatar.startsWith("http://") || avatar.startsWith("https://")) {
+    return avatar;
+  }
+
+  return avatar.startsWith("/")
+    ? avatar
+    : `/${avatar}`;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function formatTime(dateValue) {
+  if (!dateValue) return "";
+
+  const date = new Date(dateValue);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function apiHeaders(json = true) {
   const headers = {
-    ...(options.headers || {}),
     Authorization: `Bearer ${token}`
   };
 
-  if (
-    options.body &&
-    !(options.body instanceof FormData)
-  ) {
+  if (json) {
     headers["Content-Type"] = "application/json";
   }
 
+  return headers;
+}
+
+async function api(url, options = {}) {
   const response = await fetch(url, {
     ...options,
-    headers
+    headers: {
+      ...apiHeaders(options.body !== undefined),
+      ...(options.headers || {})
+    }
   });
 
-  let data;
+  let data = {};
 
   try {
     data = await response.json();
   } catch {
-    data = {
-      ok: false,
-      error: "Invalid server response."
-    };
+    data = {};
   }
 
   if (response.status === 401) {
     localStorage.removeItem("nicegold_token");
-    localStorage.removeItem("nicegold_user");
-    window.location.href = "/";
-    return null;
+    window.location.href = "/auth.html";
+    return;
   }
 
-  if (!response.ok) {
+  if (!response.ok || data.ok === false) {
     throw new Error(
       data.error ||
       data.message ||
-      "Request failed."
+      `Request failed: ${response.status}`
     );
   }
 
   return data;
 }
 
+/* =========================================================
+   PROFILE
+========================================================= */
 
-/* =========================
-   AVATAR
-========================= */
+async function loadProfile() {
+  const data = await api("/api/profile");
 
-function avatarFallback(name = "?") {
+  state.me = data.user || data.profile || data;
 
-  const letter =
-    String(name)
-      .trim()
-      .charAt(0)
-      .toUpperCase() || "?";
+  if (!state.me) return;
 
-  return (
-    "data:image/svg+xml;charset=UTF-8," +
-    encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="200"
-           height="200"
-           viewBox="0 0 200 200">
-        <rect width="200" height="200" fill="#252525"/>
-        <circle cx="100" cy="100" r="100" fill="#202020"/>
-        <text x="100"
-              y="122"
-              text-anchor="middle"
-              font-size="82"
-              font-family="Arial"
-              font-weight="700"
-              fill="#eeeeee">${letter}</text>
-      </svg>
-    `)
-  );
+  profileName.textContent =
+    state.me.displayName ||
+    state.me.username ||
+    "User";
+
+  profileUsername.textContent =
+    state.me.username
+      ? `@${state.me.username}`
+      : "";
+
+  if (profileAvatar) {
+    profileAvatar.src = avatarUrl(state.me.avatar);
+    profileAvatar.onerror = () => {
+      profileAvatar.removeAttribute("src");
+    };
+  }
 }
 
-function setAvatar(element, user) {
-
-  if (!element) return;
-
-  const fallback = avatarFallback(
-    user?.displayName ||
-    user?.username ||
-    "?"
-  );
-
-  element.src =
-    user?.avatar ||
-    fallback;
-
-  element.onerror = () => {
-    element.onerror = null;
-    element.src = fallback;
-  };
-}
-
-
-/* =========================
+/* =========================================================
    SOCKET.IO
-========================= */
+========================================================= */
 
 function connectSocket() {
-
-  if (typeof io !== "function") {
-    console.warn("Socket.IO unavailable.");
-    return;
-  }
+  if (typeof io !== "function") return;
 
   state.socket = io({
-    auth: { token }
+    auth: {
+      token
+    }
   });
 
   state.socket.on("connect", () => {
+    console.log("NICEGOLD CHAT socket connected");
 
-    console.log(
-      "NICEGOLD CHAT realtime connected."
-    );
-
-    if (state.activeConversation) {
-      joinConversationRoom(
+    if (state.activeConversation?.id) {
+      state.socket.emit(
+        "conversation:join",
         state.activeConversation.id
       );
     }
   });
 
   state.socket.on("disconnect", () => {
-    console.log(
-      "NICEGOLD CHAT realtime disconnected."
-    );
+    console.log("NICEGOLD CHAT socket disconnected");
   });
 
-  state.socket.on(
-    "message:new",
-    message => {
-      receiveRealtimeMessage(message);
-    }
-  );
+  state.socket.on("conversation:new", async (payload) => {
+    console.log("New conversation:", payload);
 
-  state.socket.on(
-    "message:notification",
-    payload => {
+    await loadConversations();
 
-      const message =
-        payload?.message;
-
-      if (!message) return;
-
-      receiveRealtimeMessage(message);
-    }
-  );
-
-  state.socket.on(
-    "message:read",
-    payload => {
-
-      if (!payload) return;
-
-      const message =
-        state.messages.find(
-          item =>
-            item.id === payload.messageId
-        );
-
-      if (!message) return;
-
-      if (!Array.isArray(message.readBy)) {
-        message.readBy = [];
-      }
-
-      const readerId =
-        payload.userId ||
-        payload.readerId;
-
-      if (
-        readerId &&
-        !message.readBy.includes(readerId)
-      ) {
-        message.readBy.push(readerId);
-        renderMessages(false);
-      }
-    }
-  );
-
-  state.socket.on(
-    "typing:start",
-    payload => {
-
-      if (
-        payload?.conversationId ===
-        state.activeConversation?.id &&
-        payload.userId !==
-        state.user?.id
-      ) {
-        showTyping();
-      }
-    }
-  );
-
-  state.socket.on(
-    "typing:stop",
-    payload => {
-
-      if (
-        payload?.conversationId ===
+    if (
+      payload?.conversation?.id &&
+      payload.conversation.id ===
         state.activeConversation?.id
-      ) {
-        hideTyping();
-      }
+    ) {
+      await openConversation(
+        payload.conversation
+      );
     }
-  );
+  });
+
+  state.socket.on("message:new", async (message) => {
+    if (!message?.conversationId) return;
+
+    await loadConversations();
+
+    if (
+      state.activeConversation?.id !==
+      message.conversationId
+    ) {
+      return;
+    }
+
+    const exists = state.messages.some(
+      (item) => item.id === message.id
+    );
+
+    if (!exists) {
+      state.messages.push(message);
+      renderMessages();
+    }
+
+    if (
+      message.senderId !== state.me?.id &&
+      message.senderId !== state.me?.userId
+    ) {
+      markConversationRead(
+        message.conversationId
+      );
+    }
+  });
+
+  state.socket.on("message:notification", async () => {
+    await loadConversations();
+  });
+
+  state.socket.on("message:read", (payload) => {
+    if (
+      !state.activeConversation ||
+      payload?.conversationId !==
+        state.activeConversation.id
+    ) {
+      return;
+    }
+
+    state.messages = state.messages.map(
+      (message) => {
+        if (message.id !== payload.messageId) {
+          return message;
+        }
+
+        return {
+          ...message,
+          readBy: payload.readBy || message.readBy
+        };
+      }
+    );
+
+    renderMessages();
+  });
 }
 
-function joinConversationRoom(id) {
-
-  if (
-    !state.socket ||
-    !state.socket.connected ||
-    !id
-  ) {
-    return;
-  }
-
-  state.socket.emit(
-    "conversation:join",
-    id
-  );
-}
-
-
-/* =========================
-   PROFILE
-========================= */
-
-async function loadProfile() {
-
-  const data =
-    await api("/api/auth/me");
-
-  if (!data) return;
-
-  state.user = data.user;
-
-  localStorage.setItem(
-    "nicegold_user",
-    JSON.stringify(state.user)
-  );
-
-  profileName.textContent =
-    state.user.displayName ||
-    state.user.username;
-
-  profileUsername.textContent =
-    `@${state.user.username}`;
-
-  setAvatar(
-    profileAvatar,
-    state.user
-  );
-
-  profileOnline.style.display =
-    state.user.online
-      ? "block"
-      : "none";
-}
-
-
-/* =========================
+/* =========================================================
    CONVERSATIONS
-========================= */
+========================================================= */
 
 async function loadConversations() {
+  const data = await api("/api/conversations");
 
-  try {
+  state.conversations =
+    Array.isArray(data.conversations)
+      ? data.conversations
+      : [];
 
-    const data =
-      await api("/api/conversations");
-
-    if (!data) return;
-
-    state.conversations =
-      data.conversations || [];
-
-    renderConversations();
-
-  } catch (error) {
-
-    console.error(
-      "Conversation load error:",
-      error
-    );
-  }
+  renderConversationList();
 }
 
-function renderConversations() {
+function getConversationUser(conversation) {
+  /*
+    Backend cleanConversation() returns:
+
+    {
+      id,
+      type,
+      name,
+      username,
+      avatar,
+      members,
+      lastMessage,
+      ...
+    }
+
+    Older frontend code expected conversation.user.
+    Support both shapes so this remains safe.
+  */
+
+  if (conversation?.user) {
+    return conversation.user;
+  }
+
+  return {
+    id: conversation?.members?.find(
+      (id) =>
+        id !== state.me?.id &&
+        id !== state.me?.userId
+    ) || null,
+
+    displayName:
+      conversation?.name ||
+      "Unknown user",
+
+    username:
+      conversation?.username ||
+      null,
+
+    avatar:
+      conversation?.avatar ||
+      null
+  };
+}
+
+function renderConversationList() {
+  if (!conversationList) return;
 
   conversationList.innerHTML = "";
 
-  conversationCount.textContent =
-    state.conversations.length;
+  if (conversationCount) {
+    conversationCount.textContent =
+      state.conversations.length;
+  }
 
   if (!state.conversations.length) {
-
-    conversationList.appendChild(
-      conversationEmpty
-    );
+    if (conversationEmpty) {
+      conversationList.appendChild(
+        conversationEmpty
+      );
+    }
 
     return;
   }
 
   state.conversations.forEach(
-    conversation => {
-
+    (conversation) => {
       const user =
-        conversation.user;
-
-      if (!user) return;
+        getConversationUser(
+          conversation
+        );
 
       const item =
         document.createElement("button");
@@ -400,36 +365,29 @@ function renderConversations() {
         item.classList.add("active");
       }
 
-      const avatarWrap =
-        document.createElement("div");
-
-      avatarWrap.className =
-        "conversation-avatar";
-
       const avatar =
         document.createElement("img");
 
       avatar.className =
-        "avatar-conversation";
+        "conversation-avatar avatar-conversation";
 
-      setAvatar(
-        avatar,
-        user
-      );
+      avatar.src =
+        avatarUrl(user.avatar);
 
-      const online =
+      avatar.alt =
+        user.displayName ||
+        user.username ||
+        "User";
+
+      avatar.onerror = () => {
+        avatar.removeAttribute("src");
+      };
+
+      const onlineDot =
         document.createElement("span");
 
-      online.className =
+      onlineDot.className =
         "online-dot conversation-online";
-
-      online.style.display =
-        user.online
-          ? "block"
-          : "none";
-
-      avatarWrap.appendChild(avatar);
-      avatarWrap.appendChild(online);
 
       const details =
         document.createElement("div");
@@ -437,44 +395,83 @@ function renderConversations() {
       details.className =
         "conversation-details";
 
+      const top =
+        document.createElement("div");
+
+      top.className =
+        "conversation-top";
+
       const name =
         document.createElement("strong");
 
       name.textContent =
         user.displayName ||
-        user.username;
+        user.username ||
+        "Unknown user";
+
+      const time =
+        document.createElement("time");
+
+      time.textContent =
+        formatTime(
+          conversation.lastMessage?.createdAt ||
+          conversation.updatedAt
+        );
+
+      top.appendChild(name);
+      top.appendChild(time);
+
+      const bottom =
+        document.createElement("div");
+
+      bottom.className =
+        "conversation-bottom";
 
       const preview =
         document.createElement("span");
 
-      if (conversation.lastMessage) {
+      preview.className =
+        "conversation-preview";
 
-        const last =
-          conversation.lastMessage;
+      preview.textContent =
+        conversation.lastMessage?.text ||
+        (
+          conversation.type === "direct"
+            ? "Start a conversation"
+            : "No messages yet"
+        );
 
-        preview.textContent =
-          last.text ||
-          (
-            last.type === "image"
-              ? "📷 Image"
-              : "Message"
-          );
+      bottom.appendChild(preview);
 
-      } else {
+      if (conversation.unread > 0) {
+        const unread =
+          document.createElement("span");
 
-        preview.textContent =
-          "Start chatting";
+        unread.className =
+          "conversation-unread";
+
+        unread.textContent =
+          conversation.unread > 99
+            ? "99+"
+            : conversation.unread;
+
+        bottom.appendChild(unread);
       }
 
-      details.appendChild(name);
-      details.appendChild(preview);
+      details.appendChild(top);
+      details.appendChild(bottom);
 
-      item.appendChild(avatarWrap);
+      item.appendChild(avatar);
+      item.appendChild(onlineDot);
       item.appendChild(details);
 
       item.addEventListener(
         "click",
-        () => openConversation(conversation)
+        async () => {
+          await openConversation(
+            conversation
+          );
+        }
       );
 
       conversationList.appendChild(item);
@@ -482,266 +479,182 @@ function renderConversations() {
   );
 }
 
-
-/* =========================
+/* =========================================================
    OPEN CONVERSATION
-========================= */
+========================================================= */
 
 async function openConversation(conversation) {
-
-  if (!conversation?.user) return;
+  if (!conversation?.id) return;
 
   state.activeConversation =
     conversation;
 
-  state.messages = [];
-  clearReply();
+  state.replyTo = null;
+  updateReplyBar();
 
   const user =
-    conversation.user;
+    getConversationUser(
+      conversation
+    );
 
   activeName.textContent =
     user.displayName ||
-    user.username;
+    user.username ||
+    "Unknown user";
 
   activeUsername.textContent =
-    `@${user.username}`;
+    user.username
+      ? `@${user.username}`
+      : "";
 
   activeStatus.textContent =
-    user.online
-      ? "online"
-      : formatLastSeen(
-          user.lastSeen
-        );
+    "Online";
 
-  activeOnline.style.display =
-    user.online
-      ? "block"
-      : "none";
+  if (activeAvatar) {
+    activeAvatar.src =
+      avatarUrl(user.avatar);
 
-  setAvatar(
-    activeAvatar,
-    user
-  );
+    activeAvatar.onerror = () => {
+      activeAvatar.removeAttribute("src");
+    };
+  }
 
   document.body.classList.add(
     "chat-open"
   );
 
-  joinConversationRoom(
-    conversation.id
-  );
+  renderConversationList();
 
-  messagesArea.innerHTML = `
-    <div class="message-empty">
-      <div class="small-spinner"></div>
-      <span>Loading messages...</span>
-    </div>
-  `;
+  if (state.socket) {
+    state.socket.emit(
+      "conversation:join",
+      conversation.id
+    );
+  }
 
   await loadMessages(
     conversation.id
   );
 
-  renderConversations();
-
-  setTimeout(
-    () => messageInput.focus(),
-    100
+  await markConversationRead(
+    conversation.id
   );
 }
 
+/* =========================================================
+   MESSAGES
+========================================================= */
 
-/* =========================
-   LOAD MESSAGES
-========================= */
+async function loadMessages(
+  conversationId
+) {
+  const data = await api(
+    `/api/conversations/${encodeURIComponent(
+      conversationId
+    )}/messages`
+  );
 
-async function loadMessages(conversationId) {
+  state.messages =
+    Array.isArray(data.messages)
+      ? data.messages
+      : [];
 
-  try {
-
-    const data =
-      await api(
-        `/api/conversations/${encodeURIComponent(
-          conversationId
-        )}/messages`
-      );
-
-    if (!data) return;
-
-    state.messages =
-      data.messages || [];
-
-    renderMessages(false);
-
-    state.messages.forEach(
-      markMessageRead
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Message load error:",
-      error
-    );
-
-    showMessageError(
-      error.message
-    );
-  }
+  renderMessages();
 }
 
-
-/* =========================
-   MESSAGE RENDERING
-========================= */
-
-function renderMessages(
-  animateLatest = false
-) {
-
+function renderMessages() {
   if (!messagesArea) return;
-
-  const shouldStick =
-    isNearBottom();
 
   messagesArea.innerHTML = "";
 
   if (!state.messages.length) {
+    const empty =
+      document.createElement("div");
 
-    messagesArea.innerHTML = `
-      <div class="message-empty">
-        <div class="message-empty-icon">💬</div>
-        <strong>No messages yet</strong>
-        <span>Send a message to start the conversation.</span>
-      </div>
+    empty.className =
+      "messages-empty";
+
+    empty.innerHTML = `
+      <div class="empty-icon">💬</div>
+      <strong>No messages yet</strong>
+      <span>Send a message to start the conversation.</span>
     `;
 
+    messagesArea.appendChild(empty);
     return;
   }
 
-  const list =
-    document.createElement("div");
-
-  list.className =
-    "message-list";
-
   state.messages.forEach(
-    (message, index) => {
-
-      list.appendChild(
-        createMessageElement(
-          message,
-          animateLatest &&
-          index ===
-          state.messages.length - 1
-        )
+    (message) => {
+      renderMessage(
+        message
       );
     }
   );
 
-  messagesArea.appendChild(list);
-
-  requestAnimationFrame(() => {
-
-    if (shouldStick || animateLatest) {
-      messagesArea.scrollTop =
-        messagesArea.scrollHeight;
-    }
-  });
+  requestAnimationFrame(
+    scrollMessagesToBottom
+  );
 }
 
-function createMessageElement(
-  message,
-  animate = false
-) {
+function renderMessage(message) {
+  const myId =
+    state.me?.id ||
+    state.me?.userId;
 
-  const mine =
-    message.senderId ===
-    state.user?.id;
+  const isMine =
+    message.senderId === myId;
 
-  const row =
+  const wrapper =
     document.createElement("div");
 
-  row.className =
-    mine
-      ? "message-row message-row-sent"
-      : "message-row message-row-received";
+  wrapper.className =
+    `message-row ${
+      isMine ? "sent" : "received"
+    }`;
+
+  wrapper.dataset.messageId =
+    message.id;
 
   const bubble =
     document.createElement("div");
 
   bubble.className =
-    mine
-      ? "message-bubble message-bubble-sent"
-      : "message-bubble message-bubble-received";
+    `message-bubble ${
+      isMine ? "bubble-sent" : "bubble-received"
+    }`;
 
-  bubble.dataset.messageId =
-    message.id;
+  const reply =
+    getReplyMessage(
+      message.replyTo
+    );
 
-  if (animate) {
-    bubble.classList.add("message-pop");
-  }
-
-  if (message.deleted) {
-    bubble.classList.add("message-deleted");
-  }
-
-  const replyIcon =
-    document.createElement("div");
-
-  replyIcon.className =
-    "swipe-reply-icon";
-
-  replyIcon.textContent = "↩";
-
-  bubble.appendChild(
-    replyIcon
-  );
-
-
-  /* ORIGINAL REPLY */
-
-  if (message.replyTo) {
-
-    const original =
-      findReplyMessage(
-        message.replyTo
-      );
-
-    const preview =
+  if (reply) {
+    const replyBox =
       document.createElement("div");
 
-    preview.className =
+    replyBox.className =
       "message-reply-preview";
 
-    const title =
-      document.createElement("strong");
+    replyBox.innerHTML = `
+      <strong>
+        ${escapeHtml(
+          reply.senderName ||
+          "Reply"
+        )}
+      </strong>
+      <span>
+        ${escapeHtml(
+          reply.text ||
+          "Message"
+        )}
+      </span>
+    `;
 
-    title.textContent =
-      original?.senderId === state.user?.id
-        ? "You"
-        : (
-            state.activeConversation?.user
-              ?.displayName ||
-            "Message"
-          );
-
-    const originalText =
-      document.createElement("span");
-
-    originalText.textContent =
-      original?.text ||
-      "Original message";
-
-    preview.appendChild(title);
-    preview.appendChild(originalText);
-
-    bubble.appendChild(preview);
+    bubble.appendChild(
+      replyBox
+    );
   }
-
-
-  /* TEXT */
 
   const text =
     document.createElement("div");
@@ -752,19 +665,9 @@ function createMessageElement(
   text.textContent =
     message.deleted
       ? "Message deleted"
-      : (
-          message.text ||
-          (
-            message.type === "image"
-              ? "📷 Image"
-              : "Message"
-          )
-        );
+      : message.text || "";
 
   bubble.appendChild(text);
-
-
-  /* META */
 
   const meta =
     document.createElement("div");
@@ -775,343 +678,243 @@ function createMessageElement(
   const time =
     document.createElement("span");
 
-  time.className =
-    "message-time";
-
   time.textContent =
-    formatMessageTime(
+    formatTime(
       message.createdAt
     );
 
   meta.appendChild(time);
 
-  if (mine) {
-
+  if (isMine) {
     const ticks =
       document.createElement("span");
 
     ticks.className =
       "message-ticks";
 
-    ticks.textContent =
-      getMessageTicks(message);
+    const read =
+      Array.isArray(
+        message.readBy
+      ) &&
+      message.readBy.some(
+        (id) => id !== myId
+      );
 
-    meta.appendChild(ticks);
+    ticks.textContent =
+      read ? "✓✓" : "✓";
+
+    meta.appendChild(
+      ticks
+    );
   }
 
   bubble.appendChild(meta);
 
-  row.appendChild(bubble);
+  wrapper.appendChild(
+    bubble
+  );
 
-  attachSwipeReply(
+  messagesArea.appendChild(
+    wrapper
+  );
+
+  attachSwipeToReply(
+    wrapper,
     bubble,
     message
   );
-
-  bubble.addEventListener(
-    "dblclick",
-    () => prepareReply(message)
-  );
-
-  return row;
 }
 
-function findReplyMessage(replyId) {
-
-  if (!replyId) return null;
-
-  return state.messages.find(
-    message =>
-      message.id === replyId
-  );
-}
-
-function getMessageTicks(message) {
+function getReplyMessage(
+  replyTo
+) {
+  if (!replyTo) return null;
 
   if (
-    Array.isArray(message.readBy)
+    typeof replyTo === "object"
   ) {
-
-    const readByOther =
-      message.readBy.some(
-        id =>
-          id !== state.user?.id
-      );
-
-    if (readByOther) {
-      return "✓✓";
-    }
+    return replyTo;
   }
 
-  return "✓";
+  return state.messages.find(
+    (message) =>
+      message.id === replyTo
+  ) || null;
 }
 
+function scrollMessagesToBottom() {
+  if (!messagesArea) return;
 
-/* =========================
+  messagesArea.scrollTop =
+    messagesArea.scrollHeight;
+}
+
+/* =========================================================
    SWIPE TO REPLY
-========================= */
+========================================================= */
 
-function attachSwipeReply(
+function attachSwipeToReply(
+  wrapper,
   bubble,
   message
 ) {
-
   let startX = 0;
-  let startY = 0;
-  let dragging = false;
   let currentX = 0;
+  let dragging = false;
 
-  const threshold = 70;
-  const maxSwipe = 105;
+  const threshold = 65;
+  const maxSwipe = 95;
 
-  function start(event) {
+  wrapper.addEventListener(
+    "pointerdown",
+    (event) => {
+      startX =
+        event.clientX;
 
-    if (
-      event.pointerType === "mouse" &&
-      event.button !== 0
-    ) {
-      return;
-    }
+      currentX =
+        startX;
 
-    startX = event.clientX;
-    startY = event.clientY;
-    currentX = 0;
-    dragging = true;
+      dragging = true;
 
-    bubble.style.transition =
-      "none";
+      bubble.style.transition =
+        "none";
 
-    try {
-      bubble.setPointerCapture(
-        event.pointerId
-      );
-    } catch {}
-  }
-
-  function move(event) {
-
-    if (!dragging) return;
-
-    const dx =
-      event.clientX - startX;
-
-    const dy =
-      event.clientY - startY;
-
-    if (
-      Math.abs(dy) >
-      Math.abs(dx) &&
-      Math.abs(dy) > 12
-    ) {
-      dragging = false;
-      bubble.style.transform = "";
-      bubble.style.transition = "";
-      return;
-    }
-
-    if (dx <= 0) return;
-
-    currentX =
-      Math.min(
-        dx,
-        maxSwipe
-      );
-
-    bubble.style.transform =
-      `translateX(${currentX}px)`;
-
-    const icon =
-      bubble.querySelector(
-        ".swipe-reply-icon"
-      );
-
-    if (icon) {
-      icon.style.opacity =
-        Math.min(
-          currentX / threshold,
-          1
+      try {
+        wrapper.setPointerCapture(
+          event.pointerId
         );
+      } catch {}
     }
-  }
+  );
 
-  function end() {
+  wrapper.addEventListener(
+    "pointermove",
+    (event) => {
+      if (!dragging) return;
 
+      currentX =
+        event.clientX;
+
+      const distance =
+        currentX - startX;
+
+      if (distance <= 0) return;
+
+      const movement =
+        Math.min(
+          distance,
+          maxSwipe
+        );
+
+      bubble.style.transform =
+        `translateX(${movement}px)`;
+
+      wrapper.classList.toggle(
+        "reply-ready",
+        distance >= threshold
+      );
+    }
+  );
+
+  const finishSwipe = () => {
     if (!dragging) return;
 
     dragging = false;
 
-    const icon =
-      bubble.querySelector(
-        ".swipe-reply-icon"
-      );
+    const distance =
+      currentX - startX;
 
-    if (
-      currentX >= threshold
-    ) {
-      prepareReply(message);
-    }
-
-    bubble.style.transform = "";
     bubble.style.transition =
-      "transform .15s ease";
+      "transform .18s ease";
 
-    if (icon) {
-      icon.style.opacity = "0";
+    bubble.style.transform =
+      "translateX(0)";
+
+    wrapper.classList.remove(
+      "reply-ready"
+    );
+
+    if (distance >= threshold) {
+      setReply(message);
     }
+  };
 
-    currentX = 0;
-  }
-
-  bubble.addEventListener(
-    "pointerdown",
-    start
-  );
-
-  bubble.addEventListener(
-    "pointermove",
-    move
-  );
-
-  bubble.addEventListener(
+  wrapper.addEventListener(
     "pointerup",
-    end
+    finishSwipe
   );
 
-  bubble.addEventListener(
+  wrapper.addEventListener(
     "pointercancel",
-    end
+    finishSwipe
+  );
+
+  wrapper.addEventListener(
+    "pointerleave",
+    () => {
+      if (dragging) {
+        finishSwipe();
+      }
+    }
   );
 }
 
+function setReply(message) {
+  state.replyTo =
+    message;
 
-/* =========================
-   REPLY
-========================= */
+  updateReplyBar();
 
-function prepareReply(message) {
+  messageInput.focus();
+}
 
-  if (!message) return;
+function updateReplyBar() {
+  if (!replyBar) return;
 
-  state.replyTo = message;
+  if (!state.replyTo) {
+    replyBar.classList.add(
+      "hidden"
+    );
+
+    return;
+  }
 
   replyBar.classList.remove(
     "hidden"
   );
 
-  replyBarTitle.textContent =
-    message.senderId === state.user?.id
-      ? "Replying to yourself"
-      : `Replying to ${
-          state.activeConversation?.user
-            ?.displayName ||
-          "message"
-        }`;
+  const myId =
+    state.me?.id ||
+    state.me?.userId;
+
+  const senderName =
+    state.replyTo.senderId === myId
+      ? "You"
+      : (
+          state.activeConversation?.username
+            ? `@${state.activeConversation.username}`
+            : state.activeConversation?.name ||
+              "User"
+        );
+
+  replyBarName.textContent =
+    senderName;
 
   replyBarText.textContent =
-    message.text ||
-    (
-      message.type === "image"
-        ? "📷 Image"
-        : "Message"
-    );
-
-  messageInput.focus();
+    state.replyTo.text ||
+    "Message";
 }
 
-function clearReply() {
-
+function cancelReply() {
   state.replyTo = null;
-
-  replyBar.classList.add(
-    "hidden"
-  );
-
-  replyBarTitle.textContent =
-    "Replying";
-
-  replyBarText.textContent =
-    "";
+  updateReplyBar();
 }
 
-
-/* =========================
-   REALTIME
-========================= */
-
-function receiveRealtimeMessage(message) {
-
-  if (!message) return;
-
-  if (
-    state.activeConversation &&
-    message.conversationId ===
-    state.activeConversation.id
-  ) {
-
-    const exists =
-      state.messages.some(
-        item =>
-          item.id === message.id
-      );
-
-    if (!exists) {
-
-      state.messages.push(
-        message
-      );
-
-      renderMessages(true);
-
-      markMessageRead(message);
-    }
-
-  } else {
-
-    refreshConversationList();
-  }
-
-  refreshConversationList();
-}
-
-async function refreshConversationList() {
-
-  try {
-    await loadConversations();
-  } catch {}
-}
-
-
-/* =========================
-   READ RECEIPTS
-========================= */
-
-function markMessageRead(message) {
-
-  if (
-    !state.socket ||
-    !state.socket.connected ||
-    !message?.id ||
-    message.senderId ===
-    state.user?.id
-  ) {
-    return;
-  }
-
-  state.socket.emit(
-    "message:read",
-    {
-      messageId: message.id
-    }
-  );
-}
-
-
-/* =========================
-   SEND
-========================= */
+/* =========================================================
+   SEND MESSAGE
+========================================================= */
 
 async function sendMessage() {
-
   if (!state.activeConversation) {
     return;
   }
@@ -1121,73 +924,66 @@ async function sendMessage() {
 
   if (!text) return;
 
-  if (text.length > 5000) {
-    alert(
-      "Message cannot exceed 5000 characters."
-    );
-    return;
-  }
+  const conversationId =
+    state.activeConversation.id;
+
+  const replyTo =
+    state.replyTo?.id ||
+    state.replyTo ||
+    null;
 
   sendButton.disabled = true;
 
   try {
+    const data = await api(
+      `/api/conversations/${encodeURIComponent(
+        conversationId
+      )}/messages`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          text,
+          type: "text",
+          replyTo
+        })
+      }
+    );
 
-    const body = {
-      text,
-      type: "text"
-    };
+    messageInput.value = "";
+    autoResizeTextarea();
 
-    if (state.replyTo?.id) {
-      body.replyTo =
-        state.replyTo.id;
-    }
+    cancelReply();
 
-    const data =
-      await api(
-        `/api/conversations/${encodeURIComponent(
-          state.activeConversation.id
-        )}/messages`,
-        {
-          method: "POST",
-          body: JSON.stringify(body)
-        }
-      );
+    const message =
+      data.message;
 
-    if (!data) return;
-
-    if (data.message) {
-
+    if (message) {
       const exists =
         state.messages.some(
-          item =>
-            item.id ===
-            data.message.id
+          (item) =>
+            item.id === message.id
         );
 
       if (!exists) {
-
         state.messages.push(
-          data.message
+          message
         );
-
-        renderMessages(true);
       }
     }
 
-    messageInput.value = "";
+    renderMessages();
 
-    clearReply();
+    await loadConversations();
 
-    autoResizeTextarea();
-
-    stopTyping();
-
-    await refreshConversationList();
-
+    if (state.socket) {
+      state.socket.emit(
+        "message:new",
+        message
+      );
+    }
   } catch (error) {
-
     console.error(
-      "Send message error:",
+      "SEND MESSAGE ERROR:",
       error
     );
 
@@ -1195,271 +991,213 @@ async function sendMessage() {
       error.message ||
       "Unable to send message."
     );
-
   } finally {
-
-    sendButton.disabled =
-      false;
-
-    messageInput.focus();
+    sendButton.disabled = false;
   }
 }
 
+/* =========================================================
+   READ RECEIPTS
+========================================================= */
 
-/* =========================
-   TYPING
-========================= */
-
-let typingTimer = null;
-
-function showTyping() {
-  typingIndicator.classList.remove(
-    "hidden"
-  );
-  typingIndicator.style.display =
-    "flex";
-}
-
-function hideTyping() {
-  typingIndicator.classList.add(
-    "hidden"
-  );
-  typingIndicator.style.display =
-    "";
-}
-
-function sendTyping() {
-
-  if (
-    !state.socket ||
-    !state.socket.connected ||
-    !state.activeConversation
-  ) {
-    return;
-  }
-
-  state.socket.emit(
-    "typing:start",
-    {
-      conversationId:
-        state.activeConversation.id
-    }
-  );
-
-  clearTimeout(typingTimer);
-
-  typingTimer =
-    setTimeout(
-      stopTyping,
-      1200
+async function markConversationRead(
+  conversationId
+) {
+  try {
+    await api(
+      `/api/conversations/${encodeURIComponent(
+        conversationId
+      )}/read`,
+      {
+        method: "POST"
+      }
     );
-}
-
-function stopTyping() {
-
-  clearTimeout(
-    typingTimer
-  );
-
-  if (
-    !state.socket ||
-    !state.socket.connected ||
-    !state.activeConversation
-  ) {
-    return;
+  } catch (error) {
+    console.warn(
+      "READ RECEIPT:",
+      error.message
+    );
   }
-
-  state.socket.emit(
-    "typing:stop",
-    {
-      conversationId:
-        state.activeConversation.id
-    }
-  );
 }
 
+/* =========================================================
+   NEW CHAT / USER SEARCH
+========================================================= */
 
-/* =========================
-   NEW CHAT
-========================= */
+function openNewChatModal() {
+  newChatModal.classList.remove(
+    "hidden"
+  );
 
-function openNewChat() {
-
-  newChatModal.hidden =
-    false;
-
-  userSearchInput.value =
-    "";
+  userSearchInput.value = "";
 
   userSearchResults.innerHTML = `
-    <div class="search-placeholder">
-      <span>👤</span>
-      <p>Search for someone to chat with.</p>
+    <div class="search-empty">
+      Search for a person to start a chat.
     </div>
   `;
 
-  setTimeout(
-    () =>
-      userSearchInput.focus(),
-    80
-  );
+  userSearchInput.focus();
 }
 
 function closeNewChatModal() {
-  newChatModal.hidden = true;
+  newChatModal.classList.add(
+    "hidden"
+  );
 }
 
+let searchTimer = null;
 
-/* =========================
-   USER SEARCH
-========================= */
+userSearchInput?.addEventListener(
+  "input",
+  () => {
+    clearTimeout(searchTimer);
+
+    const query =
+      userSearchInput.value.trim();
+
+    if (!query) {
+      userSearchResults.innerHTML = `
+        <div class="search-empty">
+          Search for a person to start a chat.
+        </div>
+      `;
+
+      return;
+    }
+
+    searchTimer =
+      setTimeout(
+        () => searchUsers(query),
+        250
+      );
+  }
+);
 
 async function searchUsers(query) {
-
-  const cleanQuery =
-    query.trim();
-
-  if (!cleanQuery) {
-
-    userSearchResults.innerHTML = `
-      <div class="search-placeholder">
-        <span>👤</span>
-        <p>Search for someone to chat with.</p>
-      </div>
-    `;
-
-    return;
-  }
-
-  userSearchResults.innerHTML = `
-    <div class="search-loading">
-      <div class="small-spinner"></div>
-      <span>Searching...</span>
-    </div>
-  `;
-
   try {
-
     const data =
       await api(
         `/api/users/search?q=${encodeURIComponent(
-          cleanQuery
+          query
         )}`
       );
 
-    if (!data) return;
+    const users =
+      Array.isArray(data.users)
+        ? data.users
+        : [];
 
-    renderUserResults(
-      data.users || []
+    renderUserSearchResults(
+      users
+    );
+  } catch (error) {
+    console.error(
+      "USER SEARCH ERROR:",
+      error
     );
 
-  } catch (error) {
-
     userSearchResults.innerHTML = `
-      <div class="search-error">
-        ${escapeHtml(error.message)}
+      <div class="search-empty">
+        ${escapeHtml(
+          error.message ||
+          "Search failed."
+        )}
       </div>
     `;
   }
 }
 
-function renderUserResults(users) {
+function renderUserSearchResults(
+  users
+) {
+  userSearchResults.innerHTML = "";
 
   if (!users.length) {
-
     userSearchResults.innerHTML = `
-      <div class="search-placeholder">
-        <span>🔎</span>
-        <p>No NICEGOLD users found.</p>
+      <div class="search-empty">
+        No users found.
       </div>
     `;
 
     return;
   }
 
-  userSearchResults.innerHTML = "";
+  users.forEach(
+    (user) => {
+      const item =
+        document.createElement("button");
 
-  users.forEach(user => {
+      item.type = "button";
+      item.className =
+        "user-search-result";
 
-    const button =
-      document.createElement("button");
+      item.innerHTML = `
+        <img
+          class="avatar-result"
+          src="${escapeHtml(
+            avatarUrl(user.avatar)
+          )}"
+          alt=""
+        >
 
-    button.type = "button";
-    button.className = "user-result";
+        <span class="user-result-info">
+          <strong>
+            ${escapeHtml(
+              user.displayName ||
+              user.username ||
+              "User"
+            )}
+          </strong>
 
-    const avatar =
-      document.createElement("img");
+          <small>
+            ${
+              user.username
+                ? `@${escapeHtml(
+                    user.username
+                  )}`
+                : ""
+            }
+          </small>
+        </span>
+      `;
 
-    avatar.className =
-      "avatar-result";
+      const image =
+        item.querySelector("img");
 
-    setAvatar(
-      avatar,
-      user
-    );
+      image.onerror = () => {
+        image.removeAttribute(
+          "src"
+        );
+      };
 
-    const info =
-      document.createElement("div");
+      item.addEventListener(
+        "click",
+        () =>
+          startDirectChat(
+            user
+          )
+      );
 
-    info.className =
-      "user-result-info";
-
-    const name =
-      document.createElement("strong");
-
-    name.textContent =
-      user.displayName ||
-      user.username;
-
-    const username =
-      document.createElement("span");
-
-    username.textContent =
-      `@${user.username}`;
-
-    const status =
-      document.createElement("small");
-
-    status.textContent =
-      user.online
-        ? "Online"
-        : "Offline";
-
-    info.appendChild(name);
-    info.appendChild(username);
-    info.appendChild(status);
-
-    button.appendChild(avatar);
-    button.appendChild(info);
-
-    button.addEventListener(
-      "click",
-      () =>
-        startConversation(user)
-    );
-
-    userSearchResults.appendChild(
-      button
-    );
-  });
+      userSearchResults.appendChild(
+        item
+      );
+    }
+  );
 }
 
+async function startDirectChat(
+  user
+) {
+  if (!user?.id) {
+    alert(
+      "This user does not have a valid ID."
+    );
 
-/* =========================
-   START CONVERSATION
-========================= */
-
-async function startConversation(user) {
+    return;
+  }
 
   try {
-
-    userSearchResults.innerHTML = `
-      <div class="search-loading">
-        <div class="small-spinner"></div>
-        <span>Opening chat...</span>
-      </div>
-    `;
-
     const data =
       await api(
         "/api/conversations/direct",
@@ -1471,150 +1209,98 @@ async function startConversation(user) {
         }
       );
 
-    if (!data) return;
+    /*
+      IMPORTANT FIX:
+
+      The backend returns:
+
+      {
+        ok: true,
+        created: true,
+        conversation: {
+          id,
+          type,
+          name,
+          username,
+          avatar,
+          members,
+          ...
+        }
+      }
+
+      Do NOT look for conversation.user.
+    */
+
+    const createdConversation =
+      data.conversation;
+
+    if (!createdConversation?.id) {
+      throw new Error(
+        "The server did not return a conversation."
+      );
+    }
 
     closeNewChatModal();
 
+    /*
+      Immediately refresh the sidebar.
+      This makes a newly-created conversation
+      appear even when there was no previous
+      message.
+    */
     await loadConversations();
 
-    const conversation =
+    /*
+      Find the conversation returned by
+      the backend using its ID.
+    */
+    let conversation =
       state.conversations.find(
-        item =>
+        (item) =>
           item.id ===
-          data.conversation.id
+          createdConversation.id
       );
 
-    if (conversation) {
-      await openConversation(
+    /*
+      If the refreshed list somehow doesn't
+      contain it yet, use the server response
+      directly. This prevents the user from
+      being stranded on the search screen.
+    */
+    if (!conversation) {
+      conversation =
+        createdConversation;
+
+      state.conversations.unshift(
         conversation
       );
+
+      renderConversationList();
     }
 
+    await openConversation(
+      conversation
+    );
   } catch (error) {
+    console.error(
+      "START DIRECT CHAT ERROR:",
+      error
+    );
 
-    userSearchResults.innerHTML = `
-      <div class="search-error">
-        ${escapeHtml(error.message)}
-      </div>
-    `;
+    alert(
+      error.message ||
+      "Unable to start chat."
+    );
   }
 }
 
+/* =========================================================
+   SEARCH EXISTING CONVERSATIONS
+========================================================= */
 
-/* =========================
-   TEXTAREA
-========================= */
-
-function autoResizeTextarea() {
-
-  messageInput.style.height =
-    "auto";
-
-  messageInput.style.height =
-    Math.min(
-      messageInput.scrollHeight,
-      140
-    ) + "px";
-}
-
-
-/* =========================
-   SCROLL
-========================= */
-
-function isNearBottom() {
-
-  const distance =
-    messagesArea.scrollHeight -
-    messagesArea.scrollTop -
-    messagesArea.clientHeight;
-
-  return distance < 180;
-}
-
-
-/* =========================
-   HELPERS
-========================= */
-
-function formatMessageTime(value) {
-
-  if (!value) return "";
-
-  const date =
-    new Date(value);
-
-  if (
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-    return "";
-  }
-
-  return date.toLocaleTimeString(
-    [],
-    {
-      hour: "2-digit",
-      minute: "2-digit"
-    }
-  );
-}
-
-function formatLastSeen(value) {
-
-  if (!value) {
-    return "offline";
-  }
-
-  const date =
-    new Date(value);
-
-  if (
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-    return "offline";
-  }
-
-  return (
-    "last seen " +
-    date.toLocaleString()
-  );
-}
-
-function escapeHtml(value) {
-
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function showMessageError(message) {
-
-  messagesArea.innerHTML = `
-    <div class="message-error">
-      ${escapeHtml(
-        message ||
-        "Unable to load messages."
-      )}
-    </div>
-  `;
-}
-
-
-/* =========================
-   CONVERSATION SEARCH
-========================= */
-
-conversationSearch.addEventListener(
+conversationSearch?.addEventListener(
   "input",
   () => {
-
     const query =
       conversationSearch.value
         .trim()
@@ -1624,8 +1310,7 @@ conversationSearch.addEventListener(
       .querySelectorAll(
         ".conversation-item"
       )
-      .forEach(item => {
-
+      .forEach((item) => {
         const text =
           item.textContent
             .toLowerCase();
@@ -1639,30 +1324,130 @@ conversationSearch.addEventListener(
   }
 );
 
+/* =========================================================
+   TEXTAREA
+========================================================= */
 
-/* =========================
+function autoResizeTextarea() {
+  if (!messageInput) return;
+
+  messageInput.style.height =
+    "auto";
+
+  messageInput.style.height =
+    `${Math.min(
+      messageInput.scrollHeight,
+      140
+    )}px`;
+}
+
+/* =========================================================
    EVENTS
-========================= */
+========================================================= */
 
-newChatButton.addEventListener(
+sendButton?.addEventListener(
   "click",
-  openNewChat
+  sendMessage
 );
 
-welcomeNewChat.addEventListener(
-  "click",
-  openNewChat
+messageInput?.addEventListener(
+  "input",
+  autoResizeTextarea
 );
 
-closeNewChat.addEventListener(
+messageInput?.addEventListener(
+  "keydown",
+  (event) => {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey
+    ) {
+      event.preventDefault();
+      sendMessage();
+    }
+  }
+);
+
+messageInput?.addEventListener(
+  "input",
+  () => {
+    if (
+      !state.socket ||
+      !state.activeConversation
+    ) {
+      return;
+    }
+
+    state.socket.emit(
+      "typing:start",
+      {
+        conversationId:
+          state.activeConversation.id
+      }
+    );
+
+    clearTimeout(
+      state.typingTimer
+    );
+
+    state.typingTimer =
+      setTimeout(() => {
+        state.socket.emit(
+          "typing:stop",
+          {
+            conversationId:
+              state.activeConversation.id
+          }
+        );
+      }, 800);
+  }
+);
+
+attachmentButton?.addEventListener(
+  "click",
+  () => {
+    alert(
+      "Attachments will be connected in Phase 9."
+    );
+  }
+);
+
+voiceButton?.addEventListener(
+  "click",
+  () => {
+    alert(
+      "Voice messages will be connected in a later phase."
+    );
+  }
+);
+
+cancelReplyButton?.addEventListener(
+  "click",
+  cancelReply
+);
+
+mobileBackButton?.addEventListener(
+  "click",
+  () => {
+    document.body.classList.remove(
+      "chat-open"
+    );
+  }
+);
+
+newChatButton?.addEventListener(
+  "click",
+  openNewChatModal
+);
+
+closeNewChat?.addEventListener(
   "click",
   closeNewChatModal
 );
 
-newChatModal.addEventListener(
+newChatModal?.addEventListener(
   "click",
-  event => {
-
+  (event) => {
     if (
       event.target ===
       newChatModal
@@ -1672,111 +1457,13 @@ newChatModal.addEventListener(
   }
 );
 
-userSearchInput.addEventListener(
-  "input",
-  () => {
+/* =========================================================
+   LOGOUT
+========================================================= */
 
-    clearTimeout(
-      state.searchTimer
-    );
-
-    state.searchTimer =
-      setTimeout(
-        () =>
-          searchUsers(
-            userSearchInput.value
-          ),
-        250
-      );
-  }
-);
-
-sendButton.addEventListener(
-  "click",
-  sendMessage
-);
-
-messageInput.addEventListener(
-  "input",
-  () => {
-    autoResizeTextarea();
-    sendTyping();
-  }
-);
-
-messageInput.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey
-    ) {
-
-      event.preventDefault();
-
-      sendMessage();
-    }
-  }
-);
-
-cancelReplyButton.addEventListener(
-  "click",
-  clearReply
-);
-
-attachmentButton.addEventListener(
-  "click",
-  () => {
-    alert(
-      "Attachments will be connected in Phase 9."
-    );
-  }
-);
-
-voiceButton.addEventListener(
-  "click",
-  () => {
-    alert(
-      "Voice messages will be connected in a later phase."
-    );
-  }
-);
-
-mobileBackButton.addEventListener(
-  "click",
-  () => {
-
-    document.body.classList.remove(
-      "chat-open"
-    );
-
-    clearReply();
-  }
-);
-
-$("chatSearchBtn").addEventListener(
-  "click",
-  () => {
-    alert(
-      "Chat search UI is prepared for the next messaging phase."
-    );
-  }
-);
-
-$("chatOptionsBtn").addEventListener(
-  "click",
-  () => {
-    alert(
-      "Conversation options will be connected to the privacy and management features."
-    );
-  }
-);
-
-logoutButton.addEventListener(
+$("logoutButton")?.addEventListener(
   "click",
   async () => {
-
     try {
       await api(
         "/api/auth/logout",
@@ -1786,29 +1473,20 @@ logoutButton.addEventListener(
       );
     } catch {}
 
-    if (state.socket) {
-      state.socket.disconnect();
-    }
-
     localStorage.removeItem(
       "nicegold_token"
     );
 
-    localStorage.removeItem(
-      "nicegold_user"
-    );
-
-    window.location.href = "/";
+    window.location.href =
+      "/auth.html";
   }
 );
 
-
-/* =========================
+/* =========================================================
    LOADER
-========================= */
+========================================================= */
 
 function hideLoader() {
-
   if (chatLoader) {
     chatLoader.classList.add(
       "hidden"
@@ -1816,23 +1494,18 @@ function hideLoader() {
   }
 }
 
-
-/* =========================
-   START
-========================= */
+/* =========================================================
+   INIT
+========================================================= */
 
 async function init() {
-
   try {
-
     connectSocket();
 
     await loadProfile();
 
     await loadConversations();
-
   } catch (error) {
-
     console.error(
       "CHAT INIT ERROR:",
       error
@@ -1842,9 +1515,7 @@ async function init() {
       error.message ||
       "Unable to load NICEGOLD CHAT."
     );
-
   } finally {
-
     setTimeout(
       hideLoader,
       250
