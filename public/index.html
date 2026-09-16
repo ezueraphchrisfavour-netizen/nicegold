@@ -2,25 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>NICEGOLD CHAT</title>
-
   <link rel="stylesheet" href="/style.css">
+
+  <style>
+    .auth-card {
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(12, 14, 20, 0.72);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow:
+        0 25px 80px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.05);
+    }
+
+    .field {
+      transition: opacity .25s ease, transform .25s ease;
+    }
+
+    .field.hidden,
+    .avatar-section.hidden {
+      display: none !important;
+    }
+
+    .input-glass {
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.09);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.025),
+        0 8px 30px rgba(0,0,0,.12);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .input-glass:focus-within {
+      border-color: rgba(130,170,255,.42);
+      background: rgba(255,255,255,.065);
+      box-shadow:
+        0 0 0 3px rgba(80,130,255,.08),
+        0 10px 35px rgba(0,0,0,.18);
+    }
+
+    .input-glass input {
+      background: transparent !important;
+    }
+
+    .avatar-section {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .avatar-preview {
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .auth-button-glow {
+      box-shadow: 0 12px 35px rgba(70,120,255,.20);
+    }
+
+    .identity-note {
+      margin-top: -5px;
+      margin-bottom: 5px;
+      font-size: 12px;
+      color: rgba(255,255,255,.42);
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- =========================
-       ANIMATED CHAT BACKGROUND
-  ========================== -->
-
   <div class="chat-background" aria-hidden="true">
-
     <span class="chat-icon icon-1">💬</span>
     <span class="chat-icon icon-2">✉️</span>
     <span class="chat-icon icon-3">💭</span>
@@ -33,80 +97,59 @@
     <span class="chat-icon icon-10">✉️</span>
     <span class="chat-icon icon-11">💭</span>
     <span class="chat-icon icon-12">🗨️</span>
-
   </div>
-
-
-  <!-- =========================
-       AMBIENT GLOW
-  ========================== -->
 
   <div class="ambient ambient-one"></div>
   <div class="ambient ambient-two"></div>
   <div class="ambient ambient-three"></div>
 
-
-  <!-- =========================
-       LOADER
-  ========================== -->
-
   <div id="loader">
-
     <div class="spinner"></div>
-
-    <div class="loader-text">
-      NICEGOLD CHAT
-    </div>
-
+    <div class="loader-text">NICEGOLD CHAT</div>
   </div>
-
-
-  <!-- =========================
-       AUTH PAGE
-  ========================== -->
 
   <main class="auth-page">
 
-    <!-- BRAND -->
-
     <section class="brand">
-
-      <div class="brand-name">
-        NICEGOLD
-      </div>
-
-      <div class="brand-chat">
-        CHAT
-      </div>
-
-      <p>
-        Private conversations. Clean connection.
-      </p>
-
+      <div class="brand-name">NICEGOLD</div>
+      <div class="brand-chat">CHAT</div>
+      <p>Private conversations. Clean connection.</p>
     </section>
-
-
-    <!-- AUTH CARD -->
 
     <section class="auth-card">
 
       <div class="auth-heading">
-
-        <h1 id="auth-title">
-          Welcome back
-        </h1>
+        <h1 id="auth-title">Welcome back</h1>
 
         <p id="auth-subtitle">
           Login to continue to NICEGOLD CHAT.
         </p>
-
       </div>
-
 
       <form id="auth-form">
 
-        <!-- USERNAME -->
+        <!-- NAME -->
+        <div id="name-group" class="field hidden">
 
+          <label for="displayName">
+            Name
+          </label>
+
+          <div class="input-glass">
+            <span class="input-icon">✦</span>
+
+            <input
+              id="displayName"
+              type="text"
+              autocomplete="name"
+              maxlength="40"
+              placeholder="Enter your name"
+            >
+          </div>
+
+        </div>
+
+        <!-- USERNAME -->
         <div id="username-group" class="field">
 
           <label for="username">
@@ -114,25 +157,25 @@
           </label>
 
           <div class="input-glass">
-
-            <span class="input-icon">
-              @
-            </span>
+            <span class="input-icon">@</span>
 
             <input
               id="username"
               type="text"
               autocomplete="username"
+              maxlength="24"
               placeholder="Enter your username"
+              required
             >
+          </div>
 
+          <div id="username-note" class="identity-note">
+            Your unique chat username.
           </div>
 
         </div>
 
-
         <!-- PHONE -->
-
         <div id="phone-group" class="field hidden">
 
           <label for="phone">
@@ -140,10 +183,7 @@
           </label>
 
           <div class="input-glass">
-
-            <span class="input-icon">
-              +
-            </span>
+            <span class="input-icon">+</span>
 
             <input
               id="phone"
@@ -151,40 +191,26 @@
               autocomplete="tel"
               placeholder="Enter your phone number"
             >
-
           </div>
 
         </div>
 
-
         <!-- PROFILE PICTURE -->
-
-        <div
-          id="avatar-group"
-          class="avatar-section hidden"
-        >
+        <div id="avatar-group" class="avatar-section hidden">
 
           <label>
             Profile Picture
           </label>
 
-
           <div class="avatar-upload">
 
-            <div
-              id="avatar-preview"
-              class="avatar-preview"
-            >
+            <div id="avatar-preview" class="avatar-preview">
               <span>+</span>
             </div>
 
-
             <div class="avatar-actions">
 
-              <label
-                for="avatar"
-                class="avatar-button"
-              >
+              <label for="avatar" class="avatar-button">
                 Choose Picture
               </label>
 
@@ -195,7 +221,6 @@
                 hidden
               >
 
-
               <button
                 type="button"
                 id="remove-avatar"
@@ -204,7 +229,6 @@
               >
                 Remove
               </button>
-
 
               <small>
                 Optional. You can skip this.
@@ -216,21 +240,15 @@
 
         </div>
 
-
         <!-- PASSWORD -->
-
         <div class="field">
 
           <label for="password">
             Password
           </label>
 
-
           <div class="input-glass">
-
-            <span class="input-icon">
-              •
-            </span>
+            <span class="input-icon">•</span>
 
             <input
               id="password"
@@ -239,16 +257,13 @@
               placeholder="Enter your password"
               required
             >
-
           </div>
 
         </div>
 
-
-        <!-- AUTH BUTTON -->
-
         <button
           id="auth-button"
+          class="auth-button-glow"
           type="submit"
         >
           Login
@@ -256,17 +271,12 @@
 
       </form>
 
-
-      <!-- MESSAGE -->
-
       <div id="auth-message"></div>
-
-
-      <!-- SWITCH -->
 
       <button
         id="switch-auth"
         class="switch-button"
+        type="button"
       >
         Create a new account
       </button>
@@ -274,7 +284,6 @@
     </section>
 
   </main>
-
 
   <script src="/app.js"></script>
 

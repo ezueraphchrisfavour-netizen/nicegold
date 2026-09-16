@@ -1,7 +1,7 @@
 const token = localStorage.getItem("nicegold_token");
 
 if (!token) {
-  window.location.href = "/auth.html";
+  window.location.href = "/";
 }
 
 const state = {
@@ -117,7 +117,7 @@ async function api(url, options = {}) {
 
   if (response.status === 401) {
     localStorage.removeItem("nicegold_token");
-    window.location.href = "/auth.html";
+    window.location.href = "/";
     return;
   }
 
@@ -1478,7 +1478,7 @@ $("logoutButton")?.addEventListener(
     );
 
     window.location.href =
-      "/auth.html";
+      "/";
   }
 );
 

@@ -1,217 +1,373 @@
-const loader = document.getElementById("loader");
+(() => {
+  "use strict";
 
-const authForm = document.getElementById("auth-form");
-const authTitle = document.getElementById("auth-title");
-const authSubtitle = document.getElementById("auth-subtitle");
-const authButton = document.getElementById("auth-button");
-const switchAuth = document.getElementById("switch-auth");
-const authMessage = document.getElementById("auth-message");
+  const $ = (id) => document.getElementById(id);
 
-const usernameGroup = document.getElementById("username-group");
-const phoneGroup = document.getElementById("phone-group");
-const avatarGroup = document.getElementById("avatar-group");
+  const form = $("auth-form");
+  const authTitle = $("auth-title");
+  const authSubtitle = $("auth-subtitle");
+  const authButton = $("auth-button");
+  const switchAuth = $("switch-auth");
+  const message = $("auth-message");
 
-const usernameInput = document.getElementById("username");
-const phoneInput = document.getElementById("phone");
-const passwordInput = document.getElementById("password");
+  const nameGroup = $("name-group");
+  const displayNameInput = $("displayName");
 
-const avatarInput = document.getElementById("avatar");
-const avatarPreview = document.getElementById("avatar-preview");
-const removeAvatar = document.getElementById("remove-avatar");
+  const usernameInput = $("username");
+  const usernameGroup = $("username-group");
 
-let registerMode = false;
-let avatarFile = null;
+  const phoneGroup = $("phone-group");
+  const phoneInput = $("phone");
 
-setTimeout(() => {
-  loader.classList.add("hidden");
-}, 650);
+  const avatarGroup = $("avatar-group");
+  const avatarInput = $("avatar");
+  const avatarPreview = $("avatar-preview");
+  const removeAvatar = $("remove-avatar");
 
-function showMessage(message, type = "info") {
-  authMessage.textContent = message;
-  authMessage.className = type;
-}
+  let registerMode = false;
+  let avatarFile = null;
 
-function setMode(register) {
-  registerMode = register;
+  function showLoader(show) {
+    const loader = $("loader");
 
-  authMessage.textContent = "";
-  authMessage.className = "";
+    if (!loader) return;
 
-  if (registerMode) {
-    authTitle.textContent = "Create account";
-    authSubtitle.textContent =
-      "Join NICEGOLD CHAT and create your profile.";
+    if (show) {
+      loader.style.display = "flex";
+      loader.style.opacity = "1";
+    } else {
+      loader.style.opacity = "0";
 
-    usernameGroup.classList.remove("hidden");
-    phoneGroup.classList.remove("hidden");
-    avatarGroup.classList.remove("hidden");
-
-    usernameInput.required = true;
-    phoneInput.required = true;
-
-    passwordInput.autocomplete = "new-password";
-
-    authButton.textContent = "Create Account";
-    switchAuth.textContent = "Already have an account? Login";
-  } else {
-    authTitle.textContent = "Welcome back";
-    authSubtitle.textContent =
-      "Login to continue to NICEGOLD CHAT.";
-
-    usernameGroup.classList.remove("hidden");
-    phoneGroup.classList.add("hidden");
-    avatarGroup.classList.add("hidden");
-
-    usernameInput.required = true;
-    phoneInput.required = false;
-
-    passwordInput.autocomplete = "current-password";
-
-    authButton.textContent = "Login";
-    switchAuth.textContent = "Create a new account";
-
-    clearAvatar();
-  }
-}
-
-switchAuth.addEventListener("click", () => {
-  setMode(!registerMode);
-});
-
-avatarInput.addEventListener("change", () => {
-  const file = avatarInput.files[0];
-
-  if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    showMessage("Please select an image file.", "error");
-    avatarInput.value = "";
-    return;
+      setTimeout(() => {
+        loader.style.display = "none";
+      }, 250);
+    }
   }
 
-  if (file.size > 5 * 1024 * 1024) {
-    showMessage("Profile picture must be 5MB or smaller.", "error");
-    avatarInput.value = "";
-    return;
+  function showMessage(text, type = "info") {
+    if (!message) return;
+
+    message.textContent = text;
+
+    if (type === "success") {
+      message.style.color = "#36df83";
+    } else if (type === "error") {
+      message.style.color = "#ff6874";
+    } else {
+      message.style.color = "#9eb0ca";
+    }
   }
 
-  avatarFile = file;
+  function setRequired(element, required) {
+    if (!element) return;
 
-  const reader = new FileReader();
-
-  reader.onload = event => {
-    avatarPreview.innerHTML = "";
-
-    const img = document.createElement("img");
-    img.src = event.target.result;
-
-    avatarPreview.appendChild(img);
-
-    removeAvatar.hidden = false;
-  };
-
-  reader.readAsDataURL(file);
-});
-
-removeAvatar.addEventListener("click", clearAvatar);
-
-function clearAvatar() {
-  avatarFile = null;
-  avatarInput.value = "";
-  avatarPreview.innerHTML = "<span>+</span>";
-  removeAvatar.hidden = true;
-}
-
-authForm.addEventListener("submit", async event => {
-  event.preventDefault();
-
-  showMessage("");
-
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value;
-
-  if (!username || !password) {
-    showMessage(
-      "Please enter your username and password.",
-      "error"
-    );
-    return;
+    if (required) {
+      element.setAttribute("required", "");
+    } else {
+      element.removeAttribute("required");
+    }
   }
 
-  authButton.disabled = true;
-  authButton.textContent = registerMode
-    ? "Creating account..."
-    : "Logging in...";
-
-  try {
-    let response;
+  function setMode(register) {
+    registerMode = register;
 
     if (registerMode) {
-      const formData = new FormData();
+      authTitle.textContent = "Create your account";
 
-      formData.append("username", username);
-      formData.append("phone", phoneInput.value.trim());
-      formData.append("password", password);
+      authSubtitle.textContent =
+        "Join NICEGOLD CHAT and start connecting.";
 
-      if (avatarFile) {
-        formData.append("avatar", avatarFile);
+      authButton.textContent = "Create Account";
+
+      switchAuth.textContent =
+        "Already have an account? Login";
+
+      nameGroup.classList.remove("hidden");
+      phoneGroup.classList.remove("hidden");
+      avatarGroup.classList.remove("hidden");
+
+      setRequired(displayNameInput, true);
+      setRequired(phoneInput, false);
+
+      displayNameInput.focus();
+
+    } else {
+      authTitle.textContent = "Welcome back";
+
+      authSubtitle.textContent =
+        "Login to continue to NICEGOLD CHAT.";
+
+      authButton.textContent = "Login";
+
+      switchAuth.textContent =
+        "Create a new account";
+
+      nameGroup.classList.add("hidden");
+      phoneGroup.classList.add("hidden");
+      avatarGroup.classList.add("hidden");
+
+      setRequired(displayNameInput, false);
+      setRequired(phoneInput, false);
+
+      displayNameInput.value = "";
+      phoneInput.value = "";
+
+      clearAvatar();
+    }
+
+    showMessage("");
+  }
+
+  function clearAvatar() {
+    avatarFile = null;
+
+    if (avatarInput) {
+      avatarInput.value = "";
+    }
+
+    if (removeAvatar) {
+      removeAvatar.hidden = true;
+    }
+
+    if (avatarPreview) {
+      avatarPreview.innerHTML = "<span>+</span>";
+    }
+  }
+
+  if (avatarInput) {
+    avatarInput.addEventListener("change", () => {
+      const file = avatarInput.files?.[0];
+
+      if (!file) {
+        clearAvatar();
+        return;
       }
 
-      response = await fetch("/api/auth/register", {
-        method: "POST",
-        body: formData
-      });
-    } else {
-      response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          identity: username,
-          password
-        })
-      });
-    }
+      const allowed = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ];
 
-    const data = await response.json();
+      if (!allowed.includes(file.type)) {
+        showMessage(
+          "Please choose a JPG, PNG, or WEBP image.",
+          "error"
+        );
 
-    if (!response.ok || !data.ok) {
-      throw new Error(
-        data.message || "Something went wrong."
-      );
-    }
+        clearAvatar();
+        return;
+      }
 
-    localStorage.setItem(
-      "nicegold_token",
-      data.token
-    );
+      if (file.size > 5 * 1024 * 1024) {
+        showMessage(
+          "Profile picture must be 5MB or smaller.",
+          "error"
+        );
 
-    localStorage.setItem(
-      "nicegold_user",
-      JSON.stringify(data.user)
-    );
+        clearAvatar();
+        return;
+      }
 
-    showMessage(
-      registerMode
-        ? "Account created successfully."
-        : "Login successful.",
-      "success"
-    );
+      avatarFile = file;
 
-    setTimeout(() => {
-      window.location.href = "/chat.html";
-    }, 700);
+      const reader = new FileReader();
 
-  } catch (error) {
-    showMessage(error.message, "error");
-  } finally {
-    authButton.disabled = false;
+      reader.onload = () => {
+        if (!avatarPreview) return;
 
-    authButton.textContent = registerMode
-      ? "Create Account"
-      : "Login";
+        avatarPreview.innerHTML = "";
+
+        const img = document.createElement("img");
+
+        img.src = reader.result;
+        img.alt = "Profile preview";
+
+        avatarPreview.appendChild(img);
+
+        if (removeAvatar) {
+          removeAvatar.hidden = false;
+        }
+      };
+
+      reader.readAsDataURL(file);
+
+      showMessage("");
+    });
   }
-});
 
-setMode(false);
+  if (removeAvatar) {
+    removeAvatar.addEventListener("click", clearAvatar);
+  }
+
+  if (switchAuth) {
+    switchAuth.addEventListener("click", () => {
+      setMode(!registerMode);
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const username = usernameInput.value.trim();
+      const password = $("password").value;
+
+      if (!username || !password) {
+        showMessage(
+          "Please enter your username and password.",
+          "error"
+        );
+        return;
+      }
+
+      if (registerMode && !displayNameInput.value.trim()) {
+        showMessage(
+          "Please enter your name.",
+          "error"
+        );
+        displayNameInput.focus();
+        return;
+      }
+
+      authButton.disabled = true;
+
+      authButton.textContent = registerMode
+        ? "Creating account..."
+        : "Logging in...";
+
+      showMessage(
+        registerMode
+          ? "Creating your account..."
+          : "Signing you in..."
+      );
+
+      try {
+        let response;
+
+        if (registerMode) {
+          const formData = new FormData();
+
+          formData.append(
+            "displayName",
+            displayNameInput.value.trim()
+          );
+
+          formData.append(
+            "username",
+            username
+          );
+
+          formData.append(
+            "phone",
+            phoneInput.value.trim()
+          );
+
+          formData.append(
+            "password",
+            password
+          );
+
+          if (avatarFile) {
+            formData.append(
+              "avatar",
+              avatarFile
+            );
+          }
+
+          response = await fetch(
+            "/api/auth/register",
+            {
+              method: "POST",
+              body: formData,
+              credentials: "include"
+            }
+          );
+
+        } else {
+
+          response = await fetch(
+            "/api/auth/login",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              credentials: "include",
+              body: JSON.stringify({
+                identity: username,
+                password
+              })
+            }
+          );
+        }
+
+        let data = {};
+
+        try {
+          data = await response.json();
+        } catch {
+          throw new Error(
+            "The server returned an invalid response."
+          );
+        }
+
+        if (!response.ok || !data.ok) {
+          throw new Error(
+            data.message ||
+            data.error ||
+            "Authentication failed."
+          );
+        }
+
+        if (!data.token) {
+          throw new Error(
+            "The server did not return a login token."
+          );
+        }
+
+        localStorage.setItem(
+          "nicegold_token",
+          data.token
+        );
+
+        if (data.user) {
+          localStorage.setItem(
+            "nicegold_user",
+            JSON.stringify(data.user)
+          );
+        }
+
+        showMessage(
+          registerMode
+            ? "Account created successfully."
+            : "Login successful.",
+          "success"
+        );
+
+        setTimeout(() => {
+          window.location.replace("/chat.html");
+        }, 500);
+
+      } catch (error) {
+        console.error("NICEGOLD AUTH ERROR:", error);
+
+        showMessage(
+          error.message ||
+          "Unable to complete authentication.",
+          "error"
+        );
+
+        authButton.disabled = false;
+
+        authButton.textContent = registerMode
+          ? "Create Account"
+          : "Login";
+      }
+    });
+  }
+
+  showLoader(false);
+  setMode(false);
+
+})();
